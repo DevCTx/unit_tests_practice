@@ -123,20 +123,19 @@ lancer_questionnaire(questionnaire)"""
 # ).lancer()
 
 
-
-filename = "animaux_leschats_confirme.json"
+filename = "animaux_leschats_confirme2.json"
 try:    # Ouverture du fichier JSON
     json_file = open(filename, "r")
-except:
+except FileNotFoundError:
     print("Aucun fichier :", filename)
     sys.exit()
 else:
     with json_file:
         try:    # Lecture du fichier JSON
             json_questionnaire = json.load(json_file)
-        except:
+        except json.decoder.JSONDecodeError:
             print("Aucune donnée JSON dans fichier :",filename)
             sys.exit()
 
 # Lancement du questionnaire
-Questionnaire(json_questionnaire).lancer()
+#Questionnaire(json_questionnaire).lancer()
