@@ -19,6 +19,8 @@
 #    - lancer()
 #
 import json
+import ntpath
+import os
 import sys
 
 
@@ -45,8 +47,8 @@ class Question:
                 bonne_reponse = json_question['choix'][i][0]
         return Question(json_question['titre'], choix, bonne_reponse)
 
-    def poser(self):
-        print("QUESTION")
+    def poser(self, index):
+        print(f"QUESTION {index}")
         print("  " + self.titre)
         for i in range(len(self.choix)):
             print("  ", i+1, "-", self.choix[i])
@@ -84,7 +86,7 @@ class Questionnaire:
 
     # Convertit un questionnaire JSON en questions sous format questionnaire
     def From_JSON_Questionnaire(self, json_questionnaire):
-        questions = list()
+        questions = []
         if json_questionnaire != None :
             for json_question in json_questionnaire['questions']:
                 questions.append( Question.FromJSON(json_question) )
@@ -92,8 +94,10 @@ class Questionnaire:
 
     def lancer(self):
         score = 0
+        index = 0
         for question in self.questions:
-            if question.poser():
+            index+=1
+            if question.poser(index):
                 score += 1
         print("Score final :", score, "sur", len(self.questions))
         return score
@@ -122,20 +126,36 @@ lancer_questionnaire(questionnaire)"""
 #     )
 # ).lancer()
 
+def main():
 
-filename = "animaux_leschats_confirme2.json"
-try:    # Ouverture du fichier JSON
-    json_file = open(filename, "r")
-except FileNotFoundError:
-    print("Aucun fichier :", filename)
-    sys.exit()
-else:
-    with json_file:
-        try:    # Lecture du fichier JSON
-            json_questionnaire = json.load(json_file)
-        except json.decoder.JSONDecodeError:
-            print("Aucune donnée JSON dans fichier :",filename)
-            sys.exit()
+    if len(sys.argv)!=2:
+        print(f"Argument insuffisant : Entrer un fichier JSON en paramètre, exemple : {ntpath.basename(sys.argv[0])} questionnaire_a_lire.json")
+        sys.exit()
 
-# Lancement du questionnaire
-#Questionnaire(json_questionnaire).lancer()
+    root, extension = os.path.splitext(sys.argv[1])
+    if extension!=".json":
+        print(f"Extension incorrecte : Entrer un fichier JSON en paramètre, exemple : questionnaire.py questionnaire_a_lire.json")
+        sys.exit()
+
+    filename = sys.argv[1]
+    try:    # Ouverture du fichier JSON
+        json_file = open(filename, "r")
+    except:
+        print("Aucun fichier :", filename)
+        sys.exit()
+    else:
+        with json_file:
+            try:    # Lecture du fichier JSON
+                json_questionnaire = json.load(json_file)
+            except json.decoder.JSONDecodeError:
+                print("Aucune donnée JSON dans fichier :",filename)
+                sys.exit()
+
+    # Lancement du questionnaire
+    print(f"Catégorie : {json_questionnaire['categorie']}")
+    print(f"Titre : {json_questionnaire['titre']}")
+    print(f"Difficulté : {json_questionnaire['difficulte']}\n")
+    Questionnaire(json_questionnaire).lancer()
+
+if __name__ == "__main__":
+    main()
