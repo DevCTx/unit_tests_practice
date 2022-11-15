@@ -40,7 +40,7 @@ class Question:
         # Question : Titre, Choix, Bonne Reponse
         # From JSON Question : Titre, Choix[4]:[Reponse_1,True],[Reponse_2,False],[Reponse_3,False],[Reponse_4,False]
         bonne_reponse = None
-        choix = list()
+        choix = []
         for i in range (0, len(json_question['choix'])):
             choix.append(json_question['choix'][i][0])
             if json_question['choix'][i][1]==True :
@@ -152,10 +152,15 @@ def main():
                 sys.exit()
 
     # Lancement du questionnaire
-    print(f"Catégorie : {json_questionnaire['categorie']}")
-    print(f"Titre : {json_questionnaire['titre']}")
-    print(f"Difficulté : {json_questionnaire['difficulte']}\n")
-    Questionnaire(json_questionnaire).lancer()
+    print(f"Catégorie : {json_questionnaire['categorie'] if json_questionnaire.get('categorie') else 'inconnue'}")
+    print(f"Difficulté : {json_questionnaire['difficulte'] if json_questionnaire.get('difficulte') else 'inconnue'}")
+
+    if not json_questionnaire.get('titre') or not json_questionnaire.get('questions'):
+        print("Le titre ou les questions sont manquants :", filename)
+        sys.exit()
+    else:
+        print(f"Titre : {json_questionnaire['titre']}\n")
+        Questionnaire(json_questionnaire).lancer()
 
 if __name__ == "__main__":
     main()
