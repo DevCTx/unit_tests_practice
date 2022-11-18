@@ -5,6 +5,7 @@ import threading
 
 import requests
 
+#From https://docs.python.org/3/library/socketserver.html
 
 class ThreadedTCPServer(socketserver.ThreadingMixIn, socketserver.TCPServer):
     pass
@@ -26,7 +27,7 @@ if __name__ == "__main__":
     server_thread.start()
     print(f"Server {ip}:{port} loop running in thread {server_thread.name}")
 
-    response = requests.get("http://127.0.0.1:8000/cinema_alien_debutant.json")
+    response = requests.get("http://localhost:8000/empty.json")
     print(response)
 
     server.shutdown()
