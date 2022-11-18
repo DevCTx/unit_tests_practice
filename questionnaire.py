@@ -23,6 +23,24 @@ import ntpath
 import os
 import sys
 
+import requests
+import validators
+import unicodedata
+
+class bcolors:
+    HEADER = '\033[95m'
+    OKBLUE = '\033[94m'
+    OKCYAN = '\033[96m'
+    OKGREEN = '\033[92m'
+    WARNING = '\033[93m'
+    FAIL = '\033[91m'
+    ENDC = '\033[0m'
+    BOLD = '\033[1m'
+    UNDERLINE = '\033[4m'
+
+def printerr(msg):
+    return print(f"{bcolors.FAIL}{msg}{bcolors.ENDC}")
+
 
 class Question:
     def __init__(self, titre, choix, bonne_reponse):
@@ -78,21 +96,66 @@ class Question:
         return Question.demander_reponse_numerique_utlisateur(min, max)
     
 class Questionnaire:
-    # def __init__(self, questions):
-    #     self.questions = questions
+
+    schema = {
+        "$schema": "json_questionnaire",
+        "$id": "https://openquizzdb.org/",
+        "type": "object",
+        "required": ["titre", "questions"],
+        "properties": {
+            "categorie": {"type": "string"},
+            "titre": {"type": "string"},
+            "questions": {
+                "type": "array",
+                "default": [],
+                "items": {
+                    "type": "object",
+                    "required": ["titre", "choix"],
+                    "properties": {
+                        "titre": {"type": "string"},
+                        "choix": {
+                            "type": "array",
+                            "default": [],
+                            "minItems": 2,
+                            "items": {
+                                "type": "array",
+                                "default": []
+                            }
+                        }
+                    }
+                }
+            },
+            "difficulte": {"type": "string"}
+        }
+    }
 
     def __init__(self, json_questionnaire):
-        self.questions = self.From_JSON_Questionnaire(json_questionnaire)
 
-    # Convertit un questionnaire JSON en questions sous format questionnaire
-    def From_JSON_Questionnaire(self, json_questionnaire):
-        questions = []
-        if json_questionnaire != None :
+        # Verification du format questionnaire (categorie et difficulte non bloquant, titre ou questions bloquants)
+        self.categorie = json_questionnaire['categorie'] if json_questionnaire.get('categorie') else 'inconnue'
+        self.difficulte = json_questionnaire['difficulte'] if json_questionnaire.get('difficulte') else 'inconnue'
+
+        if not json_questionnaire.get('titre') or not json_questionnaire.get('questions'):
+            raise Exception("JSON_Questionnaire_format_error")
+        else:
+            self.titre = json_questionnaire['titre']
+            self.questions = []
             for json_question in json_questionnaire['questions']:
-                questions.append( Question.FromJSON(json_question) )
-        return questions
+                self.questions.append( Question.FromJSON(json_question) )
+
+    # # Convertit un questionnaire JSON en questions sous format questionnaire
+    # def From_JSON_Questionnaire(self, json_questionnaire):
+    #     if json_questionnaire != None :
+    #         for json_question in json_questionnaire['questions']:
+    #             questions.append( Question.FromJSON(json_question) )
+    #     return questions
 
     def lancer(self):
+        # Lancement du questionnaire
+        print(f"Catégorie : {self.categorie}")
+        print(f"Difficulté : {self.difficulte}")
+        print(f"Titre : {self.titre}\n")
+
         score = 0
         index = 0
         for question in self.questions:
@@ -103,64 +166,63 @@ class Questionnaire:
         return score
 
 
-"""questionnaire = (
-    ("Quelle est la capitale de la France ?", ("Marseille", "Nice", "Paris", "Nantes", "Lille"), "Paris"), 
-    ("Quelle est la capitale de l"Italie ?", ("Rome", "Venise", "Pise", "Florence"), "Rome"),
-    ("Quelle est la capitale de la Belgique ?", ("Anvers", "Bruxelles", "Bruges", "Liège"), "Bruxelles")
-                )
 
-lancer_questionnaire(questionnaire)"""
+def load_json_argv( sysargv ):
+    '''Return the json questionnaire if correctly loaded else None'''
+    json_data = None
 
-# q1 = Question("Quelle est la capitale de la France ?", ("Marseille", "Nice", "Paris", "Nantes", "Lille"), "Paris")
-# q1.poser()
+    if len(sysargv)!=2:
+        printerr (f"Error in argument, should add one .json questionnaire. Example : {ntpath.basename(sys.argv[0])} questionnaire_to_read.json")
+        return None
 
-# data = (("Marseille", "Nice", "Paris", "Nantes", "Lille"), "Paris", "Quelle est la capitale de la France ?")
-# q = Question.FromData(data)
-# print(q.__dict__)
+    root, extension = os.path.splitext( sysargv[1] )
+    if extension!=".json":
+        printerr(f"Incorrect extension, add a .json questionnaire. Example : {ntpath.basename(sys.argv[0])} questionnaire_to_read.json")
+        return None
 
-# Questionnaire(
-#     (
-#     Question("Quelle est la capitale de la France ?", ("Marseille", "Nice", "Paris", "Nantes", "Lille"), "Paris"),
-#     Question("Quelle est la capitale de l'Italie ?", ("Rome", "Venise", "Pise", "Florence"), "Rome"),
-#     Question("Quelle est la capitale de la Belgique ?", ("Anvers", "Bruxelles", "Bruges", "Liège"), "Bruxelles")
-#     )
-# ).lancer()
+    filename = sysargv[1]
+
+    if validators.url(filename) :    # si le fichier JSON est une URL
+        try:
+            response = requests.get(filename)
+        except:
+            raise Exception("here")
+        else:
+            if response.status_code == 404:
+                printerr(f"Url Not found at : {filename}")
+                return None
+            else:
+                try:
+                    json_data = json.loads(response.text)
+                except:
+                    printerr(f"Incompatible or no data in JSON file at URL : {filename}")
+                    return None
+    else:
+        try:    # Opening of the JSON file
+            json_file = open(filename, "r")
+        except OSError:
+            printerr(f"Invalid File : {filename}")
+            return None
+        except FileNotFoundError:
+            printerr(f"No File : {filename}")
+            return None
+        else:
+            with json_file:     # Handle the memory needed for the file
+                try:    # Loading of the file as compatible JSON file
+                    json_data = json.load(json_file)
+                except json.decoder.JSONDecodeError:
+                    printerr(f"Incompatible or no data in JSON file : {filename}")
+                    return None
+
+    return json_data
+
+
 
 def main():
 
-    if len(sys.argv)!=2:
-        print(f"Argument insuffisant : Entrer un fichier JSON en paramètre, exemple : {ntpath.basename(sys.argv[0])} questionnaire_a_lire.json")
-        sys.exit()
-
-    root, extension = os.path.splitext(sys.argv[1])
-    if extension!=".json":
-        print(f"Extension incorrecte : Entrer un fichier JSON en paramètre, exemple : questionnaire.py questionnaire_a_lire.json")
-        sys.exit()
-
-    filename = sys.argv[1]
-    try:    # Ouverture du fichier JSON
-        json_file = open(filename, "r")
-    except:
-        print("Aucun fichier :", filename)
-        sys.exit()
-    else:
-        with json_file:
-            try:    # Lecture du fichier JSON
-                json_questionnaire = json.load(json_file)
-            except json.decoder.JSONDecodeError:
-                print("Aucune donnée JSON dans fichier :",filename)
-                sys.exit()
-
-    # Lancement du questionnaire
-    print(f"Catégorie : {json_questionnaire['categorie'] if json_questionnaire.get('categorie') else 'inconnue'}")
-    print(f"Difficulté : {json_questionnaire['difficulte'] if json_questionnaire.get('difficulte') else 'inconnue'}")
-
-    if not json_questionnaire.get('titre') or not json_questionnaire.get('questions'):
-        print("Le titre ou les questions sont manquants :", filename)
-        sys.exit()
-    else:
-        print(f"Titre : {json_questionnaire['titre']}\n")
-        Questionnaire(json_questionnaire).lancer()
+    json_data = load_json_argv( sys.argv )
+    # if json_data :
+    #     Questionnaire(json_data).lancer()
 
 if __name__ == "__main__":
     main()
