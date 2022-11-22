@@ -25,7 +25,8 @@ import sys
 
 import requests
 import validators
-import unicodedata
+import jsonschema
+from jsonschema.validators import validate
 
 class bcolors:
     HEADER = '\033[95m'
@@ -43,65 +44,55 @@ def printerr(msg):
 
 
 class Question:
-    def __init__(self, titre, choix, bonne_reponse):
-        self.titre = titre
-        self.choix = choix
-        self.bonne_reponse = bonne_reponse
-
-    def FromData(data):
-        # Question : Titre, Choix, Bonne Reponse
-        # From Data : Choix, Bonne Reponse, Titre
-        q = Question(data[2], data[0], data[1])
-        return q
+    def __init__(self, title, choice, is_answer):
+        self.title = title
+        self.choice = choice
+        self.is_answer = is_answer
 
     def FromJSON(json_question):
         # Question : Titre, Choix, Bonne Reponse
         # From JSON Question : Titre, Choix[4]:[Reponse_1,True],[Reponse_2,False],[Reponse_3,False],[Reponse_4,False]
-        bonne_reponse = None
-        choix = []
+        is_answer = None
+        choice = []
         for i in range (0, len(json_question['choix'])):
-            choix.append(json_question['choix'][i][0])
+            choice.append(json_question['choix'][i][0])
             if json_question['choix'][i][1]==True :
-                bonne_reponse = json_question['choix'][i][0]
-        return Question(json_question['titre'], choix, bonne_reponse)
+# Enregistre le numero de la bonne reponse
+#                is_answer = json_question['choix'][i][0]
+                is_answer = i
+        return Question(json_question['titre'], choice, is_answer)
 
-    def poser(self, index):
+    def ask(self, index):
         print(f"QUESTION {index}")
-        print("  " + self.titre)
-        for i in range(len(self.choix)):
-            print("  ", i+1, "-", self.choix[i])
+        print("  " + self.title)
+        for i in range(len(self.choice)):
+            print("  ", i+1, "-", self.choice[i]+"\n")
 
-        print()
-        resultat_response_correcte = False
-        reponse_int = Question.demander_reponse_numerique_utlisateur(1, len(self.choix))
-        if self.choix[reponse_int-1].lower() == self.bonne_reponse.lower():
-            print("Bonne réponse")
-            resultat_response_correcte = True
+        if Question.request_choice_to_user(1, len(self.choix)) == self.is_answer:
+            print("Bonne réponse\n")
+            return True
         else:
-            print("Mauvaise réponse")
-            
-        print()
-        return resultat_response_correcte
+            print("Mauvaise réponse\n")
+            return False
 
-    def demander_reponse_numerique_utlisateur(min, max):
-        reponse_str = input("Votre réponse (entre " + str(min) + " et " + str(max) + ") :")
+    def request_choice_to_user(min, max):
+        str_answer = input("Votre réponse (entre " + str(min) + " et " + str(max) + ") :")
         try:
-            reponse_int = int(reponse_str)
-            if min <= reponse_int <= max:
-                return reponse_int
-
-            print("ERREUR : Vous devez rentrer un nombre entre", min, "et", max)
+            int_answer = int(str_answer)
+            if min <= int_answer <= max:
+                return int_answer
+            else:
+                print("ERREUR : Vous devez rentrer un nombre entre", min, "et", max)
         except:
             print("ERREUR : Veuillez rentrer uniquement des chiffres")
-        return Question.demander_reponse_numerique_utlisateur(min, max)
+        return Question.request_choice_to_user(min, max)
     
 class Questionnaire:
 
     schema = {
-        "$schema": "json_questionnaire",
-        "$id": "https://openquizzdb.org/",
+        "$schema": "http://json-schema.org/draft/2020-12/schema",
         "type": "object",
-        "required": ["titre", "questions"],
+        "required": [ "titre", "questions" ],
         "properties": {
             "categorie": {"type": "string"},
             "titre": {"type": "string"},
@@ -110,16 +101,16 @@ class Questionnaire:
                 "default": [],
                 "items": {
                     "type": "object",
-                    "required": ["titre", "choix"],
                     "properties": {
                         "titre": {"type": "string"},
                         "choix": {
                             "type": "array",
-                            "default": [],
                             "minItems": 2,
                             "items": {
                                 "type": "array",
-                                "default": []
+                                "minItems": 2,
+                                "prefixItems": [{"type": "string"}, {"type": "boolean"}],
+                                "items": False
                             }
                         }
                     }
@@ -130,28 +121,25 @@ class Questionnaire:
     }
 
     def __init__(self, json_questionnaire):
+        '''Test the expected json schema before to initiate'''
 
-        # Verification du format questionnaire (categorie et difficulte non bloquant, titre ou questions bloquants)
-        self.categorie = json_questionnaire['categorie'] if json_questionnaire.get('categorie') else 'inconnue'
-        self.difficulte = json_questionnaire['difficulte'] if json_questionnaire.get('difficulte') else 'inconnue'
-
-        if not json_questionnaire.get('titre') or not json_questionnaire.get('questions'):
-            raise Exception("JSON_Questionnaire_format_error")
+        try
+            validate(json_questionnaire, self.schema)
+        except jsonschema.exceptions.ValidationError:
+            printerr(f"Incompatible Json schema in file : {filename}")
         else:
+            # 'categorie', 'difficulte' : non-blocking properties, but better to be completed as unknown if absent
+            self.categorie = json_questionnaire['categorie'] if json_questionnaire.get('categorie') else 'inconnue'
+            self.difficulte = json_questionnaire['difficulte'] if json_questionnaire.get('difficulte') else 'inconnue'
+
+            # 'titre' or 'questions' : required properties already checked into schema
             self.titre = json_questionnaire['titre']
             self.questions = []
             for json_question in json_questionnaire['questions']:
                 self.questions.append( Question.FromJSON(json_question) )
 
-    # # Convertit un questionnaire JSON en questions sous format questionnaire
-    # def From_JSON_Questionnaire(self, json_questionnaire):
-    #     if json_questionnaire != None :
-    #         for json_question in json_questionnaire['questions']:
-    #             questions.append( Question.FromJSON(json_question) )
-    #     return questions
-
-    def lancer(self):
-        # Lancement du questionnaire
+    def run(self):
+        # Launch of the questionnaire
         print(f"Catégorie : {self.categorie}")
         print(f"Difficulté : {self.difficulte}")
         print(f"Titre : {self.titre}\n")
@@ -160,8 +148,9 @@ class Questionnaire:
         index = 0
         for question in self.questions:
             index+=1
-            if question.poser(index):
+            if question.ask(index):
                 score += 1
+
         print("Score final :", score, "sur", len(self.questions))
         return score
 
@@ -221,8 +210,9 @@ def load_json_argv( sysargv ):
 def main():
 
     json_data = load_json_argv( sys.argv )
-    # if json_data :
-    #     Questionnaire(json_data).lancer()
+
+    if json_data:
+       Questionnaire(json_data).run()
 
 if __name__ == "__main__":
     main()
