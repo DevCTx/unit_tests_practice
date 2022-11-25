@@ -1,7 +1,8 @@
 import http.server
-import os
+import os.path
 import socketserver
 import threading
+import urllib
 
 import requests
 
@@ -27,7 +28,10 @@ if __name__ == "__main__":
     server_thread.start()
     print(f"Server {ip}:{port} loop running in thread {server_thread.name}")
 
-    response = requests.get("http://localhost:8000/empty.json")
+    # get this file via localhost
+    file_path = urllib.parse.urljoin(f"http://{ip}:{port}/", os.path.basename(__file__))
+    print("GET : ",file_path)
+    response = requests.get(file_path)
     print(response)
 
     server.shutdown()
