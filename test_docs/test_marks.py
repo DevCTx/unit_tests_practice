@@ -2,7 +2,6 @@ import unittest
 
 from pytest import mark
 from parameterized import parameterized
-import pytest
 
 # For detailed displays : pytest -v
 # To test only this file :  pytest -v -k test_marks.py
