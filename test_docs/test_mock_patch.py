@@ -3,7 +3,6 @@ from unittest import mock
 
 from simple_prog import second_API, third_API
 
-
 class Test_API(unittest.TestCase):
 
     # Here is a example of mock.patch used as decorator
