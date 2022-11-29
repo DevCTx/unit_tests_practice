@@ -44,11 +44,11 @@ class repeating_checks():
     @mark.skip('This is a skip reason : no need to test this method')
     def test_method_03(self): assert (1 + 1 == 2)      # 'skip' marked function
 
-    # parametrize is not supported by unittest.TestCase
-    @mark.marker_name3
-    @mark.parametrize("val",[1,2])                    # 'parametrize' may test different values
-    def test_method_04(self, val):
-        assert val > 0
+    # # parametrize is not supported by unittest.TestCase
+    # @mark.marker_name3
+    # @mark.parametrize("val",[1,2])                    # 'parametrize' may test different values
+    # def test_method_04(self, val):
+    #     assert val > 0
 
     # and should be modified by using parameterized (following this structure)
     @parameterized.expand([
@@ -57,7 +57,7 @@ class repeating_checks():
     ])
     @mark.marker_name3                                    # Careful, the parameterized must not be under marker
     def test_method_05(self,val1, val2):
-        print(f"Test {val1} > 0 (no use of {val2})", end=' ')
+        print(f"Test {val1} > 0 ({val2} not used here)", end=' ')
         assert val1 > 0  # 'parametrize' to test different values
 
 
@@ -77,13 +77,6 @@ class check_05_TestCase_Tests(unittest.TestCase,repeating_checks): pass    # 'ma
 @mark.skip('This is a skip reason : no need to test this class')
 class check_06_TestCase_Tests(unittest.TestCase,repeating_checks): pass    # 'skip' marked class
 
-# # # With unittest.TestCase heritage
-# @mark.marker_name2
-# class check_04_TestCase_Tests(repeating_checks): pass
-# @mark.marker_name
-# class check_05_TestCase_Tests(repeating_checks): pass    # 'mark_test' marked class
-# @mark.skip('This is a skip reason : no need to test this class')
-# class check_06_TestCase_Tests(repeating_checks): pass    # 'skip' marked class
 
 ''' pytest considers all tests if pytest.ini file is defined 
 >>> pytest -v -k test_marks.py
@@ -133,7 +126,7 @@ test_marks.py::check_06_TestCase_Tests::test_method_02 PASSED
 >>> pytest -v -k test_marks.py -m 'not marker_name'
 test_marks.py::check_01_Tests::test_method_01 PASSED         
 test_marks.py::check_03_Tests::test_method_01 PASSED         
-test_marks.py::check_04_TestCase_Tesgits::test_method_01 PASSED
+test_marks.py::check_04_TestCase_Tests::test_method_01 PASSED
 test_marks.py::check_06_TestCase_Tests::test_method_01 PASSED
 '''
 ''' WITHOUT pytest.ini file
@@ -194,7 +187,7 @@ test_marks.py::check_06_TestCase_Tests::test_method_01 SKIPPED (This is a skip r
 #     ])
 #     @mark.marker_name3                                    # Careful, the parameterized must not be under marker
 #     def test_method_05(self,val1, val2):
-#         print(f"Test {val1} > 0 (no use of {val2})", end=' ')
+#         print(f"Test {val1} > 0 ({val2} not used here)", end=' ')
 #         assert val1 > 0  # 'parametrize' to test different values
 #
 # This required to import and install 'parameterized'
@@ -203,9 +196,9 @@ test_marks.py::check_06_TestCase_Tests::test_method_01 SKIPPED (This is a skip r
 >>> pytest -v -k test_marks.py -m 'marker_name and marker_name3' -s
 test_marks.py::check_02_Tests::test_method_04[1] PASSED
 test_marks.py::check_02_Tests::test_method_04[2] PASSED
-test_marks.py::check_02_Tests::test_method_05_0 Test 1 > 0 (no use of 1) PASSED
-test_marks.py::check_02_Tests::test_method_05_1 Test 2 > 0 (no use of 2) PASSED
+test_marks.py::check_02_Tests::test_method_05_0 Test 1 > 0 (1 not used here) PASSED
+test_marks.py::check_02_Tests::test_method_05_1 Test 2 > 0 (2 not used here) PASSED
 test_marks.py::check_05_TestCase_Tests::test_method_04 FAILED                      # Not support by unittest.TestCase
-test_marks.py::check_05_TestCase_Tests::test_method_05_0 Test 1 > 0 (no use of 1) PASSED
-test_marks.py::check_05_TestCase_Tests::test_method_05_1 Test 2 > 0 (no use of 2) PASSED
+test_marks.py::check_05_TestCase_Tests::test_method_05_0 Test 1 > 0 (1 not used here) PASSED
+test_marks.py::check_05_TestCase_Tests::test_method_05_1 Test 2 > 0 (2 not used here) PASSED
 '''

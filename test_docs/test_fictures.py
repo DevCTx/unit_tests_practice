@@ -128,8 +128,9 @@ test_fictures.py::check_02_TestCase_Tests::test_method_02  --> test_method_02 PA
 test_fictures.py::check_02_TestCase_Tests::test_method_03  --> test_method_03 PASSED --> disconnect from DB/URL/FILE in class 
 '''
 
-# Fictures can also be added to the conftest.py file for handling the 'package' or 'session' scope once
-# for all the file of the directory
+
+# Fixtures can be out or included into a class or upgrade to the conftest.py file if needed in different files
+# with the 'package' or 'session' scope
 #
 # in conftest.py :
 # @fixture(scope='session')
@@ -157,13 +158,28 @@ class repeating_calls():
         print(" --> test_method_03", end=' ')
         assert True
 
+    @mark.marker_name4
+    @mark.usefixtures('different_values_tested_in_param')
+    def test_method_04(self, different_values_tested_in_param):
+        print(f" --> test_method_04 says {different_values_tested_in_param} > 0", end=' ')
+        assert different_values_tested_in_param > 0
+
+    @mark.marker_name4
+    @pytest.mark.usefixtures("value_given_by_fixture")
+    def test_method_05(self):
+        print(f" --> test_method_05 says {self.input[1]} > 0", end=' ')
+        assert self.input[1] > 0
+
+
+
 
 # Without unittest.TestCase heritage
 class check_01_Tests(repeating_calls): pass
 
-
 # With unittest.TestCase heritage
-class check_02_TestCase_Tests(unittest.TestCase, repeating_calls): pass
+class check_02_TestCase_Tests(unittest.TestCase, repeating_calls):pass
+
+
 
 ''' With the 'session' scope, the DB is opened only once at the beginning of all tests,
     even if they are in differents test files, and closed at the end
@@ -175,4 +191,38 @@ test_fictures.py::check_02_TestCase_Tests::test_method_03  --> test_method_03 PA
 test_marks.py::check_04_TestCase_Tests::test_method_01 PASSED
 test_marks.py::check_04_TestCase_Tests::test_method_02 PASSED
 test_marks.py::check_04_TestCase_Tests::test_method_03 SKIPPED --> disconnect from DB/URL/FILE in class
+'''
+
+# At least, fixtures can return values to test and be parametrized to test different values (not on TestCase)
+#
+# Use the request.cls.input to set a value or a dictionary like {'key':'value'}
+#     @fixture(scope="class")
+#     def value_given_by_fixture(request):
+#         request.cls.input = [10,20]
+#
+# And the self.input option to get it into the test_method
+#     @pytest.mark.usefixtures("value_given_by_fixture")
+#     def test_method_05(self):
+#         print(f" --> test_method_05 says {self.input[1]} > 0", end=' ')
+#         assert self.input[1] > 0
+#
+# Or use the params option into the fixture and the request.param to return them one by one to the test_method
+#     @fixture(scope='function', params=[10,20])
+#     def value_in_parameter(request):                                # param and request are keywords
+#         print(f" --> fixture opened with {request.param}", end=' ')
+#         return request.param
+#
+#     @mark.usefixtures('different_values_tested_in_param')
+#     def test_method_04(self, different_values_tested_in_param):
+#         print(f" --> test_method_04 says {different_values_tested_in_param} > 0", end=' ')
+#         assert different_values_tested_in_param > 0
+#
+# But params is not supported by unittest.TestCase
+'''  
+>>> pytest -v -k test_fictures.py -m 'marker_name4' -s
+test_fictures.py::check_01_Tests::test_method_04[10]  --> fixture opened with 10  --> test_method_04 says 10 > 0 PASSED
+test_fictures.py::check_01_Tests::test_method_04[20]  --> fixture opened with 20  --> test_method_04 says 20 > 0 PASSED
+test_fictures.py::check_01_Tests::test_method_05  --> test_method_05 says 20 > 0 PASSED
+test_fictures.py::check_02_TestCase_Tests::test_method_04 ERROR
+test_fictures.py::check_02_TestCase_Tests::test_method_05  --> test_method_05 says 20 > 0 PASSED
 '''
