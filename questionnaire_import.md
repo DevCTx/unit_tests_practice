@@ -31,7 +31,7 @@ thus been transferred to www.codeavecjonathan.com to simulate a download and be 
     {
         "fr" :
         {
-            "débutant" : [10 items
+            "débutant" : [
                 0 : {
                     "id": 1,
                     "question": "À quelle classe d'animaux vertébrés appartient le chat ?",
@@ -43,8 +43,8 @@ thus been transferred to www.codeavecjonathan.com to simulate a download and be 
                     ],
                     "réponse": "Mammifères",
                     "anecdote": "De nombreux mammifères élevés par l'homme jusqu'au XIXème siècle ..."
-                    }
-                1: {}
+                    },
+                1: {},
                 ...
                 10: {}
             "confirmé" : [10 items]
@@ -68,12 +68,12 @@ loads json quiz files and converts them to a new format by creating one file per
 ### json quizz format after import :
 ```json
 {
-  categorie : "Animaux"
-  titre : "Les chats"
-  questions: [ 20 items 
+  "categorie" : "Animaux"
+  "titre" : "Les chats"
+  "questions": [ 20 items 
     0:{
-        titre: "À quelle classe d'animaux vertébrés appartient le chat ?"
-        choix:[
+        "titre": "À quelle classe d'animaux vertébrés appartient le chat ?"
+        "choix":[
           0:["Mammifères",true]
           1:["Reptiles",false]
           2:["Oiseaux";false]
@@ -84,7 +84,7 @@ loads json quiz files and converts them to a new format by creating one file per
     ...
     20:{}
   ]
-  difficulte : confirmé
+  "difficulte" : "confirmé"
 }
 ```
 This file represents the second ```confirmé``` difficulty and therefore contains the first 20 questions
@@ -121,7 +121,7 @@ schema = {
                                 {"type": "string"}, 
                                 {"type": "boolean"}
                             ],
-                            "items": False
+                            "items": false
                         }
                     }
                 }
