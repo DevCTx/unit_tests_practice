@@ -74,10 +74,10 @@ loads json quiz files and converts them to a new format by creating one file per
     0:{
         "titre": "À quelle classe d'animaux vertébrés appartient le chat ?"
         "choix":[
-          0:["Mammifères",true]
-          1:["Reptiles",false]
-          2:["Oiseaux";false]
-          3:["Poissons",false]
+          ["Mammifères",true]
+          ["Reptiles",false]
+          ["Oiseaux";false]
+          ["Poissons",false]
         ]
     }
     1:{}
