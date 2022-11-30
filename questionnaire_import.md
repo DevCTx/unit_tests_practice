@@ -9,29 +9,29 @@ thus been transferred to www.codeavecjonathan.com to simulate a download and be 
 ### Initial json quizz format :
 ```json
 {
-    fournisseur : OpenQuizzDB - Fournisseur de contenu libre (https://www.openquizzdb.org)
-    rédacteur : Phillippe  Bresoux
-    difficulté : 3/5
-    version : 1
-    mise-à-jour : 2022-04-29
-    catégorie-nom-slogan :
+    "fournisseur" : "OpenQuizzDB - Fournisseur de contenu libre (https://www.openquizzdb.org)"
+    "rédacteur" : "Phillippe  Bresoux"
+    "difficulté" : "3/5"
+    "version" : 1
+    "mise-à-jour" : 2022-04-29
+    "catégorie-nom-slogan" :
     {
-        fr :{
-                catégorie : Animaux
-                nom : Nos amis les chats
-                slogan : Adoptez un nouveau compagnon
+        "fr" :{
+                "catégorie" : "Animaux"
+                "nom" : "Nos amis les chats"
+                "slogan" : "Adoptez un nouveau compagnon"
             }
-        en:{}
-        es:{}
-        it : {}
-        de : {}
-        nl : {}
+        "en":{}
+        "es":{}
+        "it" : {}
+        "de" : {}
+        "nl" : {}
     }
-    quizz :
+    "quizz" :
     {
-        fr :
+        "fr" :
         {
-            débutant : [10 items]
+            "débutant" : [10 items
                 0 : {
                     "id": 1,
                     "question": "À quelle classe d'animaux vertébrés appartient le chat ?",
@@ -46,8 +46,9 @@ thus been transferred to www.codeavecjonathan.com to simulate a download and be 
                     }
                 1: {}
                 ...
-            confirmé : [10 items]
-            expert : [10 items]
+                10: {}
+            "confirmé" : [10 items]
+            "expert" : [10 items]
         }
     }
 }
