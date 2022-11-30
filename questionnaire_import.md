@@ -9,23 +9,23 @@ thus been transferred to www.codeavecjonathan.com to simulate a download and be 
 ### Initial json quizz format :
 ```json
 {
-    "fournisseur" : "OpenQuizzDB - Fournisseur de contenu libre (https://www.openquizzdb.org)"
-    "rédacteur" : "Phillippe  Bresoux"
-    "difficulté" : "3/5"
-    "version" : 1
-    "mise-à-jour" : 2022-04-29
+    "fournisseur" : "OpenQuizzDB - Fournisseur de contenu libre (https://www.openquizzdb.org)",
+    "rédacteur" : "Phillippe  Bresoux",
+    "difficulté" : "3/5",
+    "version" : 1,
+    "mise-à-jour" : "2022-04-29",
     "catégorie-nom-slogan" :
     {
         "fr" :{
                 "catégorie" : "Animaux"
                 "nom" : "Nos amis les chats"
                 "slogan" : "Adoptez un nouveau compagnon"
-            }
-        "en":{}
-        "es":{}
-        "it" : {}
-        "de" : {}
-        "nl" : {}
+            },
+        "en":{},
+        "es":{},
+        "it":{},
+        "de":{},
+        "nl":{},
     }
     "quizz" :
     {
@@ -39,17 +39,22 @@ thus been transferred to www.codeavecjonathan.com to simulate a download and be 
                         "Mammifères",
                         "Reptiles",
                         "Oiseaux",
-                        "Poissons"
+                        "Poissons",
                     ],
                     "réponse": "Mammifères",
-                    "anecdote": "De nombreux mammifères élevés par l'homme jusqu'au XIXème siècle ..."
+                    "anecdote": "De nombreux mammifères élevés par l'homme jusqu'au XIXème siècle ...",
                     },
                 1: {},
                 ...
-                10: {}
-            "confirmé" : [10 items]
-            "expert" : [10 items]
-        }
+                10: {},
+            "confirmé" : [10 items],
+            "expert" : [10 items],
+        },
+        "en":{},
+        "es":{},
+        "it":{},
+        "de":{},
+        "nl":{},
     }
 }
 ```
@@ -68,19 +73,19 @@ loads json quiz files and converts them to a new format by creating one file per
 ### json quizz format after import :
 ```json
 {
-  "categorie" : "Animaux"
-  "titre" : "Les chats"
+  "categorie" : "Animaux",
+  "titre" : "Les chats",
   "questions": [ 20 items 
     0:{
         "titre": "À quelle classe d'animaux vertébrés appartient le chat ?"
         "choix":[
-          ["Mammifères",true]
-          ["Reptiles",false]
-          ["Oiseaux";false]
+          ["Mammifères",true],
+          ["Reptiles",false],
+          ["Oiseaux",false],
           ["Poissons",false]
         ]
-    }
-    1:{}
+    },
+    1:{},
     ...
     20:{}
   ]
