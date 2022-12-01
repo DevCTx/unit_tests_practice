@@ -40,7 +40,7 @@ class bcolors:
     UNDERLINE = '\033[4m'
 
 def printerr(msg):
-    return print(f"{bcolors.FAIL}{msg}{bcolors.ENDC}")
+    return print(f"{bcolors.FAIL}Error : {msg}{bcolors.ENDC}")
 
 
 class Question:
@@ -118,7 +118,7 @@ class Questionnaire:
         }
     }
 
-    def __init__(self, json_questionnaire):
+    def __init__(self, json_questionnaire, filename):
         '''Test the expected json schema before to initiate'''
 
         try:
@@ -126,30 +126,46 @@ class Questionnaire:
         except jsonschema.exceptions.ValidationError:
             printerr(f"Incompatible Json schema in file : {filename}")
         else:
-            # 'categorie', 'difficulte' : non-blocking properties, but better to be completed as unknown if absent
+            # 'categorie', 'difficulte' : non-critical properties, but better to be completed as unknown if absent
             self.categorie = json_questionnaire['categorie'] if json_questionnaire.get('categorie') else 'inconnue'
             self.difficulte = json_questionnaire['difficulte'] if json_questionnaire.get('difficulte') else 'inconnue'
 
-            # 'titre' or 'questions' : required properties already checked into schema
-            self.titre = json_questionnaire['titre']
-            self.questions = []
-            for json_question in json_questionnaire['questions']:
-                self.questions.append( Question.FromJSON(json_question) )
+            # 'titre' or 'questions' are required properties
+            # all the types are already verified into the schema validator but the len=0 may also identify an error
+            if len(json_questionnaire['titre']) <= 0 :
+                printerr(f"The title of the quizz is missing in file : {filename}")
+            else:
+                self.titre = json_questionnaire['titre']
+                self.questions = []
+                for idx, json_question in enumerate(json_questionnaire['questions']):
+                    if len(json_question['titre']) <= 0:   # This is not critical but the question won't be added
+                        printerr(f"Skipped question : nothing to ask in question {idx} file : {filename}")
+                    else:
+                        good_answers = [ choix[0] for choix in json_question['choix'] if choix[1]==True]
+                        if len(good_answers)!=1:           # This is not critical but the question won't be added
+                            printerr(f"Skipped question : no one or more than one good answer "
+                                     f"in question {idx} file : {filename}")
+                        else:
+                            self.questions.append(Question.FromJSON(json_question))
 
     def run(self):
         # Launch of the questionnaire
+        print(f"=== QUESTIONNAIRE ===")
         print(f"Catégorie : {self.categorie}")
         print(f"Difficulté : {self.difficulte}")
         print(f"Titre : {self.titre}\n")
 
         score = 0
         index = 0
-        for question in self.questions:
-            index+=1
-            if question.ask(index):
-                score += 1
+        if len(self.questions) <= 0 :
+            print("No compatible question in this quizz")
+        else:
+            for question in self.questions:
+                index+=1
+                if question.ask(index):
+                    score += 1
 
-        print("Score final :", score, "sur", len(self.questions))
+            print("Score final :", score, "sur", len(self.questions))
         return score
 
 
@@ -189,7 +205,7 @@ def load_json_argv( sysargv ):
         try:    # Opening of the JSON file
             json_file = open(filename, "r")
         except OSError:
-            printerr(f"Invalid File : {filename}")
+            printerr(f"Invalid Path to : {filename}")
             return None
         except FileNotFoundError:
             printerr(f"No File : {filename}")
@@ -202,16 +218,16 @@ def load_json_argv( sysargv ):
                     printerr(f"Incompatible or no data in JSON file : {filename}")
                     return None
 
-    return json_data
+    return json_data, filename
 
 
 
 def main():
 
-    json_data = load_json_argv( sys.argv )
+    json_data, filename = load_json_argv( sys.argv )
 
     if json_data:
-       Questionnaire(json_data).run()
+       Questionnaire(json_data, filename).run()
 
 if __name__ == "__main__":
     main()

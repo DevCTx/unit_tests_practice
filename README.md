@@ -1,11 +1,27 @@
+[README.md](./README.md)
+
 # Unit Tests Practice
 
-This repository has been prepared to practice the automated testing framework unittest through different angles.
+### This repository has been prepared to practice the 'unittest' automated testing framework through different angles
+### It is based on the use of simple quizzes importer and viewer.
 
-./questionnaire_import.py : Allows to load some questionnaires into json format
-These ones arrives 
-# These questionnaires have been loaded from openquizzdb on https://www.kiwime.com/oqdb/files/
-# The API which allows to directly load them have been disconnected and is not available anymore
-# Some questionnaires have thus been transfered on www.codeavecjonathan.com for allowing
-# to be manipulated through this exercise
+---
+
+>python ./questionnaire_import.py 
+
+Loads some quizzes from a sample list in the program and converts them into a specific json [format](./questionnaire.md#expected-json-schema) before to save them 
+into the [json_questionnaires](./json_questionnaires) folder
+
+More info : [questionnaire_import.md](./questionnaire_import.md)
+
+---
+
+>python ./questionnaire.py <questionnaire.json>
+
+Displays the quizz in argument and counts the number of good answers
+
+More info : [questionnaire.md](./questionnaire.md)
+
+---
+
 

@@ -1,12 +1,22 @@
+[README.md](./README.md) > [questionnaire_import.md](./questionnaire_import.md)
+
 # Questionnaire_import.py
 
-These quizzes were uploaded from http://www.openquizzdb.org/ or https://www.kiwime.com/oqdb/files/
+Loads some quizzes from a sample list in the program :
+* openquizzdb_50.json
+* openquizzdb_86.json
+* openquizzdb_241.json
+* openquizzdb_90.json
 
-The API that allowed them to be uploaded for free has been disconnected and is no longer available. Some quizzes have 
-thus been transferred to www.codeavecjonathan.com to simulate a download and be manipulated through this exercise
+and converts them into a specific json [format](./questionnaire.md#expected-json-schema) before to save them 
+into the [json_questionnaires](./json_questionnaires) folder
+
+Those quizzes were initially downloaded from http://www.openquizzdb.org/ or https://www.kiwime.com/oqdb/files/ but the 
+API that allowed to do it for free has been disconnected and is no longer available. Those quizzes have 
+thus been transferred on www.codeavecjonathan.com to be manipulated through this exercise
 
 
-### Initial json quizz format :
+### Sample of the initial json quiz format :
 ```json
 {
     "fournisseur" : "OpenQuizzDB - Fournisseur de contenu libre (https://www.openquizzdb.org)",
@@ -31,7 +41,7 @@ thus been transferred to www.codeavecjonathan.com to simulate a download and be 
     {
         "fr" :
         {
-            "débutant" : [
+            "débutant" : [10 items
                 0 : {
                     "id": 1,
                     "question": "À quelle classe d'animaux vertébrés appartient le chat ?",
@@ -46,7 +56,8 @@ thus been transferred to www.codeavecjonathan.com to simulate a download and be 
                     },
                 1: {},
                 ...
-                10: {},
+                10: {}
+            ],
             "confirmé" : [10 items],
             "expert" : [10 items],
         },
@@ -66,11 +77,11 @@ Each category comprises 10 questions with 4 possible answers to be proposed to t
 The good answer is saved under ```réponse``` 
 ___
 
-> questionnaire_import.py
+> python questionnaire_import.py
 
-loads json quiz files and converts them to a new format by creating one file per difficulty category
+loads json quiz files and converts them to a new json format by creating one file per difficulty category
 
-### json quizz format after import :
+### Sample of the json quizz format after import :
 ```json
 {
   "categorie" : "Animaux",
@@ -93,47 +104,11 @@ loads json quiz files and converts them to a new format by creating one file per
 }
 ```
 This file represents the second ```confirmé``` difficulty and therefore contains the first 20 questions
-The ```débutant``` quiz contains only the first 10 questions and the ```expert``` quiz contains all the questions
+The ```débutant``` quiz contains only the first 10 questions and the ```expert``` quiz contains the whole 30 questions
 
-The only rubrics kept are: ```catégorie```, ```nom```, of ```catégorie-nom-slogan``` in French (fr) and the items of the
-```quizz``` in French(fr). These last ones are compiled to have 4 propositions and a boolean parameter indicating if the
-answer is the good one. 
+The only keys kept are: ```catégorie```, ```nom```, of ```catégorie-nom-slogan``` in French (```fr```) and the items of
+the ```quizz``` in French(```fr```). These last ones are compiled to have 4 propositions and a boolean parameter 
+indicating if the answer is the good one. 
 
 ---
-### The schema must so match with the one tested in ./questionnaire.py
-```json
-schema = {
-    "$schema": "http://json-schema.org/draft/2020-12/schema",
-    "type": "object",
-    "required": [ "titre", "questions" ],
-    "properties": {
-        "categorie": {"type": "string"},
-        "titre": {"type": "string"},
-        "questions": {
-            "type": "array",
-            "default": [],
-            "items": {
-                "type": "object",
-                "properties": {
-                    "titre": {"type": "string"},
-                    "choix": {
-                        "type": "array",
-                        "minItems": 2,
-                        "items": {
-                            "type": "array",
-                            "minItems": 2,
-                            "prefixItems": [
-                                {"type": "string"}, 
-                                {"type": "boolean"}
-                            ],
-                            "items": false
-                        }
-                    }
-                }
-            }
-        },
-        "difficulte": {"type": "string"}
-    }
-}
-```
-
+### The schema must so match with the one tested in [./questionnaire.py](./questionnaire.md#expected-json-schema)
