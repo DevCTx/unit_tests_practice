@@ -124,7 +124,8 @@ HTTP Connection to http://127.0.0.1:8000/ in Thread-4 (serve_forever)
 ...
 HTTP Disconnection from http://127.0.0.1:8000/
 ```
-Note : According to the fixture used in this test, this class will be executed only using `pytest` and will be skipped under `unittests`
+Note : According to the fixture used in this test, this class will be executed only using `pytest` and will be skipped 
+using `unittests`
 ```commandline
 pytest -v -k questionnaire_unit_test.py -s
 ```
@@ -133,9 +134,9 @@ pytest -v -k questionnaire_unit_test.py -s
 ### Level 8 : Optimized Level 6 with unittests built-in `@classmethod` tag
 
 In the same idea as Level 7 with fixtures, it is possible to call the built-in methods `setUpClass` and `tearDownClass` 
-at the beginning and at the end of the tests of the class.\
-To do this, the `self` argument must be modified to `cls` because these built-in functions are private to the unittest 
-class. It is also why it is also necessary to use the built-in `@classmethod` tag in order to access them.
+at the beginning and at the end of the tests of the class. To do this, the `self` argument must be modified to `cls` 
+because these built-in functions are private to the unittest class, and the built-in `@classmethod` tag must be added
+over the class in order to access them.
 
 ---
 ### Level 9 : Tests with a patch on network requests
