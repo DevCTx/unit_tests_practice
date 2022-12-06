@@ -79,6 +79,7 @@ schema = {
             "default": [],
             "items": {
                 "type": "object",
+                "required": ["titre","choix"],
                 "properties": {
                     "titre": {"type": "string"},
                     "choix": {
