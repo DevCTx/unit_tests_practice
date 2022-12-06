@@ -46,14 +46,13 @@ Questionnaire.py tries to load the json file in argument or print :
 - [```Invalid URL```] if the path to the server can not be reached  
 - [```File not found```] if the file can not be reached on the distant server
 - [```Incompatible or no data in JSON file```] if the json file cannot be loaded and decoded
-- [```Incompatible Json schema```] if the loaded json file does not match the 
-expected [schema](./questionnaire.md#expected-json-schema)
-- [```The title of the quizz is missing```] if the titre is an empty string
+- [```Incompatible Json schema```] if the loaded json file does not match the expected schema
+- [```The title of the quizz is missing```] if the ```titre``` property is an empty string
 
-These messages may also be printed but are <u>not critical</u> to the quiz
-- [```Skipped question : nothing to ask in question```] if the question is an empty string
+These messages may also be printed but are **not critical** for the quiz
+- [```Skipped question : nothing to ask in question```] if the ```titre``` property of question is an empty string
 - [```Skipped question : no one or more than one good answer in question```] if a question has no one or more than 
-one ```boolean```  at ```True``` in its answers
+one ```boolean```  at ```True``` in its possible answers
 
 At least, if all questions have been skipped, [```No compatible question in this quizz```] will be printed.
 
@@ -63,7 +62,7 @@ At least, if all questions have been skipped, [```No compatible question in this
 ```categorie``` and ```difficulte``` properties are not required but ```titre``` and ```questions``` are mandatory
 
 
-Each questions must have at least 2 possible answers and each answers must be defined by a ```string``` and 
+Each question must have at least 2 possible answers and each answer must be defined by a ```string``` and 
 a ```boolean``` only
 
 

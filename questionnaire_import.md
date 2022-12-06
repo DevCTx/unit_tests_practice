@@ -12,8 +12,8 @@ and converts them into a specific json [format](./questionnaire.md#expected-json
 into the [json_questionnaires](./json_questionnaires) folder
 
 Those quizzes were initially downloaded from http://www.openquizzdb.org/ or https://www.kiwime.com/oqdb/files/ but the 
-API that allowed to do it for free has been disconnected and is no longer available. Those quizzes have 
-thus been transferred on www.codeavecjonathan.com to be manipulated through this exercise
+API that allowed to do it for free has been disconnected and is no longer available.\
+Those quizzes have thus been transferred on www.codeavecjonathan.com to be manipulated through this exercise
 
 
 ### Sample of the initial json quiz format :
@@ -69,17 +69,18 @@ thus been transferred on www.codeavecjonathan.com to be manipulated through this
     }
 }
 ```
-Each json quiz has 3 categories of difficulty [```débutant```, ```confirmé``` or ```expert```] 
-(beginner, advanced or expert)
+Each json quiz has 3 categories of difficulty : ```débutant```, ```confirmé``` or ```expert``` 
+( beginner, advanced or expert )
 
-Each category comprises 10 questions with 4 possible answers to be proposed to the user.
+Each category includes 10 questions with 4 possible answers to be offered to the user.
 
-The good answer is saved under ```réponse``` 
+The good answer can be found in the ```réponse``` key. 
 ___
+### How to use it :
 
 > python questionnaire_import.py
 
-loads json quiz files and converts them to a new json format by creating one file per difficulty category
+loads json quiz files and converts them into a new json format by creating one file per difficulty category
 
 ### Sample of the json quizz format after import :
 ```json
@@ -104,11 +105,13 @@ loads json quiz files and converts them to a new json format by creating one fil
 }
 ```
 This file represents the second ```confirmé``` difficulty and therefore contains the first 20 questions
-The ```débutant``` quiz contains only the first 10 questions and the ```expert``` quiz contains the whole 30 questions
+The ```débutant``` quiz contains only the first 10 questions and the ```expert``` quiz contains the whole 30 questions 
+of the initial json file.
 
-The only keys kept are: ```catégorie```, ```nom```, of ```catégorie-nom-slogan``` in French (```fr```) and the items of
-the ```quizz``` in French(```fr```). These last ones are compiled to have 4 propositions and a boolean parameter 
+The keys ```catégorie``` and ```nom``` of ```catégorie-nom-slogan``` in ```fr```, and the items of
+the ```quizz``` in ```fr```  are kept and transcribed into the new json file. 
+These last ones are compiled to have 4 propositions with a boolean parameter 
 indicating if the answer is the good one. 
 
 ---
-### The schema must so match with the one tested in [./questionnaire.py](./questionnaire.md#expected-json-schema)
+### The schema must so match with the [expected jdon schema](./questionnaire.md#expected-json-schema) of [./questionnaire.py](./questionnaire.md)
