@@ -115,8 +115,8 @@ in the class.
 This can be done by creating a fixture defined on the `class` scope and using the option `autouse=True` to automatically
 applied it to all the tests of the parent class.
 
-The fixture will so open the server, before all the tests run, and will be close the server when it will be called a 
-second time after that all tests ran.
+The fixture opens the server, before all the tests run, and closes the server when it will be called a second time after
+all tests ran.
 ```commandline
 HTTP Connection to http://127.0.0.1:8000/ in Thread-4 (serve_forever)
 ...
