@@ -19,19 +19,19 @@ and the file path `<File_Path>`
  
 - `test_01` -> `<Json_Data>, <File_Path>` if receives __a good json file__ then prints no message
 
-- `test_02` -> `None, None` if receives __no file__ then prints the message :
+- `test_02` -> `None, None` if receives __no file__ then prints the message :\
 ```Error : Error in argument, should add a single .json questionnaire```
 
-- `test_03` -> `None, None` if receives __more than one file__ then prints the message :
+- `test_03` -> `None, None` if receives __more than one file__ then prints the message :\
 ```Error : Error in argument, should add a single .json questionnaire```
 
-- `test_04` -> `None, <File_Path>` if receives __a file without json extension__ then prints the message :
+- `test_04` -> `None, <File_Path>` if receives __a file without json extension__ then prints the message :\
 ```Error : Incorrect extension, add a .json questionnaire```
 
-- `test_05` -> `None, <File_Path>` if receives __a non-existent file__ then prints the message :
+- `test_05` -> `None, <File_Path>` if receives __a non-existent file__ then prints the message :\
 ```Error : Invalid permissions or path to non-existent-file.json```
 
-- `test_06` -> `None, <File_Path>` if receives __an empty json file__ then prints the message :
+- `test_06` -> `None, <File_Path>` if receives __an empty json file__ then prints the message :\
 ```Error : Incompatible or no data in JSON file empty.json```
 
 ---
@@ -56,7 +56,7 @@ The class derives from the level 2 and 3 and executes the same tests under `test
 from [json_file_tests](./json_file_tests)
 
 The printed message of test 2 is so quite different from the Level 1 as well.
-- `test_02` -> `None, <File_Path>` if receives __no file__ then prints the message :
+- `test_02` -> `None, <File_Path>` if receives __no file__ then prints the message :\
 ```Error : Incorrect extension, add a .json questionnaire.```
 
 ---
@@ -67,15 +67,15 @@ A free json file is available at the url : https://countwordsfree.com/example.js
 - `test_01` -> `<Json_Data>, <File_Path>` if receives __a valid json file on a valid url path__ then prints no message.
 
 
-- `test_02` -> `None, <File_Path>` if receives __a invalid json file on a valid url path__ then prints the message :\
+- `test_02` -> `None, <File_Path>` if receives __a invalid json file on a valid url path__ then prints the message :\\
 ```Error : File not found at URL https://countwordsfree.com/non-existant.json```
 
 
-- `test_03` -> `None, <File_Path>` if receives __a valid json file but on a invalid url path__ then prints the message :\
+- `test_03` -> `None, <File_Path>` if receives __a valid json file but on a invalid url path__ then prints the message :\\
 ```Error : Invalid URL at https://countwordsfre.com/example.json```
 
 
-- `test_04` -> `None, <File_Path>` if receives __a file without json extension on a valid url path__ then prints the message :\
+- `test_04` -> `None, <File_Path>` if receives __a file without json extension on a valid url path__ then prints the message :\\
 ```Error : Incorrect extension, add a .json questionnaire.```
 
 ---
@@ -98,11 +98,11 @@ The printed message of test 2 is quite different from the Level 1 since the URL 
 
 Idem for test 5 and 6 because the argument given here is a URL and not a file.
 
-- `test_05` -> `None, File_Path` if receives __a non-existent file__ then prints the message :\
+- `test_05` -> `None, File_Path` if receives __a non-existent file__ then prints the message :\\
 ```Error : File not found at URL <URL>```
 
 
-- `test_06` -> `None, File_Path` if receives __an empty json file__ then prints the message :\
+- `test_06` -> `None, File_Path` if receives __an empty json file__ then prints the message :\\
 ```Error : Incompatible or no data in JSON file at URL <URL>```
 
 
@@ -151,7 +151,7 @@ This may require to rewrite the tests because the reading of the file from URL m
 tests trying to read files from a non-existent URL of the Web.
 
 - `test_01` -> `None, File_Path` if receives __a json file on a non-existent URL with a simulated ``File Not Found (404)`` answer to 
-the network request__ then prints the message :
+the network request__ then prints the message :\
 ```commandline
 questionnaire.py http://non-existent-url.com/initial_json_test_file.json -> None, File_Path
 Error : File not found at URL http://non-existent-url.com/initial_json_test_file.json
