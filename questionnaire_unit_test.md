@@ -229,8 +229,8 @@ Thank you for reading.
 ---
 ### Final results with unittests
 
-```commandline
- python questionnaire_unit_test.py         
+```commandline 
+python questionnaire_unit_test.py         
 
 questionnaire.py initial_json_test_file.json -> Json_Data, File_Path
 .                                                                                                                        
@@ -387,8 +387,9 @@ OK (skipped=6)
 ---
 ### Final results with pytest
 
-```commandline
+```commandline 
 pytest -v -k questionnaire_unit_test.py -s
+
 ========================================================================================== test session starts ==========================================================================================
 platform win32 -- Python 3.10.8, pytest-7.2.0, pluggy-1.0.0 -- C:\Users\cedri\AppData\Local\Microsoft\WindowsApps\PythonSoftwareFoundation.Python.3.10_qbz5n2kfra8p0\python.exe
 cachedir: .pytest_cache                                                                                                                                                        
