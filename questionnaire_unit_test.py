@@ -31,15 +31,9 @@ class _01_load_json_argv(unittest.TestCase):
         with patch.object(sys, 'argv', test_args):
             json_returned, filepath_returned = questionnaire.load_json_argv(test_args)
             # Tests json_returned
-            if json_expected:
-                self.assertIsNotNone(json_returned)
-            else:
-                self.assertIsNone(json_returned)
+            self.assertIsNotNone(json_returned) if json_expected else self.assertIsNone(json_returned)
             # Tests filepath_returned
-            if file_path_expected:
-                self.assertIsNotNone(filepath_returned)
-            else:
-                self.assertIsNone(filepath_returned)
+            self.assertIsNotNone(filepath_returned) if file_path_expected else self.assertIsNone(filepath_returned)
 
     def test_01_load_json_argv_with_one_good_json_file(self):
         test_args = [self.script_name,
@@ -55,77 +49,77 @@ class _01_load_json_argv(unittest.TestCase):
             test_args = [self.script_name]
             self.return_value_expected(test_args, None, None)
 
-    # def test_03_load_json_argv_with_more_than_one_argv(self):
-    #     test_args = [self.script_name,
-    #                  os.path.join( self.server_adr, self.test_data_folder,'initial_json_test_file.json.json'),
-    #                  os.path.join( self.server_adr, self.test_data_folder,'second_json_test_file.json')]
-    #     self.return_value_expected(test_args, None, None)
-    #
-    # def test_04_load_json_argv_with_argv_without_json_extension(self):
-    #     test_args = [self.script_name,
-    #                  os.path.join( self.server_adr,self.test_data_folder,'json_file_without_extension')]
-    #     self.return_value_expected(test_args, None)
-    #
-    # def test_05_load_json_argv_with_non_existent_json_file(self):
-    #     test_args = [self.script_name,
-    #                  os.path.join(self.server_adr,self.test_data_folder, 'non-existent-file.json')]
-    #     self.return_value_expected(test_args, None)
-    #
-    # def test_06_load_json_argv_with_empty_json_file(self):
-    #     test_args = [self.script_name,
-    #                  os.path.join(self.server_adr,self.test_data_folder,'empty.json')]
-    #     self.return_value_expected(test_args, None)
+    def test_03_load_json_argv_with_more_than_one_argv(self):
+        test_args = [self.script_name,
+                     os.path.join( self.server_adr, self.test_data_folder,'initial_json_test_file.json.json'),
+                     os.path.join( self.server_adr, self.test_data_folder,'second_json_test_file.json')]
+        self.return_value_expected(test_args, None, None)
+
+    def test_04_load_json_argv_with_argv_without_json_extension(self):
+        test_args = [self.script_name,
+                     os.path.join( self.server_adr,self.test_data_folder,'json_file_without_extension')]
+        self.return_value_expected(test_args, None)
+
+    def test_05_load_json_argv_with_non_existent_json_file(self):
+        test_args = [self.script_name,
+                     os.path.join(self.server_adr,self.test_data_folder, 'non-existent-file.json')]
+        self.return_value_expected(test_args, None)
+
+    def test_06_load_json_argv_with_empty_json_file(self):
+        test_args = [self.script_name,
+                     os.path.join(self.server_adr,self.test_data_folder,'empty.json')]
+        self.return_value_expected(test_args, None)
 
 
-#
-# class _02_load_json_argv_with_another_name(_01_load_json_argv):
-#     # If the name of the questionnaire.py change, the error messages must be adapted.
-#     script_name = 'test.py'
-#
+class _02_load_json_argv_with_another_name(_01_load_json_argv):
+    # If the name of the questionnaire.py change, the error messages must be adapted.
+    script_name = 'test.py'
+
+
 class _03_load_json_argv_with_file_in_folder(_01_load_json_argv):
     # If argv file is in a data folder, it should be working as well
     test_data_folder = 'json_file_tests/'
 
 
-# class _04_load_json_argv_with_file_in_folder_and_another_name(_02_load_json_argv_with_another_name,
-#                                                               _03_load_json_argv_with_file_in_folder):
-#     # Must be able to combine both : another name for the questionnaire.py and a folder for the data to display
-#     pass
-#
-# class _05_load_json_argv_with_data_online(unittest.TestCase):
-#     # Must be able to work with a json file online : here is a test of simple json file
-#     script_name = 'questionnaire.py'
-#     def return_value_expected(self, test_args, json_expected=True, file_path_expected=True):
-#         print(f"\n{' '.join(test_args)} -> {'Json_Data' if json_expected else 'None' },"
-#                                         f" {'File_Path' if file_path_expected else 'None'}")
-#         with patch.object(sys, 'argv', test_args):
-#             json_returned, filepath_returned = questionnaire.load_json_argv(test_args)
-#             # Tests json_returned
-#             if json_expected:
-#                 self.assertIsNotNone(json_returned)
-#             else:
-#                 self.assertIsNone(json_returned)
-#             # Tests filepath_returned
-#             if file_path_expected:
-#                 self.assertIsNotNone(filepath_returned)
-#             else:
-#                 self.assertIsNone(filepath_returned)
-#
-#     def test_01_load_json_argv_with_json_file_sample_online(self):
-#         test_args = [self.script_name, 'https://countwordsfree.com/example.json']
-#         self.return_value_expected(test_args)
-#
-#     def test_02_load_json_argv_with_invalid_json_file_sample_online(self):
-#         test_args = [self.script_name, 'https://countwordsfree.com/non-existant.json']
-#         self.return_value_expected(test_args, None)
-#
-#     def test_03_load_json_argv_with_invalid_url(self):
-#         test_args = [self.script_name, 'https://countwordsfre.com/example.json']
-#         self.return_value_expected(test_args, None)
-#
-#     def test_04_load_json_argv_with_empty_or_uncompleted_file_online(self):
-#         test_args = [self.script_name, 'https://countwordsfree.com/empty_or_uncompleted_file']
-#         self.return_value_expected(test_args, None)
+class _04_load_json_argv_with_file_in_folder_and_another_name(_02_load_json_argv_with_another_name,
+                                                              _03_load_json_argv_with_file_in_folder):
+    # Must be able to combine both : another name for the questionnaire.py and a folder for the data to display
+    pass
+
+class _05_load_json_argv_with_data_online(unittest.TestCase):
+    # Must be able to work with a json file online : here is a test of simple json file
+    script_name = 'questionnaire.py'
+    def return_value_expected(self, test_args, json_expected=True, file_path_expected=True):
+        print(f"\n{' '.join(test_args)} -> {'Json_Data' if json_expected else 'None' },"
+                                        f" {'File_Path' if file_path_expected else 'None'}")
+        with patch.object(sys, 'argv', test_args):
+            json_returned, filepath_returned = questionnaire.load_json_argv(test_args)
+            # Tests json_returned
+            if json_expected:
+                self.assertIsNotNone(json_returned)
+            else:
+                self.assertIsNone(json_returned)
+            # Tests filepath_returned
+            if file_path_expected:
+                self.assertIsNotNone(filepath_returned)
+            else:
+                self.assertIsNone(filepath_returned)
+
+    def test_01_load_json_argv_with_json_file_sample_online(self):
+        test_args = [self.script_name, 'https://countwordsfree.com/example.json']
+        self.return_value_expected(test_args)
+
+    def test_02_load_json_argv_with_invalid_json_file_sample_online(self):
+        test_args = [self.script_name, 'https://countwordsfree.com/non-existant.json']
+        self.return_value_expected(test_args, None)
+
+    def test_03_load_json_argv_with_invalid_url(self):
+        test_args = [self.script_name, 'https://countwordsfre.com/example.json']
+        self.return_value_expected(test_args, None)
+
+    def test_04_load_json_argv_with_empty_or_uncompleted_file_online(self):
+        test_args = [self.script_name, 'https://countwordsfree.com/empty_or_uncompleted_file']
+        self.return_value_expected(test_args, None)
 
 
 # Thread Server Handler for test_load_json_argv_with_json_argv_online
@@ -159,11 +153,12 @@ class _06_load_json_argv_with_data_via_localhost_8000_in_setup_teardown(_03_load
             print(f"\n\nConnection to {self.server_adr} in {server_thread.name}", end=' ')
 
     def tearDown(self) -> None:
-        print(f"\nDisconnection from {self.server_adr}")
+        print(f"Disconnection from {self.server_adr}")
         if self.httpd:
             self.httpd.shutdown()
             self.httpd.server_close()
         self.server_adr = ''
+
 
 @unittest.skipUnless( 'pytest' in sys.argv[0] or 'PYTEST_CURRENT_TEST' in os.environ, reason='requires pytest')
 # Use 'pytest' in sys.argv[0] because 'PYTEST_CURRENT_TEST' in os.environ can be used only after 1 test ran
@@ -198,7 +193,7 @@ class _07_load_json_argv_with_data_via_localhost_8000_in_fixture(_03_load_json_a
             print(f"\n\nHTTP Connection to {self.server_adr} in {server_thread.name}", end=' ')
 
     def HTTPServer_Disconnection(self):
-        print(f"\nHTTP Disconnection from {self.server_adr}")
+        print(f"HTTP Disconnection from {self.server_adr}")
         if self.httpd:
             self.httpd.shutdown()
             self.httpd.server_close()
@@ -227,7 +222,7 @@ class _08_load_json_argv_with_data_via_localhost_8000_in_setupClass_teardownClas
 
     @classmethod
     def tearDownClass(cls) -> None:
-        print(f"\nDisconnection from {cls.server_adr}")
+        print(f"Disconnection from {cls.server_adr}")
         if cls.httpd:
             cls.httpd.shutdown()
             cls.httpd.server_close()

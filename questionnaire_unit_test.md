@@ -225,3 +225,436 @@ More information and independent tests about marks, fixtures, patchs, local serv
 conftest.py files, etc ... available in [more_unit_tests_docs](./more_unit_test_docs) folder.
 
 Thank you for reading.
+
+---
+### Final results with unittests
+
+```commandline
+ python questionnaire_unit_test.py         
+
+questionnaire.py initial_json_test_file.json -> Json_Data, File_Path
+.                                                                                                                        
+questionnaire.py -> None, None                                                                                           
+Error : Error in argument, should add a single .json questionnaire. Example : questionnaire.py questionnaire_to_read.json
+.                                                                                                                        
+questionnaire.py initial_json_test_file.json.json second_json_test_file.json -> None, None                               
+Error : Error in argument, should add a single .json questionnaire. Example : questionnaire.py questionnaire_to_read.json
+.                                                                                                                        
+questionnaire.py json_file_without_extension -> None, File_Path                                                          
+Error : Incorrect extension, add a .json questionnaire. Example : questionnaire.py questionnaire_to_read.json            
+.                                                                                                                        
+questionnaire.py non-existent-file.json -> None, File_Path                                                               
+Error : Invalid permissions or path to non-existent-file.json                                                            
+.                                                                                                                        
+questionnaire.py empty.json -> None, File_Path                                                                           
+Error : Incompatible or no data in JSON file empty.json                                                                  
+.                                                                                                                        
+test.py initial_json_test_file.json -> Json_Data, File_Path                                                              
+.
+test.py -> None, None
+Error : Error in argument, should add a single .json questionnaire. Example : test.py questionnaire_to_read.json
+.
+test.py initial_json_test_file.json.json second_json_test_file.json -> None, None
+Error : Error in argument, should add a single .json questionnaire. Example : test.py questionnaire_to_read.json
+.
+test.py json_file_without_extension -> None, File_Path
+Error : Incorrect extension, add a .json questionnaire. Example : test.py questionnaire_to_read.json
+.
+test.py non-existent-file.json -> None, File_Path
+Error : Invalid permissions or path to non-existent-file.json
+.
+test.py empty.json -> None, File_Path
+Error : Incompatible or no data in JSON file empty.json
+.
+questionnaire.py json_file_tests/initial_json_test_file.json -> Json_Data, File_Path
+.
+questionnaire.py json_file_tests/ -> None, File_Path
+Error : Incorrect extension, add a .json questionnaire. Example : questionnaire.py questionnaire_to_read.json
+.
+questionnaire.py json_file_tests/initial_json_test_file.json.json json_file_tests/second_json_test_file.json -> None, None
+Error : Error in argument, should add a single .json questionnaire. Example : questionnaire.py questionnaire_to_read.json
+.
+questionnaire.py json_file_tests/json_file_without_extension -> None, File_Path
+Error : Incorrect extension, add a .json questionnaire. Example : questionnaire.py questionnaire_to_read.json
+.
+questionnaire.py json_file_tests/non-existent-file.json -> None, File_Path
+Error : Invalid permissions or path to json_file_tests/non-existent-file.json
+.
+questionnaire.py json_file_tests/empty.json -> None, File_Path
+Error : Incompatible or no data in JSON file json_file_tests/empty.json
+.
+test.py json_file_tests/initial_json_test_file.json -> Json_Data, File_Path
+.
+test.py json_file_tests/ -> None, File_Path
+Error : Incorrect extension, add a .json questionnaire. Example : test.py questionnaire_to_read.json
+.
+test.py json_file_tests/initial_json_test_file.json.json json_file_tests/second_json_test_file.json -> None, None
+Error : Error in argument, should add a single .json questionnaire. Example : test.py questionnaire_to_read.json
+.
+test.py json_file_tests/json_file_without_extension -> None, File_Path
+Error : Incorrect extension, add a .json questionnaire. Example : test.py questionnaire_to_read.json
+.
+test.py json_file_tests/non-existent-file.json -> None, File_Path
+Error : Invalid permissions or path to json_file_tests/non-existent-file.json
+.
+test.py json_file_tests/empty.json -> None, File_Path
+Error : Incompatible or no data in JSON file json_file_tests/empty.json
+.
+questionnaire.py https://countwordsfree.com/example.json -> Json_Data, File_Path
+.
+questionnaire.py https://countwordsfree.com/non-existant.json -> None, File_Path
+Error : File not found at URL https://countwordsfree.com/non-existant.json
+.
+questionnaire.py https://countwordsfre.com/example.json -> None, File_Path
+Error : Invalid URL at https://countwordsfre.com/example.json
+.
+questionnaire.py https://countwordsfree.com/empty_or_uncompleted_file -> None, File_Path
+Error : Incorrect extension, add a .json questionnaire. Example : questionnaire.py questionnaire_to_read.json
+.
+
+Connection to http://127.0.0.1:8000/ in Thread-1 (serve_forever)
+questionnaire.py http://127.0.0.1:8000/json_file_tests/initial_json_test_file.json -> Json_Data, File_Path
+127.0.0.1 - - [05/Dec/2022 18:30:06] "GET /json_file_tests/initial_json_test_file.json HTTP/1.1" 200 -
+Disconnection from http://127.0.0.1:8000/
+.
+
+Connection to http://127.0.0.1:8000/ in Thread-3 (serve_forever)
+questionnaire.py http://127.0.0.1:8000/json_file_tests/ -> None, File_Path
+Error : Incorrect extension, add a .json questionnaire. Example : questionnaire.py questionnaire_to_read.json
+Disconnection from http://127.0.0.1:8000/
+.
+
+Connection to http://127.0.0.1:8000/ in Thread-4 (serve_forever)
+questionnaire.py http://127.0.0.1:8000/json_file_tests/initial_json_test_file.json.json http://127.0.0.1:8000/json_file_tests/second_json_test_file.json -> None, None
+Error : Error in argument, should add a single .json questionnaire. Example : questionnaire.py questionnaire_to_read.json
+Disconnection from http://127.0.0.1:8000/
+.
+
+Connection to http://127.0.0.1:8000/ in Thread-5 (serve_forever)
+questionnaire.py http://127.0.0.1:8000/json_file_tests/json_file_without_extension -> None, File_Path
+Error : Incorrect extension, add a .json questionnaire. Example : questionnaire.py questionnaire_to_read.json
+Disconnection from http://127.0.0.1:8000/
+.
+
+Connection to http://127.0.0.1:8000/ in Thread-6 (serve_forever)
+questionnaire.py http://127.0.0.1:8000/json_file_tests/non-existent-file.json -> None, File_Path
+127.0.0.1 - - [05/Dec/2022 18:30:08] code 404, message File not found
+127.0.0.1 - - [05/Dec/2022 18:30:08] "GET /json_file_tests/non-existent-file.json HTTP/1.1" 404 -
+Error : File not found at URL http://127.0.0.1:8000/json_file_tests/non-existent-file.json
+Disconnection from http://127.0.0.1:8000/
+.
+
+Connection to http://127.0.0.1:8000/ in Thread-8 (serve_forever)
+questionnaire.py http://127.0.0.1:8000/json_file_tests/empty.json -> None, File_Path
+127.0.0.1 - - [05/Dec/2022 18:30:08] "GET /json_file_tests/empty.json HTTP/1.1" 200 -
+Error : Incompatible or no data in JSON file at URL http://127.0.0.1:8000/json_file_tests/empty.json
+Disconnection from http://127.0.0.1:8000/
+.ssssss
+
+Connection to http://127.0.0.1:8000/ in Thread-10 (serve_forever)
+questionnaire.py http://127.0.0.1:8000/json_file_tests/initial_json_test_file.json -> Json_Data, File_Path
+127.0.0.1 - - [05/Dec/2022 18:30:09] "GET /json_file_tests/initial_json_test_file.json HTTP/1.1" 200 -
+.
+questionnaire.py http://127.0.0.1:8000/json_file_tests/ -> None, File_Path
+Error : Incorrect extension, add a .json questionnaire. Example : questionnaire.py questionnaire_to_read.json
+.
+questionnaire.py http://127.0.0.1:8000/json_file_tests/initial_json_test_file.json.json http://127.0.0.1:8000/json_file_tests/second_json_test_file.json -> None, None
+Error : Error in argument, should add a single .json questionnaire. Example : questionnaire.py questionnaire_to_read.json
+.
+questionnaire.py http://127.0.0.1:8000/json_file_tests/json_file_without_extension -> None, File_Path
+Error : Incorrect extension, add a .json questionnaire. Example : questionnaire.py questionnaire_to_read.json
+.
+questionnaire.py http://127.0.0.1:8000/json_file_tests/non-existent-file.json -> None, File_Path
+127.0.0.1 - - [05/Dec/2022 18:30:09] code 404, message File not found
+127.0.0.1 - - [05/Dec/2022 18:30:09] "GET /json_file_tests/non-existent-file.json HTTP/1.1" 404 -
+Error : File not found at URL http://127.0.0.1:8000/json_file_tests/non-existent-file.json
+.
+questionnaire.py http://127.0.0.1:8000/json_file_tests/empty.json -> None, File_Path
+127.0.0.1 - - [05/Dec/2022 18:30:09] "GET /json_file_tests/empty.json HTTP/1.1" 200 -
+Error : Incompatible or no data in JSON file at URL http://127.0.0.1:8000/json_file_tests/empty.json
+.Disconnection from http://127.0.0.1:8000/
+
+questionnaire.py http://non-existent-url.com/initial_json_test_file.json -> None, File_Path
+Error : File not found at URL http://non-existent-url.com/initial_json_test_file.json
+.
+questionnaire.py http://non-existent-url.com/initial_json_test_file.json -> Json_Data, File_Path
+.
+----------------------------------------------------------------------
+Ran 48 tests in 5.413s
+
+OK (skipped=6)
+```
+---
+### Final results with pytest
+
+```commandline
+pytest -v -k questionnaire_unit_test.py -s
+========================================================================================== test session starts ==========================================================================================
+platform win32 -- Python 3.10.8, pytest-7.2.0, pluggy-1.0.0 -- C:\Users\cedri\AppData\Local\Microsoft\WindowsApps\PythonSoftwareFoundation.Python.3.10_qbz5n2kfra8p0\python.exe
+cachedir: .pytest_cache                                                                                                                                                        
+rootdir: C:\MyPythonApps\unit_tests_practice, configfile: pytest.ini                                                                                                           
+collecting 6 items                                                                                                                                                                                       o
+k
+collected 102 items / 54 deselected / 48 selected
+
+questionnaire_unit_test.py::_01_load_json_argv::test_01_load_json_argv_with_one_good_json_file                           
+questionnaire.py initial_json_test_file.json -> Json_Data, File_Path                                                     
+PASSED               
+                                                                                                    
+questionnaire_unit_test.py::_01_load_json_argv::test_02_load_json_argv_with_no_argv                                      
+questionnaire.py -> None, None                                                                                           
+Error : Error in argument, should add a single .json questionnaire. Example : questionnaire.py questionnaire_to_read.json
+PASSED                                                                                                                   
+
+questionnaire_unit_test.py::_01_load_json_argv::test_03_load_json_argv_with_more_than_one_argv                           
+questionnaire.py initial_json_test_file.json.json second_json_test_file.json -> None, None                               
+Error : Error in argument, should add a single .json questionnaire. Example : questionnaire.py questionnaire_to_read.json
+PASSED                                                                                                                   
+
+questionnaire_unit_test.py::_01_load_json_argv::test_04_load_json_argv_with_argv_without_json_extension                  
+questionnaire.py json_file_without_extension -> None, File_Path                                                          
+Error : Incorrect extension, add a .json questionnaire. Example : questionnaire.py questionnaire_to_read.json            
+PASSED                                                                                                                   
+
+questionnaire_unit_test.py::_01_load_json_argv::test_05_load_json_argv_with_non_existent_json_file                       
+questionnaire.py non-existent-file.json -> None, File_Path                                                               
+Error : Invalid permissions or path to non-existent-file.json                                                            
+PASSED
+
+questionnaire_unit_test.py::_01_load_json_argv::test_06_load_json_argv_with_empty_json_file
+questionnaire.py empty.json -> None, File_Path
+Error : Incompatible or no data in JSON file empty.json
+PASSED
+
+questionnaire_unit_test.py::_02_load_json_argv_with_another_name::test_01_load_json_argv_with_one_good_json_file
+test.py initial_json_test_file.json -> Json_Data, File_Path
+PASSED
+
+questionnaire_unit_test.py::_02_load_json_argv_with_another_name::test_02_load_json_argv_with_no_argv
+test.py -> None, None
+Error : Error in argument, should add a single .json questionnaire. Example : test.py questionnaire_to_read.json
+PASSED
+
+questionnaire_unit_test.py::_02_load_json_argv_with_another_name::test_03_load_json_argv_with_more_than_one_argv
+test.py initial_json_test_file.json.json second_json_test_file.json -> None, None
+Error : Error in argument, should add a single .json questionnaire. Example : test.py questionnaire_to_read.json
+PASSED
+
+questionnaire_unit_test.py::_02_load_json_argv_with_another_name::test_04_load_json_argv_with_argv_without_json_extension
+test.py json_file_without_extension -> None, File_Path
+Error : Incorrect extension, add a .json questionnaire. Example : test.py questionnaire_to_read.json
+PASSED
+
+questionnaire_unit_test.py::_02_load_json_argv_with_another_name::test_05_load_json_argv_with_non_existent_json_file
+test.py non-existent-file.json -> None, File_Path
+Error : Invalid permissions or path to non-existent-file.json
+PASSED
+
+questionnaire_unit_test.py::_02_load_json_argv_with_another_name::test_06_load_json_argv_with_empty_json_file
+test.py empty.json -> None, File_Path
+Error : Incompatible or no data in JSON file empty.json
+PASSED
+
+questionnaire_unit_test.py::_03_load_json_argv_with_file_in_folder::test_01_load_json_argv_with_one_good_json_file
+questionnaire.py json_file_tests/initial_json_test_file.json -> Json_Data, File_Path
+PASSED
+
+questionnaire_unit_test.py::_03_load_json_argv_with_file_in_folder::test_02_load_json_argv_with_no_argv
+questionnaire.py json_file_tests/ -> None, File_Path
+Error : Incorrect extension, add a .json questionnaire. Example : questionnaire.py questionnaire_to_read.json
+PASSED
+
+questionnaire_unit_test.py::_03_load_json_argv_with_file_in_folder::test_03_load_json_argv_with_more_than_one_argv
+questionnaire.py json_file_tests/initial_json_test_file.json.json json_file_tests/second_json_test_file.json -> None, None
+Error : Error in argument, should add a single .json questionnaire. Example : questionnaire.py questionnaire_to_read.json
+PASSED
+
+questionnaire_unit_test.py::_03_load_json_argv_with_file_in_folder::test_04_load_json_argv_with_argv_without_json_extension
+questionnaire.py json_file_tests/json_file_without_extension -> None, File_Path
+Error : Incorrect extension, add a .json questionnaire. Example : questionnaire.py questionnaire_to_read.json
+PASSED
+
+questionnaire_unit_test.py::_03_load_json_argv_with_file_in_folder::test_05_load_json_argv_with_non_existent_json_file
+questionnaire.py json_file_tests/non-existent-file.json -> None, File_Path
+Error : Invalid permissions or path to json_file_tests/non-existent-file.json
+PASSED
+
+questionnaire_unit_test.py::_03_load_json_argv_with_file_in_folder::test_06_load_json_argv_with_empty_json_file
+questionnaire.py json_file_tests/empty.json -> None, File_Path
+Error : Incompatible or no data in JSON file json_file_tests/empty.json
+PASSED
+
+questionnaire_unit_test.py::_04_load_json_argv_with_file_in_folder_and_another_name::test_01_load_json_argv_with_one_good_json_file
+test.py json_file_tests/initial_json_test_file.json -> Json_Data, File_Path
+PASSED
+
+questionnaire_unit_test.py::_04_load_json_argv_with_file_in_folder_and_another_name::test_02_load_json_argv_with_no_argv
+test.py json_file_tests/ -> None, File_Path
+Error : Incorrect extension, add a .json questionnaire. Example : test.py questionnaire_to_read.json
+PASSED
+
+questionnaire_unit_test.py::_04_load_json_argv_with_file_in_folder_and_another_name::test_03_load_json_argv_with_more_than_one_argv
+test.py json_file_tests/initial_json_test_file.json.json json_file_tests/second_json_test_file.json -> None, None
+Error : Error in argument, should add a single .json questionnaire. Example : test.py questionnaire_to_read.json
+PASSED
+
+questionnaire_unit_test.py::_04_load_json_argv_with_file_in_folder_and_another_name::test_04_load_json_argv_with_argv_without_json_extension
+test.py json_file_tests/json_file_without_extension -> None, File_Path
+Error : Incorrect extension, add a .json questionnaire. Example : test.py questionnaire_to_read.json
+PASSED
+
+questionnaire_unit_test.py::_04_load_json_argv_with_file_in_folder_and_another_name::test_05_load_json_argv_with_non_existent_json_file
+test.py json_file_tests/non-existent-file.json -> None, File_Path
+Error : Invalid permissions or path to json_file_tests/non-existent-file.json
+PASSED
+
+questionnaire_unit_test.py::_04_load_json_argv_with_file_in_folder_and_another_name::test_06_load_json_argv_with_empty_json_file
+test.py json_file_tests/empty.json -> None, File_Path
+Error : Incompatible or no data in JSON file json_file_tests/empty.json
+PASSED
+
+questionnaire_unit_test.py::_05_load_json_argv_with_data_online::test_01_load_json_argv_with_json_file_sample_online
+questionnaire.py https://countwordsfree.com/example.json -> Json_Data, File_Path
+PASSED
+
+questionnaire_unit_test.py::_05_load_json_argv_with_data_online::test_02_load_json_argv_with_invalid_json_file_sample_online
+questionnaire.py https://countwordsfree.com/non-existant.json -> None, File_Path
+Error : File not found at URL https://countwordsfree.com/non-existant.json
+PASSED
+
+questionnaire_unit_test.py::_05_load_json_argv_with_data_online::test_03_load_json_argv_with_invalid_url
+questionnaire.py https://countwordsfre.com/example.json -> None, File_Path
+Error : Invalid URL at https://countwordsfre.com/example.json
+PASSED
+
+questionnaire_unit_test.py::_05_load_json_argv_with_data_online::test_04_load_json_argv_with_empty_or_uncompleted_file_online
+questionnaire.py https://countwordsfree.com/empty_or_uncompleted_file -> None, File_Path
+Error : Incorrect extension, add a .json questionnaire. Example : questionnaire.py questionnaire_to_read.json
+PASSED
+
+questionnaire_unit_test.py::_06_load_json_argv_with_data_via_localhost_8000_in_setup_teardown::test_01_load_json_argv_with_one_good_json_file
+Connection to http://127.0.0.1:8000/ in Thread-1 (serve_forever)
+questionnaire.py http://127.0.0.1:8000/json_file_tests/initial_json_test_file.json -> Json_Data, File_Path
+127.0.0.1 - - [05/Dec/2022 18:30:59] "GET /json_file_tests/initial_json_test_file.json HTTP/1.1" 200 -
+Disconnection from http://127.0.0.1:8000/
+PASSED
+
+questionnaire_unit_test.py::_06_load_json_argv_with_data_via_localhost_8000_in_setup_teardown::test_02_load_json_argv_with_no_argv
+Connection to http://127.0.0.1:8000/ in Thread-3 (serve_forever) 
+questionnaire.py http://127.0.0.1:8000/json_file_tests/ -> None, File_Path
+Error : Incorrect extension, add a .json questionnaire. Example : questionnaire.py questionnaire_to_read.json
+Disconnection from http://127.0.0.1:8000/
+PASSED
+
+questionnaire_unit_test.py::_06_load_json_argv_with_data_via_localhost_8000_in_setup_teardown::test_03_load_json_argv_with_more_than_one_argv
+Connection to http://127.0.0.1:8000/ in Thread-4 (serve_forever)
+questionnaire.py http://127.0.0.1:8000/json_file_tests/initial_json_test_file.json.json http://127.0.0.1:8000/json_file_tests/second_json_test_file.json -> None, None
+Error : Error in argument, should add a single .json questionnaire. Example : questionnaire.py questionnaire_to_read.json
+Disconnection from http://127.0.0.1:8000/
+PASSED
+
+questionnaire_unit_test.py::_06_load_json_argv_with_data_via_localhost_8000_in_setup_teardown::test_04_load_json_argv_with_argv_without_json_extension
+Connection to http://127.0.0.1:8000/ in Thread-5 (serve_forever)
+questionnaire.py http://127.0.0.1:8000/json_file_tests/json_file_without_extension -> None, File_Path
+Error : Incorrect extension, add a .json questionnaire. Example : questionnaire.py questionnaire_to_read.json
+Disconnection from http://127.0.0.1:8000/
+PASSED
+
+questionnaire_unit_test.py::_06_load_json_argv_with_data_via_localhost_8000_in_setup_teardown::test_05_load_json_argv_with_non_existent_json_file
+Connection to http://127.0.0.1:8000/ in Thread-6 (serve_forever)
+questionnaire.py http://127.0.0.1:8000/json_file_tests/non-existent-file.json -> None, File_Path
+127.0.0.1 - - [05/Dec/2022 18:31:01] code 404, message File not found
+127.0.0.1 - - [05/Dec/2022 18:31:01] "GET /json_file_tests/non-existent-file.json HTTP/1.1" 404 -
+Error : File not found at URL http://127.0.0.1:8000/json_file_tests/non-existent-file.json
+Disconnection from http://127.0.0.1:8000/
+PASSED
+
+questionnaire_unit_test.py::_06_load_json_argv_with_data_via_localhost_8000_in_setup_teardown::test_06_load_json_argv_with_empty_json_file
+Connection to http://127.0.0.1:8000/ in Thread-8 (serve_forever)
+questionnaire.py http://127.0.0.1:8000/json_file_tests/empty.json -> None, File_Path
+127.0.0.1 - - [05/Dec/2022 18:31:02] "GET /json_file_tests/empty.json HTTP/1.1" 200 -
+Error : Incompatible or no data in JSON file at URL http://127.0.0.1:8000/json_file_tests/empty.json
+Disconnection from http://127.0.0.1:8000/
+PASSED
+
+questionnaire_unit_test.py::_07_load_json_argv_with_data_via_localhost_8000_in_fixture::test_01_load_json_argv_with_one_good_json_file
+HTTP Connection to http://127.0.0.1:8000/ in Thread-10 (serve_forever) 
+questionnaire.py http://127.0.0.1:8000/json_file_tests/initial_json_test_file.json -> Json_Data, File_Path
+127.0.0.1 - - [05/Dec/2022 18:31:02] "GET /json_file_tests/initial_json_test_file.json HTTP/1.1" 200 -
+PASSED
+
+questionnaire_unit_test.py::_07_load_json_argv_with_data_via_localhost_8000_in_fixture::test_02_load_json_argv_with_no_argv
+questionnaire.py http://127.0.0.1:8000/json_file_tests/ -> None, File_Path
+Error : Incorrect extension, add a .json questionnaire. Example : questionnaire.py questionnaire_to_read.json
+PASSED
+
+questionnaire_unit_test.py::_07_load_json_argv_with_data_via_localhost_8000_in_fixture::test_03_load_json_argv_with_more_than_one_argv
+questionnaire.py http://127.0.0.1:8000/json_file_tests/initial_json_test_file.json.json http://127.0.0.1:8000/json_file_tests/second_json_test_file.json -> None, None
+Error : Error in argument, should add a single .json questionnaire. Example : questionnaire.py questionnaire_to_read.json
+PASSED
+
+questionnaire_unit_test.py::_07_load_json_argv_with_data_via_localhost_8000_in_fixture::test_04_load_json_argv_with_argv_without_json_extension
+questionnaire.py http://127.0.0.1:8000/json_file_tests/json_file_without_extension -> None, File_Path
+Error : Incorrect extension, add a .json questionnaire. Example : questionnaire.py questionnaire_to_read.json
+PASSED
+
+questionnaire_unit_test.py::_07_load_json_argv_with_data_via_localhost_8000_in_fixture::test_05_load_json_argv_with_non_existent_json_file
+questionnaire.py http://127.0.0.1:8000/json_file_tests/non-existent-file.json -> None, File_Path
+127.0.0.1 - - [05/Dec/2022 18:31:02] code 404, message File not found
+127.0.0.1 - - [05/Dec/2022 18:31:02] "GET /json_file_tests/non-existent-file.json HTTP/1.1" 404 -
+Error : File not found at URL http://127.0.0.1:8000/json_file_tests/non-existent-file.json
+PASSED
+
+questionnaire_unit_test.py::_07_load_json_argv_with_data_via_localhost_8000_in_fixture::test_06_load_json_argv_with_empty_json_file
+questionnaire.py http://127.0.0.1:8000/json_file_tests/empty.json -> None, File_Path
+127.0.0.1 - - [05/Dec/2022 18:31:02] "GET /json_file_tests/empty.json HTTP/1.1" 200 -
+Error : Incompatible or no data in JSON file at URL http://127.0.0.1:8000/json_file_tests/empty.json
+PASSED
+HTTP Disconnection from http://127.0.0.1:8000/
+
+questionnaire_unit_test.py::_08_load_json_argv_with_data_via_localhost_8000_in_setupClass_teardownClass::test_01_load_json_argv_with_one_good_json_file 
+Connection to http://127.0.0.1:8000/ in Thread-14 (serve_forever)
+questionnaire.py http://127.0.0.1:8000/json_file_tests/initial_json_test_file.json -> Json_Data, File_Path
+127.0.0.1 - - [05/Dec/2022 18:31:03] "GET /json_file_tests/initial_json_test_file.json HTTP/1.1" 200 -
+PASSED
+
+questionnaire_unit_test.py::_08_load_json_argv_with_data_via_localhost_8000_in_setupClass_teardownClass::test_02_load_json_argv_with_no_argv
+questionnaire.py http://127.0.0.1:8000/json_file_tests/ -> None, File_Path
+Error : Incorrect extension, add a .json questionnaire. Example : questionnaire.py questionnaire_to_read.json
+PASSED
+
+questionnaire_unit_test.py::_08_load_json_argv_with_data_via_localhost_8000_in_setupClass_teardownClass::test_03_load_json_argv_with_more_than_one_argv
+questionnaire.py http://127.0.0.1:8000/json_file_tests/initial_json_test_file.json.json http://127.0.0.1:8000/json_file_tests/second_json_test_file.json -> None, None
+Error : Error in argument, should add a single .json questionnaire. Example : questionnaire.py questionnaire_to_read.json
+PASSED
+
+questionnaire_unit_test.py::_08_load_json_argv_with_data_via_localhost_8000_in_setupClass_teardownClass::test_04_load_json_argv_with_argv_without_json_extension
+questionnaire.py http://127.0.0.1:8000/json_file_tests/json_file_without_extension -> None, File_Path
+Error : Incorrect extension, add a .json questionnaire. Example : questionnaire.py questionnaire_to_read.json
+PASSED
+
+questionnaire_unit_test.py::_08_load_json_argv_with_data_via_localhost_8000_in_setupClass_teardownClass::test_05_load_json_argv_with_non_existent_json_file
+questionnaire.py http://127.0.0.1:8000/json_file_tests/non-existent-file.json -> None, File_Path
+127.0.0.1 - - [05/Dec/2022 18:31:03] code 404, message File not found
+127.0.0.1 - - [05/Dec/2022 18:31:03] "GET /json_file_tests/non-existent-file.json HTTP/1.1" 404 -
+Error : File not found at URL http://127.0.0.1:8000/json_file_tests/non-existent-file.json
+PASSED
+
+questionnaire_unit_test.py::_08_load_json_argv_with_data_via_localhost_8000_in_setupClass_teardownClass::test_06_load_json_argv_with_empty_json_file
+questionnaire.py http://127.0.0.1:8000/json_file_tests/empty.json -> None, File_Path
+127.0.0.1 - - [05/Dec/2022 18:31:03] "GET /json_file_tests/empty.json HTTP/1.1" 200 -
+Error : Incompatible or no data in JSON file at URL http://127.0.0.1:8000/json_file_tests/empty.json
+PASSED
+Disconnection from http://127.0.0.1:8000/
+
+questionnaire_unit_test.py::_09_load_json_argv_with_simulated_server::test_01_load_json_argv_with_simulated_FileNotFound_answer 
+questionnaire.py http://non-existent-url.com/initial_json_test_file.json -> None, File_Path
+Error : File not found at URL http://non-existent-url.com/initial_json_test_file.json
+PASSED
+
+questionnaire_unit_test.py::_09_load_json_argv_with_simulated_server::test_02_load_json_argv_with_simulated_success_request_and_fake_data
+questionnaire.py http://non-existent-url.com/initial_json_test_file.json -> Json_Data, File_Path
+PASSED
+
+=================================================================================== 48 passed, 54 deselected in 6.70s ===================================================================================
+```
