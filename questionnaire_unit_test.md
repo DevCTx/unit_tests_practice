@@ -46,7 +46,7 @@ The class derives from the level 1 and executes the same tests except that
 a [json_file_tests](./json_file_tests) folder is added to the path of the file given in argument
 
 The printed message of test 2 is quite different from the Level 1 since the file path is given in argument.
-- `test_02` -> `None, <File_Path>` if receives __no file__ then prints a message
+- `test_02` -> `None, <File_Path>` if receives __no file__ then prints the message :\
 ```Error : Incorrect extension, add a .json questionnaire.```
 
 ---
