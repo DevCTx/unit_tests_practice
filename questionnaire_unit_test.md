@@ -136,7 +136,7 @@ pytest -v -k questionnaire_unit_test.py -s
 In the same idea as Level 7 with fixtures, it is possible to call the built-in methods `setUpClass` and `tearDownClass` 
 at the beginning and at the end of the tests of the class. To do this, the `self` argument must be modified to `cls` 
 because these built-in functions are private to the unittest class, and the built-in `@classmethod` tag must be added
-over the class in order to access them.
+over the class in order to force the access to them.
 
 ---
 ### Level 9 : Tests with a patch on network requests
@@ -148,22 +148,22 @@ It should so better to simulate the answers of the network requests like ``Succe
 or ``File Not Found (404)`` for example, to get the best knowledge of the program behavior.
 
 This may require to rewrite the tests because the reading of the file from URL must also be simulated, like in this 2 
-tests trying to read files from a non-existent URL of the Web.
+tests trying to read files from a non-existent Web URL.
 
-- `test_01` -> `None, File_Path` if receives __a json file on a non-existent URL with a simulated ``File Not Found (404)`` answer to 
-the network request__ then prints the message :
+- `test_01` -> `None, File_Path` if receives __a json file on a non-existent Web URL with a simulated
+``File Not Found (404)`` answer to the network request__ then prints the message :
 ```commandline
 questionnaire.py http://non-existent-url.com/initial_json_test_file.json -> None, File_Path
 Error : File not found at URL http://non-existent-url.com/initial_json_test_file.json
 ```
-- `test_02` -> `Json_Data, File_Path` if receives __a json file on a non-existent URL with a simulated ``Success (200)`` answer to the 
-network request__ then prints no message.
+- `test_02` -> `Json_Data, File_Path` if receives __a json file on a non-existent Web URL with a simulated 
+``Success (200)`` answer to the network request__ then prints no message.
 ```commandline
 questionnaire.py http://non-existent-url.com/initial_json_test_file.json -> Json_Data, File_Path
 ```
 In that case, the property `status_code` of the response must be updated to the code `200 (OK)` and the property `text`
-of the response must contain the read json data. This is simulated by the reading of a file from the given path without 
-the server part ``./initial_json_test_file.json``
+of the response must contain the read json data. This is simulated by the reading of a local file from the given path 
+without the server part like ``./initial_json_test_file.json`` in this example.
 
 ---
 ### Level 10 : Json Tests
