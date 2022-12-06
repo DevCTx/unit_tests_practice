@@ -19,7 +19,6 @@
 #    - lancer()
 #
 import json
-import ntpath
 import os
 import sys
 
@@ -102,6 +101,7 @@ class Questionnaire:
                 "default": [],
                 "items": {
                     "type": "object",
+                    "required": ["titre", "choix"],
                     "properties": {
                         "titre": {"type": "string"},
                         "choix": {
@@ -121,37 +121,42 @@ class Questionnaire:
         }
     }
 
-    def __init__(self, json_questionnaire, file_path):
-        '''Test the expected json schema before to initiate'''
-
+    def __new__(cls, json_questionnaire, file_path):
+        '''Test the expected json schema before to initiate a Questionnaire'''
         try:
-            validate(json_questionnaire, self.schema)
+            validate(json_questionnaire, cls.schema)
         except jsonschema.exceptions.ValidationError:
             printerr(f"Incompatible Json schema in file {file_path}")
+            return None
         else:
             # 'titre' or 'questions' are required properties
             # all the types are already verified into the schema validator but the len=0 may also identify an error
             if len(json_questionnaire.get('titre')) <= 0:
                 printerr(f"The title of the quizz is missing in file {file_path}")
+                return None
             else:
-                self.titre = json_questionnaire['titre']
+                return super().__new__(cls)
 
-                # 'categorie', 'difficulte' : non-critical properties, but better to be completed as unknown if absent
-                self.categorie = json_questionnaire['categorie'] if json_questionnaire.get('categorie') else 'inconnue'
-                self.difficulte = json_questionnaire['difficulte'] if json_questionnaire.get(
-                    'difficulte') else 'inconnue'
+    def __init__(self, json_questionnaire, file_path):
+        '''Initiate a Questionnaire after __new__ checked the required settings'''
 
-                self.questions = []
-                for idx, json_question in enumerate(json_questionnaire['questions']):
-                    if len(json_question['titre']) <= 0:  # This is not critical but the question won't be added
-                        printerr(f"Skipped question : nothing to ask in question {idx} file {file_path}")
-                    else:
-                        good_answers = [choix[0] for choix in json_question['choix'] if choix[1] == True]
-                        if len(good_answers) != 1:  # This is not critical but the question won't be added
-                            printerr(f"Skipped question : no one or more than one good answer "
-                                     f"in question {idx} file {file_path}")
-                        else:
-                            self.questions.append(Question.FromJSON(json_question))
+        self.titre = json_questionnaire['titre']
+
+        # 'categorie', 'difficulte' : non-critical properties, but better to be completed as unknown if absent
+        self.categorie = json_questionnaire['categorie'] if json_questionnaire.get('categorie') else 'inconnue'
+        self.difficulte = json_questionnaire['difficulte'] if json_questionnaire.get('difficulte') else 'inconnue'
+
+        self.questions = []
+        for idx, json_question in enumerate(json_questionnaire['questions']):
+            if len(json_question['titre']) <= 0:  # This is not critical but the question won't be added
+                printerr(f"Skipped question : nothing to ask in question {idx} file {file_path}")
+            else:
+                good_answers = [choix[0] for choix in json_question['choix'] if choix[1] == True]
+                if len(good_answers) != 1:  # This is not critical but the question won't be added
+                    printerr(f"Skipped question : no one or more than one good answer "
+                             f"in question {idx} file {file_path}")
+                else:
+                    self.questions.append(Question.FromJSON(json_question))
 
     def run(self):
         score = 0
@@ -182,7 +187,7 @@ def load_json_argv(sysargv):
 
     if len(sysargv) != 2:
         printerr(
-            f"Error in argument, should add a single .json questionnaire. Example : {ntpath.basename(sys.argv[0])} questionnaire_to_read.json")
+            f"Error in argument, should add a single .json questionnaire. Example : {os.path.basename(sys.argv[0])} questionnaire_to_read.json")
         return None, None
 
     sysargv_path = sysargv[1]
@@ -190,7 +195,7 @@ def load_json_argv(sysargv):
     root, extension = os.path.splitext(sysargv_path)
     if extension != ".json":
         printerr(
-            f"Incorrect extension, add a .json questionnaire. Example : {ntpath.basename(sys.argv[0])} questionnaire_to_read.json")
+            f"Incorrect extension, add a .json questionnaire. Example : {os.path.basename(sys.argv[0])} questionnaire_to_read.json")
         return None, sysargv_path
 
     if validators.url(sysargv_path):  # si le fichier JSON est une URL
@@ -235,9 +240,14 @@ def load_json_data_from_file(file_path):
 
 def main():
     json_data, file_path = load_json_argv(sys.argv)
+    print(">",json_data)
+    print(">",file_path)
+    print(">",os.path.basename(sys.argv[1]))
 
     if json_data:
-        Questionnaire(json_data, file_path).run()
+        questionnaire = Questionnaire(json_data, file_path)
+        if questionnaire :
+            questionnaire.run()
 
 
 if __name__ == "__main__":
