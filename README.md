@@ -36,7 +36,7 @@ More info : [questionnaire_unit_test.md](./questionnaire_unit_test.md)
 Uses : 
 - initial_json_test_file.json
 - second_json_test_file.json
-- json_file_withou_extension
+- json_file_without_extension
 - empty.json
 
 and files into [json_file_tests](./json_file_tests) folder
