@@ -67,15 +67,15 @@ A free json file is available at the url : https://countwordsfree.com/example.js
 - `test_01` -> `<Json_Data>, <File_Path>` if receives __a valid json file on a valid url path__ then prints no message.
 
 
-- `test_02` -> `None, <File_Path>` if receives __a invalid json file on a valid url path__ then prints the message :\\
+- `test_02` -> `None, <File_Path>` if receives __a invalid json file on a valid url path__ then prints the message :\
 ```Error : File not found at URL https://countwordsfree.com/non-existant.json```
 
 
-- `test_03` -> `None, <File_Path>` if receives __a valid json file but on a invalid url path__ then prints the message :\\
+- `test_03` -> `None, <File_Path>` if receives __a valid json file but on a invalid url path__ then prints the message :\
 ```Error : Invalid URL at https://countwordsfre.com/example.json```
 
 
-- `test_04` -> `None, <File_Path>` if receives __a file without json extension on a valid url path__ then prints the message :\\
+- `test_04` -> `None, <File_Path>` if receives __a file without json extension on a valid url path__ then prints the message :\
 ```Error : Incorrect extension, add a .json questionnaire.```
 
 ---
@@ -98,11 +98,11 @@ The printed message of test 2 is quite different from the Level 1 since the URL 
 
 Idem for test 5 and 6 because the argument given here is a URL and not a file.
 
-- `test_05` -> `None, File_Path` if receives __a non-existent file__ then prints the message :\\
+- `test_05` -> `None, File_Path` if receives __a non-existent file__ then prints the message :\
 ```Error : File not found at URL <URL>```
 
 
-- `test_06` -> `None, File_Path` if receives __an empty json file__ then prints the message :\\
+- `test_06` -> `None, File_Path` if receives __an empty json file__ then prints the message :\
 ```Error : Incompatible or no data in JSON file at URL <URL>```
 
 
@@ -124,8 +124,7 @@ HTTP Connection to http://127.0.0.1:8000/ in Thread-4 (serve_forever)
 ...
 HTTP Disconnection from http://127.0.0.1:8000/
 ```
-Note : According to the definition of the fixture used in this test, this class will be executed only using `pytest` and 
-will be skipped under `unittests`
+Note : According to the fixture used in this test, this class will be executed only using `pytest` and will be skipped under `unittests`
 ```commandline
 pytest -v -k questionnaire_unit_test.py -s
 ```
@@ -151,7 +150,7 @@ This may require to rewrite the tests because the reading of the file from URL m
 tests trying to read files from a non-existent URL of the Web.
 
 - `test_01` -> `None, File_Path` if receives __a json file on a non-existent URL with a simulated ``File Not Found (404)`` answer to 
-the network request__ then prints the message :\
+the network request__ then prints the message :
 ```commandline
 questionnaire.py http://non-existent-url.com/initial_json_test_file.json -> None, File_Path
 Error : File not found at URL http://non-existent-url.com/initial_json_test_file.json
