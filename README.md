@@ -31,7 +31,7 @@ More info : [questionnaire.md](./questionnaire.md)
 
 Uses the `unittest` automated framework but not only to test questionnaire.py
 
-More info : [questionnaire_unit_tests.md](./questionnaire_unit_tests.md)
+More info : [questionnaire_unit_test.md](./questionnaire_unit_test.md)
 
 Uses : 
 - initial_json_test_file.json
