@@ -39,7 +39,7 @@ Uses :
 - json_file_without_extension
 - empty.json
 
-and files into [json_file_tests](./json_file_tests) folder
+and files into [json_test_files](./json_test_files) folder
 
 ---
 

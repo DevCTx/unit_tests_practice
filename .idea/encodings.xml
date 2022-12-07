@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="Encoding">
+    <file url="file://$PROJECT_DIR$/json_file_tests/json_01_good_format.json" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/json_file_tests/json_09_with_empty_questions.json" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/json_file_tests/json_23_with_questions_without_good_answer_only.json" charset="UTF-8" />
+  </component>
+</project>

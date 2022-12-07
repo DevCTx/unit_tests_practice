@@ -46,14 +46,17 @@ def print_error(msg):
 def print_warning(msg):
     return print(f"{bcolors.WARNING}Warning : {msg}{bcolors.ENDC}")
 
+def print_bold(msg):
+    return print(f"{bcolors.BOLD}{msg}{bcolors.ENDC}")
+
 class Question:
     def __init__(self, title, choice, is_answer):
         self.title = title
         self.choice = choice
         self.is_answer = is_answer
 
-    def ask(self, index):
-        print(f"QUESTION {index}")
+    def ask(self, index, nb_questions):
+        print_bold(f"QUESTION {index}/{nb_questions}")
         print("  " + self.title)
         for i in range(len(self.choice)):
             print("  ", i + 1, "-", self.choice[i])
@@ -144,19 +147,19 @@ class Questionnaire:
         self.questions = []
         for idx, json_question in enumerate(json_questionnaire['questions']):
             if len(json_question['titre']) <= 0:  # This is not critical but the question won't be added
-                print_warning(f"Skipped question : nothing to ask in question {idx} file {file_path}")
+                print_warning(f"Skipped question : question is empty in question {idx+1} file {file_path}")
             else:
                 # Print a warning message if one answer of the question is empty
                 # Must be done before to check the boolean because the good answer may have an empty string
 
                 for idc, choice in enumerate(json_question['choix']):
                     if len(choice[0]) <= 0:
-                        print_warning(f"Skipped answer : answer is empty in question {idx} file {file_path}")
+                        print_warning(f"Skipped answer : answer is empty in question {idx+1} file {file_path}")
                         json_question['choix'].pop(idc)
 
                 good_answer = [(choice[0], idc) for idc, choice in enumerate(json_question['choix']) if choice[1]]
                 if len(good_answer) != 1:  # This is not critical but the question won't be added
-                    print_warning(f"Skipped question : no one or more than one good answers in question {idx} file {file_path}")
+                    print_warning(f"Skipped question : no one or more than one good answers in question {idx+1} file {file_path}")
                 else:
                     answers = [choice[0] for choice in json_question['choix']]
                     self.questions.append(Question(json_question['titre'], answers, good_answer[0][1]+1))
@@ -166,21 +169,22 @@ class Questionnaire:
         index = 0
         try:
             # Launch of the questionnaire
-            print(f"=== QUESTIONNAIRE ===")
+            print_bold(f"=== QUESTIONNAIRE ===")
             print(f"Catégorie : {self.categorie}")
             print(f"Difficulté : {self.difficulte}")
             print(f"Titre : {self.titre}\n")
             if len(self.questions) <= 0:
-                print("No compatible question in this quizz")
+                # No compatible questions for this quiz
+                print("Désolé, aucune question n'est compatible avec ce quizz\n")
             else:
                 for question in self.questions:
                     index += 1
-                    if question.ask(index):
+                    if question.ask(index,len(self.questions)):
                         score += 1
 
                 print("Score final :", score, "sur", len(self.questions))
         except:
-            pass
+            pass    # Allows to quit the program by Ctrl+C
         return score
 
 
