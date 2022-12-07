@@ -40,26 +40,17 @@ class bcolors:
     UNDERLINE = '\033[4m'
 
 
-def printerr(msg):
+def print_error(msg):
     return print(f"{bcolors.FAIL}Error : {msg}{bcolors.ENDC}")
 
+def print_warning(msg):
+    return print(f"{bcolors.WARNING}Warning : {msg}{bcolors.ENDC}")
 
 class Question:
     def __init__(self, title, choice, is_answer):
         self.title = title
         self.choice = choice
         self.is_answer = is_answer
-
-    def FromJSON(json_question):
-        # Question : Titre, Choix, Bonne Reponse
-        # From JSON Question : Titre, Choix[4]:[Reponse_1,True],[Reponse_2,False],[Reponse_3,False],[Reponse_4,False]
-        is_answer = None
-        choice = []
-        for i in range(0, len(json_question['choix'])):
-            choice.append(json_question['choix'][i][0])
-            if json_question['choix'][i][1] == True:
-                is_answer = i + 1
-        return Question(json_question['titre'], choice, is_answer)
 
     def ask(self, index):
         print(f"QUESTION {index}")
@@ -126,16 +117,20 @@ class Questionnaire:
         try:
             validate(json_questionnaire, cls.schema)
         except jsonschema.exceptions.ValidationError:
-            printerr(f"Incompatible Json schema in file {file_path}")
+            print_error(f"Incompatible Json schema in file {file_path}")
             return None
         else:
             # 'titre' or 'questions' are required properties
             # all the types are already verified into the schema validator but the len=0 may also identify an error
             if len(json_questionnaire.get('titre')) <= 0:
-                printerr(f"The title of the quizz is missing in file {file_path}")
+                print_error(f"The title of the quizz is missing and mandatory in file {file_path}")
                 return None
             else:
-                return super().__new__(cls)
+                if len(json_questionnaire.get('questions')) <= 0:
+                    print_error(f"The questions of the quizz are missing and mandatory in file {file_path}")
+                    return None
+                else:
+                    return super().__new__(cls)
 
     def __init__(self, json_questionnaire, file_path):
         '''Initiate a Questionnaire after __new__ checked the required settings'''
@@ -149,14 +144,22 @@ class Questionnaire:
         self.questions = []
         for idx, json_question in enumerate(json_questionnaire['questions']):
             if len(json_question['titre']) <= 0:  # This is not critical but the question won't be added
-                printerr(f"Skipped question : nothing to ask in question {idx} file {file_path}")
+                print_warning(f"Skipped question : nothing to ask in question {idx} file {file_path}")
             else:
-                good_answers = [choix[0] for choix in json_question['choix'] if choix[1] == True]
-                if len(good_answers) != 1:  # This is not critical but the question won't be added
-                    printerr(f"Skipped question : no one or more than one good answer "
-                             f"in question {idx} file {file_path}")
+                # Print a warning message if one answer of the question is empty
+                # Must be done before to check the boolean because the good answer may have an empty string
+
+                for idc, choice in enumerate(json_question['choix']):
+                    if len(choice[0]) <= 0:
+                        print_warning(f"Skipped answer : answer is empty in question {idx} file {file_path}")
+                        json_question['choix'].pop(idc)
+
+                good_answer = [(choice[0], idc) for idc, choice in enumerate(json_question['choix']) if choice[1]]
+                if len(good_answer) != 1:  # This is not critical but the question won't be added
+                    print_warning(f"Skipped question : no one or more than one good answers in question {idx} file {file_path}")
                 else:
-                    self.questions.append(Question.FromJSON(json_question))
+                    answers = [choice[0] for choice in json_question['choix']]
+                    self.questions.append(Question(json_question['titre'], answers, good_answer[0][1]+1))
 
     def run(self):
         score = 0
@@ -186,7 +189,7 @@ def load_json_argv(sysargv):
     json_data = None
 
     if len(sysargv) != 2:
-        printerr(
+        print_error(
             f"Error in argument, should add a single .json questionnaire. Example : {os.path.basename(sys.argv[0])} questionnaire_to_read.json")
         return None, None
 
@@ -194,7 +197,7 @@ def load_json_argv(sysargv):
 
     root, extension = os.path.splitext(sysargv_path)
     if extension != ".json":
-        printerr(
+        print_error(
             f"Incorrect extension, add a .json questionnaire. Example : {os.path.basename(sys.argv[0])} questionnaire_to_read.json")
         return None, sysargv_path
 
@@ -209,17 +212,17 @@ def load_json_data_from_URL(URL_path):
     try:
         response = requests.get(URL_path)
     except:
-        printerr(f"Invalid URL at {URL_path}")
+        print_error(f"Invalid URL at {URL_path}")
         return None
     else:
         if response.status_code == 404:
-            printerr(f"File not found at URL {URL_path}")
+            print_error(f"File not found at URL {URL_path}")
             return None
         else:
             try:
                 json_data = json.loads(response.text)  # Decode JSON String
             except:
-                printerr(f"Incompatible or no data in JSON file at URL {URL_path}")
+                print_error(f"Incompatible or no data in JSON file at URL {URL_path}")
                 return None
     return json_data
 
@@ -227,22 +230,19 @@ def load_json_data_from_file(file_path):
     try:  # Opening of the JSON file
         json_file = open(file_path, "r")
     except OSError:
-        printerr(f"Invalid permissions or path to {file_path}")
+        print_error(f"Invalid permissions or path to {file_path}")
         return None
     else:
         with json_file:  # Handle the memory needed for the file
             try:
                 json_data = json.load(json_file)  # Read File and Decode JSON String
             except json.decoder.JSONDecodeError:
-                printerr(f"Incompatible or no data in JSON file {file_path}")
+                print_error(f"Incompatible or no data in JSON file {file_path}")
                 return None
     return json_data
 
 def main():
     json_data, file_path = load_json_argv(sys.argv)
-    print(">",json_data)
-    print(">",file_path)
-    print(">",os.path.basename(sys.argv[1]))
 
     if json_data:
         questionnaire = Questionnaire(json_data, file_path)
