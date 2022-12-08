@@ -133,8 +133,10 @@ class _06_load_json_argv_with_data_via_localhost_8000_in_setup_teardown(_03_load
 
     # CAREFUL : localhost not always recognized, better to use 127.0.0.1
     # Port 0 can also be used and means to select an arbitrary unused port
-    HOST, PORT = "127.0.0.1", 8000
-    server_adr = f"http://{HOST}:{PORT}/"
+    # HOST, PORT = "127.0.0.1", 8000
+    # server_adr = f"http://{HOST}:{PORT}/"
+    HOST, PORT = "127.0.0.1", 0
+    server_adr = ''
     # Open a HTTP server to access to the current directory
     Handler = http.server.SimpleHTTPRequestHandler
     httpd = None
@@ -147,6 +149,10 @@ class _06_load_json_argv_with_data_via_localhost_8000_in_setup_teardown(_03_load
             # Exit the server thread when the main thread terminates
             server_thread.daemon = True
             server_thread.start()
+            self.httpd_address, self.httpd_port = self.httpd.server_address
+            self.httpd_url = f"http://{self.httpd_address}:{self.httpd_port}"
+            print(f"Server URL = {self.httpd_url}")
+            self.server_adr = f"http://{self.httpd_address}:{self.httpd_port}/"
             print(f"\n\nConnection to {self.server_adr} in {server_thread.name}", end=' ')
 
     def tearDown(self) -> None:
@@ -204,11 +210,14 @@ class _07_load_json_argv_with_data_via_localhost_8000_in_fixture(_03_load_json_a
 class _08_load_json_argv_with_data_via_localhost_8000_in_setupClass_teardownClass(_03_load_json_argv_with_file_in_folder):
     # CAREFUL : localhost not always recognized, better to use 127.0.0.1
     # Port 0 can also be used and means to select an arbitrary unused port
-    HOST, PORT = "127.0.0.1", 8000
-    server_adr = f"http://{HOST}:{PORT}/"
+    # HOST, PORT = "127.0.0.1", 8000
+    # server_adr = f"http://{HOST}:{PORT}/"
+    HOST, PORT = "127.0.0.1", 0
+    server_adr = ''
     # Open a HTTP server to access to the current directory
     Handler = http.server.SimpleHTTPRequestHandler
     httpd = None
+    httpd_address, httpd_port = '', 0
 
     @classmethod
     def setUpClass(cls) -> None:
@@ -219,6 +228,10 @@ class _08_load_json_argv_with_data_via_localhost_8000_in_setupClass_teardownClas
             # Exit the server thread when the main thread terminates
             server_thread.daemon = True
             server_thread.start()
+            cls.httpd_address, cls.httpd_port = cls.httpd.server_address
+            cls.httpd_url = f"http://{cls.httpd_address}:{cls.httpd_port}"
+            print(f"Server URL = {cls.httpd_url}")
+            cls.server_adr = f"http://{cls.httpd_address}:{cls.httpd_port}/"
             print(f"\n\nConnection to {cls.server_adr} in {server_thread.name}", end=' ')
 
     @classmethod
