@@ -133,8 +133,6 @@ class _06_load_json_argv_with_data_via_localhost_8000_in_setup_teardown(_03_load
 
     # CAREFUL : localhost not always recognized, better to use 127.0.0.1
     # Port 0 can also be used and means to select an arbitrary unused port
-    # HOST, PORT = "127.0.0.1", 8000
-    # server_adr = f"http://{HOST}:{PORT}/"
     HOST, PORT = "127.0.0.1", 0
     server_adr = ''
     # Open a HTTP server to access to the current directory
@@ -150,8 +148,6 @@ class _06_load_json_argv_with_data_via_localhost_8000_in_setup_teardown(_03_load
             server_thread.daemon = True
             server_thread.start()
             self.httpd_address, self.httpd_port = self.httpd.server_address
-            self.httpd_url = f"http://{self.httpd_address}:{self.httpd_port}"
-            print(f"Server URL = {self.httpd_url}")
             self.server_adr = f"http://{self.httpd_address}:{self.httpd_port}/"
             print(f"\n\nConnection to {self.server_adr} in {server_thread.name}", end=' ')
 
@@ -170,7 +166,7 @@ class _07_load_json_argv_with_data_via_localhost_8000_in_fixture(_03_load_json_a
     # This is launched as Thread and need the Thread Server Handler
 
     # CAREFUL : localhost not always recognized, better to use 127.0.0.1
-    # Port 0 can also be used and means to select an arbitrary unused port
+    # Port fixed at 8000 before to use the fixture because some issues appears with thread
     HOST, PORT = "127.0.0.1", 8000
     server_adr = f"http://{HOST}:{PORT}/"
     Handler = http.server.SimpleHTTPRequestHandler  # Open a HTTP server to access to the current directory
@@ -186,17 +182,13 @@ class _07_load_json_argv_with_data_via_localhost_8000_in_fixture(_03_load_json_a
         self.httpd = ThreadedTCPServer((self.HOST, self.PORT), self.Handler)
         if self.httpd:
             # ip, port = self.httpd.server_address
-            # self.server_adr = f"http://{ip}:{port}/"\     # Careful : issues with properties in thread using fixtures
+            # self.server_adr = f"http://{ip}:{port}/"\     # Careful : Do not initialize an attribute here
 
             # Start a thread with the server
             server_thread = threading.Thread(target=self.httpd.serve_forever)
             # Exit the server thread when the main thread terminates
             server_thread.daemon = True
             server_thread.start()
-            # self.httpd_address, self.httpd_port = self.httpd.server_address
-            # self.httpd_url = f"http://{self.httpd_address}:{self.httpd_port}"
-            # print(f"Server URL = {self.httpd_url}")
-            # self.server_adr = f"http://{self.httpd_address}:{self.httpd_port}/"
             print(f"\n\nHTTP Connection to {self.server_adr} in {server_thread.name}", end=' ')
 
     def HTTPServer_Disconnection(self):
@@ -210,8 +202,6 @@ class _07_load_json_argv_with_data_via_localhost_8000_in_fixture(_03_load_json_a
 class _08_load_json_argv_with_data_via_localhost_8000_in_setupClass_teardownClass(_03_load_json_argv_with_file_in_folder):
     # CAREFUL : localhost not always recognized, better to use 127.0.0.1
     # Port 0 can also be used and means to select an arbitrary unused port
-    # HOST, PORT = "127.0.0.1", 8000
-    # server_adr = f"http://{HOST}:{PORT}/"
     HOST, PORT = "127.0.0.1", 0
     server_adr = ''
     # Open a HTTP server to access to the current directory
@@ -229,8 +219,6 @@ class _08_load_json_argv_with_data_via_localhost_8000_in_setupClass_teardownClas
             server_thread.daemon = True
             server_thread.start()
             cls.httpd_address, cls.httpd_port = cls.httpd.server_address
-            cls.httpd_url = f"http://{cls.httpd_address}:{cls.httpd_port}"
-            print(f"Server URL = {cls.httpd_url}")
             cls.server_adr = f"http://{cls.httpd_address}:{cls.httpd_port}/"
             print(f"\n\nConnection to {cls.server_adr} in {server_thread.name}", end=' ')
 
