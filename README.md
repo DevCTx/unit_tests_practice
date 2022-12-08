@@ -44,4 +44,9 @@ and files into [json_test_files](./json_test_files) folder
 
 ---
 
+## [Requirements](./Requirements)
+jsonschema==4.17.0
+parameterized==0.8.1
+requests==2.28.1
+validators==0.20.0
 
