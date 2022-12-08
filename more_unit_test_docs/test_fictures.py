@@ -158,11 +158,11 @@ class repeating_calls():
         print(" --> test_method_03", end=' ')
         assert True
 
-    @mark.marker_name4
-    @mark.usefixtures('different_values_tested_in_param')
-    def test_method_04(self, different_values_tested_in_param):
-        print(f" --> test_method_04 says {different_values_tested_in_param} > 0", end=' ')
-        assert different_values_tested_in_param > 0
+    # @mark.marker_name4
+    # @mark.usefixtures('different_values_tested_in_param')
+    # def test_method_04(self, different_values_tested_in_param):
+    #     print(f" --> test_method_04 says {different_values_tested_in_param} > 0", end=' ')
+    #     assert different_values_tested_in_param > 0
 
     @mark.marker_name4
     @pytest.mark.usefixtures("value_given_by_fixture")
