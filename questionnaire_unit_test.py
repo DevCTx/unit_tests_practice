@@ -165,7 +165,7 @@ class _07_load_json_argv_with_data_via_localhost_8000_in_fixture(_03_load_json_a
 
     # CAREFUL : localhost not always recognized, better to use 127.0.0.1
     # Port 0 can also be used and means to select an arbitrary unused port
-    HOST, PORT = "127.0.0.1", 8000
+    HOST, PORT = "127.0.0.1", 0
     server_adr = f"http://{HOST}:{PORT}/"
     Handler = http.server.SimpleHTTPRequestHandler  # Open a HTTP server to access to the current directory
     httpd = None
