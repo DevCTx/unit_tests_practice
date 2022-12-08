@@ -165,8 +165,10 @@ class _07_load_json_argv_with_data_via_localhost_8000_in_fixture(_03_load_json_a
 
     # CAREFUL : localhost not always recognized, better to use 127.0.0.1
     # Port 0 can also be used and means to select an arbitrary unused port
+#    HOST, PORT = "127.0.0.1", 8000
+#    server_adr = f"http://{HOST}:{PORT}/"
     HOST, PORT = "127.0.0.1", 0
-    server_adr = f"http://{HOST}:{PORT}/"
+    server_adr = ''
     Handler = http.server.SimpleHTTPRequestHandler  # Open a HTTP server to access to the current directory
     httpd = None
 
@@ -187,6 +189,10 @@ class _07_load_json_argv_with_data_via_localhost_8000_in_fixture(_03_load_json_a
             # Exit the server thread when the main thread terminates
             server_thread.daemon = True
             server_thread.start()
+            self.httpd_address, self.httpd_port = self.httpd.server_address
+            self.httpd_url = f"http://{self.httpd_address}:{self.httpd_port}"
+            print(f"Server URL = {self.httpd_url}")
+            self.server_adr = f"http://{self.httpd_address}:{self.httpd_port}/"
             print(f"\n\nHTTP Connection to {self.server_adr} in {server_thread.name}", end=' ')
 
     def HTTPServer_Disconnection(self):
