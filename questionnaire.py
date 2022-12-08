@@ -100,11 +100,15 @@ class Questionnaire:
                         "titre": {"type": "string"},
                         "choix": {
                             "type": "array",
+                            "default": [],
                             "minItems": 2,
                             "items": {
                                 "type": "array",
                                 "minItems": 2,
-                                "prefixItems": [{"type": "string"}, {"type": "boolean"}],
+                                "prefixItems": [
+                                    {"type": "string"},
+                                    {"type": "boolean"}
+                                ],
                                 "items": False
                             }
                         }

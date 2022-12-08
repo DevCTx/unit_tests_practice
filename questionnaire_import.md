@@ -8,12 +8,12 @@ Loads some quizzes from a sample list in the program :
 * openquizzdb_241.json
 * openquizzdb_90.json
 
-and converts them into a specific json [format](./questionnaire.md#expected-json-schema) before to save them 
+and converts them into a specific [json format](./questionnaire.md#expected-json-schema) before to save them 
 into the [json_questionnaires](./json_questionnaires) folder
 
 Those quizzes were initially downloaded from http://www.openquizzdb.org/ or https://www.kiwime.com/oqdb/files/ but the 
-API that allowed to do it for free has been disconnected and is no longer available.\
-Those quizzes have thus been transferred on www.codeavecjonathan.com to be manipulated through this exercise
+API which allowed to do it for free has been disconnected and is no longer available.\
+Those quizzes have thus been transferred on www.codeavecjonathan.com to be manipulated through this exercise.
 
 
 ### Sample of the initial json quiz format :
@@ -69,20 +69,20 @@ Those quizzes have thus been transferred on www.codeavecjonathan.com to be manip
     }
 }
 ```
-Each json quiz has 3 categories of difficulty : ```débutant```, ```confirmé``` or ```expert``` 
-( beginner, advanced or expert )
+Each json quiz has 3 categories of difficulty : `débutant`, `confirmé` or `expert` 
+*[ beginner, advanced or expert ]*
 
-Each category includes 10 questions with 4 possible answers to be offered to the user.
+Each category includes 10 questions with 4 answer choices to be offered to the user.
 
-The good answer can be found in the ```réponse``` key. 
+The good answer can be found under the `réponse` key. 
 ___
 ### How to use it :
 
 > python questionnaire_import.py
 
-loads json quiz files and converts them into a new json format by creating one file per difficulty category
+loads json quizzes and converts them to a new json format by creating one file per difficulty category.
 
-### Sample of the json quizz format after import :
+### Sample of the json quiz format after import :
 ```json
 {
   "categorie" : "Animaux",
@@ -114,4 +114,7 @@ These last ones are compiled to have 4 propositions with a boolean parameter
 indicating if the answer is the good one. 
 
 ---
-### The schema must so match with the [expected jdon schema](./questionnaire.md#expected-json-schema) of [./questionnaire.py](./questionnaire.md)
+### The schema must so match with the [expected json schema](./questionnaire.md#expected-json-schema) of [./questionnaire.py](./questionnaire.md)
+
+
+[README.md](./README.md) > [questionnaire_import.md](./questionnaire_import.md)
