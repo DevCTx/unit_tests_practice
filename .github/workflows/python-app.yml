@@ -36,5 +36,5 @@ jobs:
         flake8 . --count --exit-zero --max-complexity=10 --max-line-length=127 --statistics
     - name: Test with pytest
       run: |
-        pytest -v -k questionnaire_unit_test.py -m 'not json_tests' -s
+        pytest -v -k questionnaire_unit_test.py -s > pytest_results.txt
 
