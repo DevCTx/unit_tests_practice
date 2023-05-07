@@ -2,8 +2,7 @@
 
 # Unit Tests Practice
 
-#### This repository has been prepared for practicing on the automated test framework: unittest
-#### It is based on the use of simple quizzes importer and viewer.
+#### This repository has been prepared to explore the different possibilities of unittest and pytest automated tests, through the import of simple quizzes and the conversion of these quizzes into a verified JSON format.
 
 ---
 
