@@ -2,7 +2,7 @@
 
 # Unit Tests Practice
 
-#### This repository has been prepared to practice the `unittest` automated testing framework
+#### This repository has been prepared for practicing on the automated test framework: unittest
 #### It is based on the use of simple quizzes importer and viewer.
 
 ---
