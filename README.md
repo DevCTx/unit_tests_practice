@@ -2,9 +2,12 @@
 
 # Unit Tests Practice
 
-#### This repository has been prepared to explore the different possibilities of unittest and pytest automated tests, through the import of simple quizzes and the conversion of these quizzes into a verified JSON format.
+#### This repository explores some possibilities of automated tests (unittest and pytest) to verify the import and conversion of simple JSON quizzes. It was also my first steps in using Markdown documentation.
 
 ---
+------
+--------
+-----------------------------
 
 ## questionnaire_import.py
 >python ./questionnaire_import.py 
