@@ -7,7 +7,7 @@
 ---
 
 ## questionnaire_import.py
->python ./questionnaire_import.py 
+>python3 ./questionnaire_import.py 
 
 Loads some quizzes from a sample list in the program and converts them into a specific [json format](./questionnaire.md#expected-json-schema) before to save them 
 into the [json_questionnaires](./json_questionnaires) folder
@@ -17,7 +17,7 @@ More info : [questionnaire_import.md](./questionnaire_import.md)
 ---
 
 ## questionnaire.py
->python ./questionnaire.py <questionnaire.json>
+>python3 ./questionnaire.py <questionnaire.json>
 
 Displays the quiz in argument and counts the number of good answers
 
@@ -26,7 +26,7 @@ More info : [questionnaire.md](./questionnaire.md)
 ---
 
 ## questionnaire_unit_tests.py
->python ./questionnaire_unit_tests.py
+>python3 ./questionnaire_unit_tests.py
 
 Uses the `unittest` automated framework but not only to test questionnaire.py
 
