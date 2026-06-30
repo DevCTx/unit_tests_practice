@@ -2,9 +2,11 @@
 
 # Unit Tests Practice
 
-#### This repo explores a wide range of testing techniques — mocking, fixtures, test-class inheritance, a simulated HTTP server and continuous integration — using simple multiple-choice quizzes stored as JSON. It also compares the automated tests through unittest and pytest, and was also my first steps with Markdown documentation.
+This repo explores a wide range of testing techniques — mocking, fixtures, test-class inheritance, a simulated HTTP server and continuous integration — using simple multiple-choice quizzes stored as JSON, and compares the automated tests through unittest and pytest.
 
-## Overview
+It was also my first steps with Markdown documentation.
+
+### Overview
  
 | Program | Role |
 |---|---|
@@ -16,7 +18,7 @@ The test suite is the heart of the project: it stacks several techniques on a si
 
 ---
 
-## Installation
+### Installation
  
 ```bash
 python -m venv venv
@@ -25,29 +27,29 @@ pip install -r requirements.txt       # to use questionnaire.py only
 pip install -r requirements-dev.txt   # to use questionnaire_unit_tests.py
 ```
 
-## questionnaire_import.py : Import and convert online quizzes into json_questionnaires
+### Import and convert online quizzes into json_questionnaires
 >python3 ./questionnaire_import.py 
 
 More info : [questionnaire_import.md](./questionnaire_import.md)
 
 ---
 
-## questionnaire.py : Displays the quiz in argument and counts the number of good answers
+### Displays the quiz in argument and counts the number of good answers
 >python3 ./questionnaire.py ./json_questionnaires/<questionnaire.json>
 
 More info : [questionnaire.md](./questionnaire.md)
 
 ---
 
-## questionnaire_unit_tests.py : Run the tests with `unittest` or `pytest` 
-# use ./json_test_files folder to check 25 intentionally broken quizzes targeting error cases
+### Run the tests with `unittest` or `pytest` 
+use ./json_test_files folder to check 25 intentionally broken quizzes targeting error cases
 >python3 -m unittest questionnaire_unit_test.py ./json_test_files/<questionnaire.json>
 >pytest -v questionnaire_unit_test.py -s ./json_test_files/<questionnaire.json>
 
 More info : [questionnaire_unit_test.md](./questionnaire_unit_test.md)
 
 
-## Testing highlights
+### Testing highlights
  
 - **Test-class inheritance** to reuse base cases by changing a single parameter.
 - **Mocking** with `unittest.mock.patch` to simulate `sys.argv`.
@@ -57,21 +59,21 @@ More info : [questionnaire_unit_test.md](./questionnaire_unit_test.md)
   compare both frameworks directly.
 
 
-## Continuous integration
+### Continuous integration
  
 GitHub Actions runs on every push and pull request to `master`: dependency install
 (Python 3.10), `flake8` lint, then the test suite under both `unittest` and `pytest`.
 
 ---
 
-## [Requirements](./requirements.txt)
+### [Requirements](./requirements.txt)
 - Python 3.10+
 - jsonschema==4.17.0
 - parameterized==0.8.1
 - requests==2.28.1
 - validators==0.20.0
 
-## [Requirements-dev](./requirements-dev.txt)
+### [Requirements-dev](./requirements-dev.txt)
 - pytest==7.2.0
 - flake8==6.0.0
 
