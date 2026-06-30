@@ -19,7 +19,13 @@ The test suite is the heart of the project: it stacks several techniques on a si
 ---
 
 ### Installation
- 
+
+Clone the repository :
+```bash
+git clone https://github.com/DevCTx/unit_tests_practice
+```
+
+Into the cloned folder :
 ```bash
 python -m venv venv
 source venv/bin/activate              # Linux / macOS  (venv\Scripts\activate on Windows)
