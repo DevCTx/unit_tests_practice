@@ -2,7 +2,7 @@
 
 # Unit Tests Practice
 
-This repo explores a wide range of testing techniques — mocking, fixtures, test-class inheritance, a simulated HTTP server and continuous integration — using simple multiple-choice quizzes stored as JSON, and compares the automated tests through unittest and pytest.
+This repo explores a wide range of testing techniques — mocking, fixtures, test-class inheritance, a simulated HTTP server and continuous integration — using simple multiple-choice quizzes stored as JSON, and compares the automated tests through `unittest` and `pytest`.
 
 It was also my first steps with Markdown documentation.
 
