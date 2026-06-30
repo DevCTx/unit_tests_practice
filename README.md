@@ -70,7 +70,8 @@ More info about the 25 tests : [questionnaire_unit_test.md](./questionnaire_unit
 \
 **Explanation**
 
-In [questionnaire_unit_test.py](./questionnaire_unit_test.py), ```load_json_argv()``` is the entry point.\
+In [questionnaire_unit_test.py](./questionnaire_unit_test.py), ```load_json_argv()``` is the entry point.
+
 It receives ```sys.argv```, validates that there is exactly one ```.json``` argument. detects whether it is a ```URL``` or a local ```file```, and delegates to ```load_json_data_from_URL()``` or ```load_json_data_from_file()```. 
 
 It always returns a tuple ```(json_data, file_path)```.
