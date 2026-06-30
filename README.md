@@ -28,14 +28,18 @@ pip install -r requirements-dev.txt   # to use questionnaire_unit_tests.py
 ```
 
 ### Import and convert online quizzes into json_questionnaires
->python3 ./questionnaire_import.py 
+```bash
+python3 ./questionnaire_import.py 
+```
 
 More info : [questionnaire_import.md](./questionnaire_import.md)
 
 ---
 
 ### Displays the quiz in argument and counts the number of good answers
->python3 ./questionnaire.py ./json_questionnaires/<questionnaire.json>
+```bash
+python3 ./questionnaire.py ./json_questionnaires/<questionnaire.json>
+```
 
 More info : [questionnaire.md](./questionnaire.md)
 
@@ -43,8 +47,10 @@ More info : [questionnaire.md](./questionnaire.md)
 
 ### Run the tests with `unittest` or `pytest` 
 use ./json_test_files folder to check 25 intentionally broken quizzes targeting error cases
->python3 -m unittest questionnaire_unit_test.py ./json_test_files/<questionnaire.json>
->pytest -v questionnaire_unit_test.py -s ./json_test_files/<questionnaire.json>
+```bash
+python3 -m unittest questionnaire_unit_test.py ./json_test_files/<questionnaire.json>
+pytest -v questionnaire_unit_test.py -s ./json_test_files/<questionnaire.json>
+```
 
 More info : [questionnaire_unit_test.md](./questionnaire_unit_test.md)
 
