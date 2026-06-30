@@ -495,9 +495,9 @@ OK (skipped=6)
 pytest -v -k questionnaire_unit_test.py -s
 ```
 
-```python
+```console
 ============================================================================================================ test session starts =============================================================================================================
-platform linux -- Python 3.12.3, pytest-9.1.1, pluggy-1.6.0 -- ~/unit_tests_practice/venv/bin/python3
+platform linux -- Python 3.12.3, pytest-8.0.0, pluggy-1.6.0 -- ~/unit_tests_practice/venv/bin/python3
 cachedir: .pytest_cache
 rootdir: ~/unit_tests_practice
 configfile: pytest.ini
@@ -613,54 +613,54 @@ Error : Incorrect extension, add a .json questionnaire. Example : questionnaire.
 PASSED
 questionnaire_unit_test.py::_06_load_json_argv_with_data_via_localhost_8000_in_setup_teardown::test_01_load_json_argv_with_one_good_json_file 
 
-Connection to http://127.0.0.1:60393/ in Thread-1 (serve_forever) 
-questionnaire.py http://127.0.0.1:60393/json_test_files/json_01_good_format.json -> Json_Data, File_Path
-127.0.0.1 - - [30/Jun/2026 15:14:15] "GET /json_test_files/json_01_good_format.json HTTP/1.1" 200 -
-Disconnection from http://127.0.0.1:60393/
+Connection to http://127.0.0.1:59521/ in Thread-1 (serve_forever) 
+questionnaire.py http://127.0.0.1:59521/json_test_files/json_01_good_format.json -> Json_Data, File_Path
+127.0.0.1 - - [30/Jun/2026 15:32:21] "GET /json_test_files/json_01_good_format.json HTTP/1.1" 200 -
+Disconnection from http://127.0.0.1:59521/
 PASSED
 questionnaire_unit_test.py::_06_load_json_argv_with_data_via_localhost_8000_in_setup_teardown::test_02_load_json_argv_with_no_argv 
 
-Connection to http://127.0.0.1:55809/ in Thread-3 (serve_forever) 
-questionnaire.py http://127.0.0.1:55809/json_test_files/ -> None, File_Path
+Connection to http://127.0.0.1:37907/ in Thread-3 (serve_forever) 
+questionnaire.py http://127.0.0.1:37907/json_test_files/ -> None, File_Path
 Error : Incorrect extension, add a .json questionnaire. Example : questionnaire.py questionnaire_to_read.json
-Disconnection from http://127.0.0.1:55809/
+Disconnection from http://127.0.0.1:37907/
 PASSED
 questionnaire_unit_test.py::_06_load_json_argv_with_data_via_localhost_8000_in_setup_teardown::test_03_load_json_argv_with_more_than_one_argv 
 
-Connection to http://127.0.0.1:40861/ in Thread-4 (serve_forever) 
-questionnaire.py http://127.0.0.1:40861/json_test_files/json_01_good_format.json http://127.0.0.1:40861/json_test_files/json_01_another_good_format.json -> None, None
+Connection to http://127.0.0.1:38407/ in Thread-4 (serve_forever) 
+questionnaire.py http://127.0.0.1:38407/json_test_files/json_01_good_format.json http://127.0.0.1:38407/json_test_files/json_01_another_good_format.json -> None, None
 Error : Error in argument, should add a single .json questionnaire. Example : questionnaire.py questionnaire_to_read.json
-Disconnection from http://127.0.0.1:40861/
+Disconnection from http://127.0.0.1:38407/
 PASSED
 questionnaire_unit_test.py::_06_load_json_argv_with_data_via_localhost_8000_in_setup_teardown::test_04_load_json_argv_with_argv_without_json_extension 
 
-Connection to http://127.0.0.1:40203/ in Thread-5 (serve_forever) 
-questionnaire.py http://127.0.0.1:40203/json_test_files/json_00_without_extension -> None, File_Path
+Connection to http://127.0.0.1:53347/ in Thread-5 (serve_forever) 
+questionnaire.py http://127.0.0.1:53347/json_test_files/json_00_without_extension -> None, File_Path
 Error : Incorrect extension, add a .json questionnaire. Example : questionnaire.py questionnaire_to_read.json
-Disconnection from http://127.0.0.1:40203/
+Disconnection from http://127.0.0.1:53347/
 PASSED
 questionnaire_unit_test.py::_06_load_json_argv_with_data_via_localhost_8000_in_setup_teardown::test_05_load_json_argv_with_non_existent_json_file 
 
-Connection to http://127.0.0.1:58481/ in Thread-6 (serve_forever) 
-questionnaire.py http://127.0.0.1:58481/json_test_files/non-existent-file.json -> None, File_Path
-127.0.0.1 - - [30/Jun/2026 15:14:17] code 404, message File not found
-127.0.0.1 - - [30/Jun/2026 15:14:17] "GET /json_test_files/non-existent-file.json HTTP/1.1" 404 -
-Error : File not found at URL http://127.0.0.1:58481/json_test_files/non-existent-file.json
-Disconnection from http://127.0.0.1:58481/
+Connection to http://127.0.0.1:35085/ in Thread-6 (serve_forever) 
+questionnaire.py http://127.0.0.1:35085/json_test_files/non-existent-file.json -> None, File_Path
+127.0.0.1 - - [30/Jun/2026 15:32:23] code 404, message File not found
+127.0.0.1 - - [30/Jun/2026 15:32:23] "GET /json_test_files/non-existent-file.json HTTP/1.1" 404 -
+Error : File not found at URL http://127.0.0.1:35085/json_test_files/non-existent-file.json
+Disconnection from http://127.0.0.1:35085/
 PASSED
 questionnaire_unit_test.py::_06_load_json_argv_with_data_via_localhost_8000_in_setup_teardown::test_06_load_json_argv_with_empty_json_file 
 
-Connection to http://127.0.0.1:49833/ in Thread-8 (serve_forever) 
-questionnaire.py http://127.0.0.1:49833/json_test_files/json_00_empty.json -> None, File_Path
-127.0.0.1 - - [30/Jun/2026 15:14:17] "GET /json_test_files/json_00_empty.json HTTP/1.1" 200 -
-Error : Incompatible or no data in JSON file at URL http://127.0.0.1:49833/json_test_files/json_00_empty.json
-Disconnection from http://127.0.0.1:49833/
+Connection to http://127.0.0.1:44455/ in Thread-8 (serve_forever) 
+questionnaire.py http://127.0.0.1:44455/json_test_files/json_00_empty.json -> None, File_Path
+127.0.0.1 - - [30/Jun/2026 15:32:24] "GET /json_test_files/json_00_empty.json HTTP/1.1" 200 -
+Error : Incompatible or no data in JSON file at URL http://127.0.0.1:44455/json_test_files/json_00_empty.json
+Disconnection from http://127.0.0.1:44455/
 PASSED
 questionnaire_unit_test.py::_07_load_json_argv_with_data_via_localhost_8000_in_fixture::test_01_load_json_argv_with_one_good_json_file 
 
 HTTP Connection to http://127.0.0.1:8000/ in Thread-10 (serve_forever) 
 questionnaire.py http://127.0.0.1:8000/json_test_files/json_01_good_format.json -> Json_Data, File_Path
-127.0.0.1 - - [30/Jun/2026 15:14:18] "GET /json_test_files/json_01_good_format.json HTTP/1.1" 200 -
+127.0.0.1 - - [30/Jun/2026 15:32:24] "GET /json_test_files/json_01_good_format.json HTTP/1.1" 200 -
 PASSED
 questionnaire_unit_test.py::_07_load_json_argv_with_data_via_localhost_8000_in_fixture::test_02_load_json_argv_with_no_argv 
 questionnaire.py http://127.0.0.1:8000/json_test_files/ -> None, File_Path
@@ -676,45 +676,45 @@ Error : Incorrect extension, add a .json questionnaire. Example : questionnaire.
 PASSED
 questionnaire_unit_test.py::_07_load_json_argv_with_data_via_localhost_8000_in_fixture::test_05_load_json_argv_with_non_existent_json_file 
 questionnaire.py http://127.0.0.1:8000/json_test_files/non-existent-file.json -> None, File_Path
-127.0.0.1 - - [30/Jun/2026 15:14:18] code 404, message File not found
-127.0.0.1 - - [30/Jun/2026 15:14:18] "GET /json_test_files/non-existent-file.json HTTP/1.1" 404 -
+127.0.0.1 - - [30/Jun/2026 15:32:24] code 404, message File not found
+127.0.0.1 - - [30/Jun/2026 15:32:24] "GET /json_test_files/non-existent-file.json HTTP/1.1" 404 -
 Error : File not found at URL http://127.0.0.1:8000/json_test_files/non-existent-file.json
 PASSED
 questionnaire_unit_test.py::_07_load_json_argv_with_data_via_localhost_8000_in_fixture::test_06_load_json_argv_with_empty_json_file 
 questionnaire.py http://127.0.0.1:8000/json_test_files/json_00_empty.json -> None, File_Path
-127.0.0.1 - - [30/Jun/2026 15:14:18] "GET /json_test_files/json_00_empty.json HTTP/1.1" 200 -
+127.0.0.1 - - [30/Jun/2026 15:32:24] "GET /json_test_files/json_00_empty.json HTTP/1.1" 200 -
 Error : Incompatible or no data in JSON file at URL http://127.0.0.1:8000/json_test_files/json_00_empty.json
 PASSEDHTTP Disconnection from http://127.0.0.1:8000/
 
 questionnaire_unit_test.py::_08_load_json_argv_with_data_via_localhost_8000_in_setupClass_teardownClass::test_01_load_json_argv_with_one_good_json_file 
 
-Connection to http://127.0.0.1:47413/ in Thread-14 (serve_forever) 
-questionnaire.py http://127.0.0.1:47413/json_test_files/json_01_good_format.json -> Json_Data, File_Path
-127.0.0.1 - - [30/Jun/2026 15:14:18] "GET /json_test_files/json_01_good_format.json HTTP/1.1" 200 -
+Connection to http://127.0.0.1:43809/ in Thread-14 (serve_forever) 
+questionnaire.py http://127.0.0.1:43809/json_test_files/json_01_good_format.json -> Json_Data, File_Path
+127.0.0.1 - - [30/Jun/2026 15:32:24] "GET /json_test_files/json_01_good_format.json HTTP/1.1" 200 -
 PASSED
 questionnaire_unit_test.py::_08_load_json_argv_with_data_via_localhost_8000_in_setupClass_teardownClass::test_02_load_json_argv_with_no_argv 
-questionnaire.py http://127.0.0.1:47413/json_test_files/ -> None, File_Path
+questionnaire.py http://127.0.0.1:43809/json_test_files/ -> None, File_Path
 Error : Incorrect extension, add a .json questionnaire. Example : questionnaire.py questionnaire_to_read.json
 PASSED
 questionnaire_unit_test.py::_08_load_json_argv_with_data_via_localhost_8000_in_setupClass_teardownClass::test_03_load_json_argv_with_more_than_one_argv 
-questionnaire.py http://127.0.0.1:47413/json_test_files/json_01_good_format.json http://127.0.0.1:47413/json_test_files/json_01_another_good_format.json -> None, None
+questionnaire.py http://127.0.0.1:43809/json_test_files/json_01_good_format.json http://127.0.0.1:43809/json_test_files/json_01_another_good_format.json -> None, None
 Error : Error in argument, should add a single .json questionnaire. Example : questionnaire.py questionnaire_to_read.json
 PASSED
 questionnaire_unit_test.py::_08_load_json_argv_with_data_via_localhost_8000_in_setupClass_teardownClass::test_04_load_json_argv_with_argv_without_json_extension 
-questionnaire.py http://127.0.0.1:47413/json_test_files/json_00_without_extension -> None, File_Path
+questionnaire.py http://127.0.0.1:43809/json_test_files/json_00_without_extension -> None, File_Path
 Error : Incorrect extension, add a .json questionnaire. Example : questionnaire.py questionnaire_to_read.json
 PASSED
 questionnaire_unit_test.py::_08_load_json_argv_with_data_via_localhost_8000_in_setupClass_teardownClass::test_05_load_json_argv_with_non_existent_json_file 
-questionnaire.py http://127.0.0.1:47413/json_test_files/non-existent-file.json -> None, File_Path
-127.0.0.1 - - [30/Jun/2026 15:14:18] code 404, message File not found
-127.0.0.1 - - [30/Jun/2026 15:14:18] "GET /json_test_files/non-existent-file.json HTTP/1.1" 404 -
-Error : File not found at URL http://127.0.0.1:47413/json_test_files/non-existent-file.json
+questionnaire.py http://127.0.0.1:43809/json_test_files/non-existent-file.json -> None, File_Path
+127.0.0.1 - - [30/Jun/2026 15:32:24] code 404, message File not found
+127.0.0.1 - - [30/Jun/2026 15:32:24] "GET /json_test_files/non-existent-file.json HTTP/1.1" 404 -
+Error : File not found at URL http://127.0.0.1:43809/json_test_files/non-existent-file.json
 PASSED
 questionnaire_unit_test.py::_08_load_json_argv_with_data_via_localhost_8000_in_setupClass_teardownClass::test_06_load_json_argv_with_empty_json_file 
-questionnaire.py http://127.0.0.1:47413/json_test_files/json_00_empty.json -> None, File_Path
-127.0.0.1 - - [30/Jun/2026 15:14:18] "GET /json_test_files/json_00_empty.json HTTP/1.1" 200 -
-Error : Incompatible or no data in JSON file at URL http://127.0.0.1:47413/json_test_files/json_00_empty.json
-PASSEDDisconnection from http://127.0.0.1:47413/
+questionnaire.py http://127.0.0.1:43809/json_test_files/json_00_empty.json -> None, File_Path
+127.0.0.1 - - [30/Jun/2026 15:32:24] "GET /json_test_files/json_00_empty.json HTTP/1.1" 200 -
+Error : Incompatible or no data in JSON file at URL http://127.0.0.1:43809/json_test_files/json_00_empty.json
+PASSEDDisconnection from http://127.0.0.1:43809/
 
 questionnaire_unit_test.py::_09_load_json_argv_with_simulated_server::test_01_load_json_argv_with_simulated_FileNotFound_answer 
 questionnaire.py http://non-existent-url.com/json_01_good_format.json -> None, File_Path
@@ -821,7 +821,7 @@ Warning : Skipped question : no one or more than one good answers in question 1 
 Warning : Skipped question : no one or more than one good answers in question 2 file json_test_files/json_24_with_questions_without_good_answer_only.json
 PASSED
 
-===================================================================================================== 73 passed, 53 deselected in 6.33s ======================================================================================================
+===================================================================================================== 73 passed, 53 deselected in 5.70s ======================================================================================================
 ```
 
 [README.md](./README.md) > [questionnaire_unit_test.md](./questionnaire_unit_test.md)
