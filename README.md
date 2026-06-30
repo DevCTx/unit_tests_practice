@@ -32,8 +32,10 @@ source venv/bin/activate              # Linux / macOS  (venv\Scripts\activate on
 pip install -r requirements.txt       # to use questionnaire.py only
 pip install -r requirements-dev.txt   # to use questionnaire_unit_tests.py
 ```
+---
 
 ### Import and convert online quizzes into json_questionnaires
+
 ```bash
 python3 ./questionnaire_import.py 
 ```
@@ -42,7 +44,7 @@ More info about the original conversion : [questionnaire_import.md](./questionna
 
 ---
 
-### Displays the quiz in argument and counts the number of good answers
+### Displays the quiz in argument and counts the number of good answers
 ```bash
 python3 ./questionnaire.py ./json_questionnaires/<questionnaire.json>
 ```
@@ -52,7 +54,6 @@ More info about the JSON format expected and Error messages : [questionnaire.md]
 ---
 
 ### Run the tests with `unittest` or `pytest` 
-
 ```bash
 python3 -m unittest questionnaire_unit_test
 ```
@@ -64,25 +65,29 @@ or use ./json_test_files folder to check 25 intentionally broken quizzes targeti
 python3 questionnaire.py json_test_files/json_00_empty.json
 ```
 
-More info : [questionnaire_unit_test.md](./questionnaire_unit_test.md)
+More info about the 25 tests : [questionnaire_unit_test.md](./questionnaire_unit_test.md)
 
-### Explanation
+\
+**Explanation**
 
-```load_json_argv()``` is the entry point. It receives ```sys.argv```, validates that there is exactly one ```.json``` argument, detects whether it is a ```URL``` or a local ```file```, and delegates to ```load_json_data_from_URL()``` or ```load_json_data_from_file()```. It always returns a tuple ```(json_data, file_path)```.
+In [questionnaire_unit_test.py](./questionnaire_unit_test.py), ```load_json_argv()``` is the entry point.\
+It receives ```sys.argv```, validates that there is exactly one ```.json``` argument. detects whether it is a ```URL``` or a local ```file```, and delegates to ```load_json_data_from_URL()``` or ```load_json_data_from_file()```. 
 
+It always returns a tuple ```(json_data, file_path)```.
 
-### Testing highlights
+\
+ **Testing highlights**
+
 The objective was to test these various characteristics and methods:
 
 - **Test-class inheritance** to reuse base cases by changing a single parameter.
 - **Mocking** with `unittest.mock.patch` to simulate `sys.argv`.
-- **Threaded local HTTP server** (`ThreadingMixIn` + `SimpleHTTPRequestHandler`) to test
-  remote loading without relying on the internet.
-- **`setUp`/`tearDown` (unittest) vs `@pytest.fixture` (pytest)** for the same need, to
-  compare both frameworks directly.
+- **Threaded local HTTP server** (`ThreadingMixIn` + `SimpleHTTPRequestHandler`) to test remote loading without relying on the internet.
+- **`setUp`/`tearDown` (unittest) vs `@pytest.fixture` (pytest)** for the same need, to compare both frameworks directly.
 
 
-### Continuous integration
+\
+**Continuous integration**
  
 GitHub Actions runs on every push and pull request to `master`: dependency install
 (Python 3.10), `flake8` lint, then the test suite under both `unittest` and `pytest`.
