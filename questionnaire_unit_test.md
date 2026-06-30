@@ -5,39 +5,40 @@
 Uses the 'unittest' automated framework but not only to test questionnaire.py
 
 ```commandline
-python ./questionnaire_unit_tests.py
+python3 -m unittest questionnaire_unit_test
+
+pytest -v -k questionnaire_unit_test.py -s
 ```
 Note : All tests are described following the format :\
 `test number`->`returned values` if receives __argument(s)__ then prints `message`
 
+**The tests are orchestrated to be progressive :**
+- **Level 1** : Basic Unit tests with argument parsing on a local file
+- **Level 2** : Same tests but with a different name of program
+- **Level 3** : Same tests but with a file into a folder
+
+
 ---
-### Level 1 : Basic Unit tests about the arguments received by questionnaire.py
+### Level 1 : Basic Unit tests with argument parsing on a local file
 
 the argument are read and handled by the `load_json_argv` function which should return the json data `<Json_Data>`
 and the file path `<File_Path>`
 `
  
-- `test_01` -> `<Json_Data>, <File_Path>` if receives __a good json file__ then prints no message
-
-- `test_02` -> `None, None` if receives __no file__ then prints the message :\
-```Error : Error in argument, should add a single .json questionnaire```
-
-- `test_03` -> `None, None` if receives __more than one file__ then prints the message :\
-```Error : Error in argument, should add a single .json questionnaire```
-
-- `test_04` -> `None, <File_Path>` if receives __a file without json extension__ then prints the message :\
-```Error : Incorrect extension, add a .json questionnaire```
-
-- `test_05` -> `None, <File_Path>` if receives __a non-existent file__ then prints the message :\
-```Error : Invalid permissions or path to non-existent-file.json```
-
-- `test_06` -> `None, <File_Path>` if receives __an empty json file__ then prints the message :\
-```Error : Incompatible or no data in JSON file empty.json```
+| Test | What it checks | Msg | json | file_path |
+|---|---|---|---|---|
+| `test_01` | __a good json file__ | None | Data | Path |
+| `test_02` | __no file__ | Error in argument, should add a single .json questionnaire | None | None |
+| `test_03` | __more than one file__ | Error in argument, should add a single .json questionnaire | None | None |
+| `test_04` | __a file without json extension__ | Incorrect extension, add a .json questionnaire | None | Path |
+| `test_05` | __a non-existent file__ | Invalid permissions or path to non-existent-file.json | None | Path |
+| `test_06` | __an empty json file__ | Incompatible or no data in JSON file <file> | None | Path |
 
 ---
 ### Level 2 : Same tests but with a different name of program
+
 If the name of the questionnaire.py change, the error messages should adapt.\
-The class test is derived from the level 1 but simulates a program named `test.py`
+Inherits Level 1 and simulates a program named `test.py`
 
 ---
 ### Level 3 : Same tests but with a file into a folder
@@ -45,72 +46,50 @@ The class test is derived from the level 1 but simulates a program named `test.p
 The class derives from the level 1 and executes the same tests except that 
 a [json_test_files](./json_test_files) folder is added to the path of the file given in argument
 
-The printed message of test 2 is quite different from the Level 1 since the file path is given in argument.
-- `test_02` -> `None, <File_Path>` if receives __no file__ then prints the message :\
-```Error : Incorrect extension, add a .json questionnaire.```
+| Test | What it checks | Msg | json | file_path |
+|---|---|---|---|---|
+| `test_02` | __a folder (no file)__ | Incorrect extension, add a .json questionnaire | None | Path |
 
 ---
 ### Level 4 : Same tests but with another name and a file into a folder 
 
-The class derives from the level 2 and 3 and executes the same tests under `test.py` name and with files 
-from [json_test_files](./json_test_files)
-
-The printed message of test 2 is so quite different from the Level 1 as well.
-- `test_02` -> `None, <File_Path>` if receives __no file__ then prints the message :\
-```Error : Incorrect extension, add a .json questionnaire.```
+Inherits Levels 2 and 3: same as Level 3, with the `test.py` script name in the messages
 
 ---
-### Level 5 : Tests with data online 
+### Level 5 :  Loading from a real URL 
 
-A free json file is available at the url : https://countwordsfree.com/example.json
-
-- `test_01` -> `<Json_Data>, <File_Path>` if receives __a valid json file on a valid url path__ then prints no message.
-
-
-- `test_02` -> `None, <File_Path>` if receives __a invalid json file on a valid url path__ then prints the message :\
-```Error : File not found at URL https://countwordsfree.com/non-existant.json```
-
-
-- `test_03` -> `None, <File_Path>` if receives __a valid json file but on a invalid url path__ then prints the message :\
-```Error : Invalid URL at https://countwordsfre.com/example.json```
-
-
-- `test_04` -> `None, <File_Path>` if receives __a file without json extension on a valid url path__ then prints the message :\
-```Error : Incorrect extension, add a .json questionnaire.```
+Sample file used: `https://countwordsfree.com/example.json`.
+ 
+| Test | What it checks | Msg | json | file_path |
+|---|---|---|---|---|
+| `test_01` | __a valid json file on a valid url__ | None | Data | Path |
+| `test_02` | __an invalid json file on a valid url__ | File not found at URL <url> | None | Path |
+| `test_03` | __a valid json file on an invalid url__ | Invalid URL at <url> | None | Path |
+| `test_04` | __a file without json extension on a valid url__ | Incorrect extension, add a .json questionnaire | None | Path |
 
 ---
-### Level 6 : Tests with data on http://localhost 
+### Level 6 : Loading over a local HTTP server (`setUp` / `tearDown`)
 
-To go further and test wrong or empty json files, it is necessary to simulate a simple HTTP server 
-via localhost(`http://127.0.0.1`) for example.
-
-The simple HTTP server is started through a thread by the `setUp` method and close by the `tearDown` method.\
+A simple HTTP server is started through a thread with `setUp` and close with `tearDown`.\
 Those 2 `unittest.TestCase` methods are respectively called before and after each test of the class and can be overwritten.
 
-The class derives from the level 1 and therefore executes the same tests but through an HTTP connection.
+The class inherits from Level 1, but served over `http://127.0.0.1`. \
+The argument is now a URL, so a few messages change.
 
-- `test_01` -> `<Json_Data>, <File_Path>` if receives __a good json file__ then prints no message.
-
-
-The printed message of test 2 is quite different from the Level 1 since the URL is given in argument.
-- `test_02` -> `None, <File_Path>` if receives __no file__ then prints a message \
-```Error : Incorrect extension, add a .json questionnaire```
-
-Idem for test 5 and 6 because the argument given here is a URL and not a file.
-
-- `test_05` -> `None, File_Path` if receives __a non-existent file__ then prints the message :\
-```Error : File not found at URL <URL>```
-
-
-- `test_06` -> `None, File_Path` if receives __an empty json file__ then prints the message :\
-```Error : Incompatible or no data in JSON file at URL <URL>```
+| Test | What it checks | Msg | json | file_path |
+|---|---|---|---|---|
+| `test_01` | __a good json file__ | None | Data | Path |
+| `test_02` | __no file (folder url)__ | Incorrect extension, add a .json questionnaire | None | Path |
+| `test_03` | __more than one file__ | Error in argument, should add a single .json questionnaire | None | None |
+| `test_04` | __a file without json extension__ | Incorrect extension, add a .json questionnaire | None | Path |
+| `test_05` | __a non-existent file__ | File not found at URL <url> | None | Path |
+| `test_06` | __an empty json file__ | Incompatible or no data in JSON file at URL <url> | None | Path |
 
 
 ---
-### Level 7 : Optimized Level 6 with pytest  
+### Level 7 : Optimizing Level 6 with pytest  
 
-Rather than opening and closing an HTTP server for each test, it would be better to open and close it once for all tests
-in the class.
+Rather than opening and closing an HTTP server for each test, it would be better to open and close it once for all tests in the class.
 
 This can be done by creating a fixture defined on the `class` scope and using the option `autouse=True` to automatically
 applied it to all the tests of the parent class.
@@ -130,13 +109,17 @@ using `unittests`
 pytest -v -k questionnaire_unit_test.py -s
 ```
 
----
-### Level 8 : Optimized Level 6 with unittests built-in `@classmethod` tag
+Identical cases to Level 6. The server is opened/closed once per class by a class-scoped
+`@pytest.fixture(autouse=True)`. **Skipped under `unittest`** (pytest only).
 
-In the same idea as Level 7 with fixtures, it is possible to call the built-in methods `setUpClass` and `tearDownClass` 
-at the beginning and at the end of the tests of the class. To do this, the `self` argument must be modified to `cls` 
-because these built-in functions are private to the unittest class, and the built-in `@classmethod` tag must be added
-over the class in order to force the access to them.
+---
+### Level 8 : Optimizing Level 6 with unittests built-in `@classmethod` tag
+
+In the same idea as Level 7 with fixtures, it is possible to call the built-in methods `setUpClass` and `tearDownClass` at the beginning and at the end of the tests of the class.
+
+To do this, the `self` argument must be modified to `cls` because these built-in functions are private to the unittest class, and the built-in `@classmethod` tag must be added over the class in order to force the access to them.
+
+This class is identical cases to Level 6, using the `unittest` built-in class methods to start the server once for the whole class.
 
 ---
 ### Level 9 : Tests with a patch on network requests
@@ -150,739 +133,695 @@ or ``File Not Found (404)`` for example, to get the best knowledge of the progra
 This may require to rewrite the tests because the reading of the file from URL must also be simulated, like in this 2 
 tests trying to read files from a non-existent Web URL.
 
-- `test_01` -> `None, File_Path` if receives __a json file on a non-existent Web URL with a simulated
-``File Not Found (404)`` answer to the network request__ then prints the message :
-```commandline
-questionnaire.py http://non-existent-url.com/initial_json_test_file.json -> None, File_Path
-Error : File not found at URL http://non-existent-url.com/initial_json_test_file.json
-```
-- `test_02` -> `Json_Data, File_Path` if receives __a json file on a non-existent Web URL with a simulated 
-``Success (200)`` answer to the network request__ then prints no message.
-```commandline
-questionnaire.py http://non-existent-url.com/initial_json_test_file.json -> Json_Data, File_Path
-```
-In that case, the property `status_code` of the response must be updated to the code `200 (OK)` and the property `text`
-of the response must contain the read json data. This is simulated by the reading of a local file from the given path 
-without the server part like ``./initial_json_test_file.json`` in this example.
+| Test | What it checks | Msg | json | file_path |
+|---|---|---|---|---|
+| `test_01` | __a json file on a non-existent url with a simulated 404 answer__ | File not found at URL <url> | None | Path |
+| `test_02` | __a json file on a non-existent url with a simulated 200 answer + fake data__ | None | Data | Path |
 
 ---
 ### Level 10 : Json Tests
 
-These tests are prepared to know if a `Questionnaire` instance is created or not according to the json file received in 
-argument. 
+These tests are prepared to know if a `Questionnaire` instance is created or not according to the json file received in argument. 
 
-If all the conditions of the [expected json format](./questionnaire.md#expected-json-schema) is respected, the `__new__`
-method creates an instance of `Questionnaire` and the `__init__` method initializes it, else `__new__` returns `None`.
+According to the [expected json format](./questionnaire.md#expected-json-schema), the properties `categorie` and `difficulté` are not required, so they will be saved as unknown (`inconnue`) if they are non-existent or empty and won't disturb the good behavior of the application.
 
-All json file tested should be a valid json file or the message following will be printed :\
-```--> Wrong arguments, should be test on load_json_argv```
-
-For example :
-- `test_00` -> `None` if receives __empty file__ then prints the message :\
-```Error : Incompatible or no data in JSON file <file>``` then\
-```--> Wrong arguments, should be test on load_json_argv```
-
-The next tests returns a `Questionnaire instance` to be handled by the `run` function and prints no message
-- `test_01` -> `Questionnaire` if receives __a good format file__ 
-- `test_02` -> `Questionnaire` if receives __a file without not mandatory category__ 
-- `test_03` -> `Questionnaire` if receives __a file with empty not mandatory category__ 
-- `test_04` -> `Questionnaire` if receives __a file without not mandatory difficulty__ 
-- `test_05` -> `Questionnaire` if receives __a file with empty not mandatory difficulty__ 
-- `test_10` -> `Questionnaire` if receives __a file with more keys__ 
-
-According to the [expected json format](./questionnaire.md#expected-json-schema), the properties `categorie` and 
-`difficulté` are not required, so they will be saved as unknown (`inconnue`) if they are non-existent or empty
-and won't disturb the good behavior of the application.
-
-If the json file does not respect the [expected json format](./questionnaire.md#expected-json-schema), the message\
-`Error : Incompatible Json schema in file <file>` will be printed, like for the following tests :
-- `test_06` -> `None` if receives __a file without mandatory title__ 
-- `test_08` -> `None` if receives __a file without mandatory questions__ 
-- `test_11` -> `None` if receives __a file without title in questions__ 
-- `test_13` -> `None` if receives __a file without choice in questions__ 
-- `test_14` -> `None` if receives __a file with a empty choice array in questions__ 
-- `test_15` -> `None` if receives __a file with only one choice in questions__ 
-- `test_16` -> `None` if receives __a file without answer in choices in questions__ 
-- `test_19` -> `None` if receives __a file without boolean indicator specifying a right or wrong answer__ 
-- `test_20` -> `None` if receives __a file with an integer in place of the boolean__ 
-- `test_23` -> `None` if receives __a file with an empty array in choices in questions__ 
-
-Then, if the title or questions are missing, the `__ini__` function will also answer `None`
-
-- `test_07` -> `None` if receives __a file with empty title__ and prints the message:\
-```Error : The title of the quizz is missing and mandatory in file <file>```
+| Test | What it checks | Msg | Result |
+|---|---|---|---|
+| `test_00` | __empty file__ | Incompatible or no data in JSON file <file> — Wrong arguments, should be test on load_json_argv | None |
+| `test_01` | __a good format file__ | None | Questionnaire |
+| `test_02` | __a file without not-mandatory category__ | None | Questionnaire |
+| `test_03` | __a file with empty not-mandatory category__ | None | Questionnaire |
+| `test_04` | __a file without not-mandatory difficulty__ | None | Questionnaire |
+| `test_05` | __a file with empty not-mandatory difficulty__ | None | Questionnaire |
+| `test_06` | __a file without mandatory title__ | Incompatible Json schema in file <file> | None |
+| `test_07` | __a file with empty title__ | The title of the quizz is missing and mandatory in file <file> | None |
+| `test_08` | __a file without mandatory questions__ | Incompatible Json schema in file <file> | None |
+| `test_09` | __a file with empty questions__ | The questions of the quizz are missing and mandatory in file <file> | None |
+| `test_10` | __a file with more keys__ | None | Questionnaire |
+| `test_11` | __a file without title in questions__ | Incompatible Json schema in file <file> | None |
+| `test_12` | __a file with an empty title in a question__ | ⚠ Skipped question : question is empty in question <n> | Questionnaire |
+| `test_13` | __a file without choice in questions__ | Incompatible Json schema in file <file> | None |
+| `test_14` | __a file with an empty choice array in questions__ | Incompatible Json schema in file <file> | None |
+| `test_15` | __a file with only one choice in questions__ | Incompatible Json schema in file <file> | None |
+| `test_16` | __a file without answer in choices in questions__ | Incompatible Json schema in file <file> | None |
+| `test_17` | __a file with an empty wrong answer in choices__ | ⚠ Skipped answer : answer is empty in question <n> | Questionnaire |
+| `test_18` | __a file with an empty good answer in choices__ | ⚠ Skipped answer : answer is empty… — ⚠ Skipped question : no one or more than one good answers… | Questionnaire |
+| `test_19` | __a file without boolean in choices__ | Incompatible Json schema in file <file> | None |
+| `test_20` | __a file with an integer instead of the boolean__ | Incompatible Json schema in file <file> | None |
+| `test_21` | __a file without good answer in choices__ | ⚠ Skipped question : no one or more than one good answers in question <n> | Questionnaire |
+| `test_22` | __a file with more than one good answer in choices__ | ⚠ Skipped question : no one or more than one good answers in question <n> | Questionnaire |
+| `test_23` | __a file with an empty array in choices__ | Incompatible Json schema in file <file> | None |
+| `test_24` | __a file with questions without good answer only__ | every question is dropped, so at run time the quiz prints "Not compatible questions" and is skipped entirely | None |
 
 
-- `test_09` -> `None` if receives __a file with an empty array in choices in questions__ and prints the message :\
-```Error : The questions of the quizz are missing and mandatory in file <file>```
-
-
-Next, the `__init__` function will initialize the `Questionnaire` instance but may skip some incompatible parts of 
-the quiz if they are empty, or if there is no answer or more than one answer in a question, and will print one or more 
-warning messages depending on the number of cases encountered.
-
-- `test_12` -> `Questionnaire` if receives __a file with an empty title in a question__ , skip the question, and prints:\
-```Warning : Skipped question : question is empty in question <number> file <file>```
-
-
-- `test_17` -> `Questionnaire` if receives __a file with an empty wrong answer in choices in questions__ , skip the 
-question, and prints:\
-```Warning : Skipped answer : answer is empty in question <number> file <file>```
-
-
-- `test_18` -> `Questionnaire` if receives __a file with an empty good answer in choices in questions__ , skip the 
-answer and the question if there is no more good answer, and prints:\
-```Warning : Skipped answer : answer is empty in question <number> file <file>```\
-```Warning : Skipped question : no one or more than one good answers in question <number> file <file>```
-
-
-- `test_21` -> `Questionnaire` if receives __a file without good answer in choices in questions__ , skip the question,
-and prints:\
-```Warning : Skipped question : no one or more than one good answers in question <number> file <file>```
-
-
-- `test_22` -> `Questionnaire` if receives __a file with more than one good answer in choices in questions__ ,
-skip the question, and prints:\
-```Warning : Skipped question : no one or more than one good answers in question <number> file <file>```
-
-
-Finally, the `__init__` function will initialize the `Questionnaire` instance but the `run` function will 
-skip the whole quizz if there is no compatible question in with the `questionnaire.py` application and 
-will print the following message to the user : \
-```Désolé, aucune questions n'est compatible avec ce quizz``` 
-
-- `test_24` -> `Questionnaire` if receives __a file with questions without good answer only__ ,
-skip all the questions, and prints:\
-```Warning : Skipped question : no one or more than one good answers in question <number> file <file>```\
-```Warning : Skipped question : no one or more than one good answers in question <number> file <file>```
 
 ---
 ### More Unit Tests and Documentations
 
 More information and independent tests about marks, fixtures, patch, local server in thread, json schema, pytest.ini or
-conftest.py files, etc ... are available in [more_unit_tests_docs](./more_unit_test_docs) folder.
+conftest.py files, etc ... are available in [more_unit_tests_methods](./more_unit_tests_methods) folder.
 
 Thank you for reading.
 
 ---
 ### Final results with unittests
 
-```commandline 
-python .\questionnaire_unit_test.py                        
-
+```bash
+python3 -m unittest questionnaire_unit_test -v 
+```
+```commandline
+test_01_load_json_argv_with_one_good_json_file (questionnaire_unit_test._01_load_json_argv.test_01_load_json_argv_with_one_good_json_file) ... 
 questionnaire.py json_01_good_format.json -> Json_Data, File_Path
-.
+ok
+test_02_load_json_argv_with_no_argv (questionnaire_unit_test._01_load_json_argv.test_02_load_json_argv_with_no_argv) ... 
 questionnaire.py -> None, None
 Error : Error in argument, should add a single .json questionnaire. Example : questionnaire.py questionnaire_to_read.json
-.
+ok
+test_03_load_json_argv_with_more_than_one_argv (questionnaire_unit_test._01_load_json_argv.test_03_load_json_argv_with_more_than_one_argv) ... 
 questionnaire.py json_01_good_format.json json_01_another_good_format.json -> None, None
 Error : Error in argument, should add a single .json questionnaire. Example : questionnaire.py questionnaire_to_read.json
-.
+ok
+test_04_load_json_argv_with_argv_without_json_extension (questionnaire_unit_test._01_load_json_argv.test_04_load_json_argv_with_argv_without_json_extension) ... 
 questionnaire.py json_00_without_extension -> None, File_Path
 Error : Incorrect extension, add a .json questionnaire. Example : questionnaire.py questionnaire_to_read.json
-.
+ok
+test_05_load_json_argv_with_non_existent_json_file (questionnaire_unit_test._01_load_json_argv.test_05_load_json_argv_with_non_existent_json_file) ... 
 questionnaire.py non-existent-file.json -> None, File_Path
 Error : Invalid permissions or path to non-existent-file.json
-.
+ok
+test_06_load_json_argv_with_empty_json_file (questionnaire_unit_test._01_load_json_argv.test_06_load_json_argv_with_empty_json_file) ... 
 questionnaire.py json_00_empty.json -> None, File_Path
 Error : Incompatible or no data in JSON file json_00_empty.json
-.
+ok
+test_01_load_json_argv_with_one_good_json_file (questionnaire_unit_test._02_load_json_argv_with_another_name.test_01_load_json_argv_with_one_good_json_file) ... 
 test.py json_01_good_format.json -> Json_Data, File_Path
-.
+ok
+test_02_load_json_argv_with_no_argv (questionnaire_unit_test._02_load_json_argv_with_another_name.test_02_load_json_argv_with_no_argv) ... 
 test.py -> None, None
 Error : Error in argument, should add a single .json questionnaire. Example : test.py questionnaire_to_read.json
-.
+ok
+test_03_load_json_argv_with_more_than_one_argv (questionnaire_unit_test._02_load_json_argv_with_another_name.test_03_load_json_argv_with_more_than_one_argv) ... 
 test.py json_01_good_format.json json_01_another_good_format.json -> None, None
 Error : Error in argument, should add a single .json questionnaire. Example : test.py questionnaire_to_read.json
-.
+ok
+test_04_load_json_argv_with_argv_without_json_extension (questionnaire_unit_test._02_load_json_argv_with_another_name.test_04_load_json_argv_with_argv_without_json_extension) ... 
 test.py json_00_without_extension -> None, File_Path
 Error : Incorrect extension, add a .json questionnaire. Example : test.py questionnaire_to_read.json
-.
+ok
+test_05_load_json_argv_with_non_existent_json_file (questionnaire_unit_test._02_load_json_argv_with_another_name.test_05_load_json_argv_with_non_existent_json_file) ... 
 test.py non-existent-file.json -> None, File_Path
 Error : Invalid permissions or path to non-existent-file.json
-.
+ok
+test_06_load_json_argv_with_empty_json_file (questionnaire_unit_test._02_load_json_argv_with_another_name.test_06_load_json_argv_with_empty_json_file) ... 
 test.py json_00_empty.json -> None, File_Path
 Error : Incompatible or no data in JSON file json_00_empty.json
-.
+ok
+test_01_load_json_argv_with_one_good_json_file (questionnaire_unit_test._03_load_json_argv_with_file_in_folder.test_01_load_json_argv_with_one_good_json_file) ... 
 questionnaire.py json_test_files/json_01_good_format.json -> Json_Data, File_Path
-.
+ok
+test_02_load_json_argv_with_no_argv (questionnaire_unit_test._03_load_json_argv_with_file_in_folder.test_02_load_json_argv_with_no_argv) ... 
 questionnaire.py json_test_files/ -> None, File_Path
 Error : Incorrect extension, add a .json questionnaire. Example : questionnaire.py questionnaire_to_read.json
-.
+ok
+test_03_load_json_argv_with_more_than_one_argv (questionnaire_unit_test._03_load_json_argv_with_file_in_folder.test_03_load_json_argv_with_more_than_one_argv) ... 
 questionnaire.py json_test_files/json_01_good_format.json json_test_files/json_01_another_good_format.json -> None, None
 Error : Error in argument, should add a single .json questionnaire. Example : questionnaire.py questionnaire_to_read.json
-.
+ok
+test_04_load_json_argv_with_argv_without_json_extension (questionnaire_unit_test._03_load_json_argv_with_file_in_folder.test_04_load_json_argv_with_argv_without_json_extension) ... 
 questionnaire.py json_test_files/json_00_without_extension -> None, File_Path
 Error : Incorrect extension, add a .json questionnaire. Example : questionnaire.py questionnaire_to_read.json
-.
+ok
+test_05_load_json_argv_with_non_existent_json_file (questionnaire_unit_test._03_load_json_argv_with_file_in_folder.test_05_load_json_argv_with_non_existent_json_file) ... 
 questionnaire.py json_test_files/non-existent-file.json -> None, File_Path
 Error : Invalid permissions or path to json_test_files/non-existent-file.json
-.
+ok
+test_06_load_json_argv_with_empty_json_file (questionnaire_unit_test._03_load_json_argv_with_file_in_folder.test_06_load_json_argv_with_empty_json_file) ... 
 questionnaire.py json_test_files/json_00_empty.json -> None, File_Path
 Error : Incompatible or no data in JSON file json_test_files/json_00_empty.json
-.
+ok
+test_01_load_json_argv_with_one_good_json_file (questionnaire_unit_test._04_load_json_argv_with_file_in_folder_and_another_name.test_01_load_json_argv_with_one_good_json_file) ... 
 test.py json_test_files/json_01_good_format.json -> Json_Data, File_Path
-.
+ok
+test_02_load_json_argv_with_no_argv (questionnaire_unit_test._04_load_json_argv_with_file_in_folder_and_another_name.test_02_load_json_argv_with_no_argv) ... 
 test.py json_test_files/ -> None, File_Path
 Error : Incorrect extension, add a .json questionnaire. Example : test.py questionnaire_to_read.json
-.
+ok
+test_03_load_json_argv_with_more_than_one_argv (questionnaire_unit_test._04_load_json_argv_with_file_in_folder_and_another_name.test_03_load_json_argv_with_more_than_one_argv) ... 
 test.py json_test_files/json_01_good_format.json json_test_files/json_01_another_good_format.json -> None, None
 Error : Error in argument, should add a single .json questionnaire. Example : test.py questionnaire_to_read.json
-.
+ok
+test_04_load_json_argv_with_argv_without_json_extension (questionnaire_unit_test._04_load_json_argv_with_file_in_folder_and_another_name.test_04_load_json_argv_with_argv_without_json_extension) ... 
 test.py json_test_files/json_00_without_extension -> None, File_Path
 Error : Incorrect extension, add a .json questionnaire. Example : test.py questionnaire_to_read.json
-.
+ok
+test_05_load_json_argv_with_non_existent_json_file (questionnaire_unit_test._04_load_json_argv_with_file_in_folder_and_another_name.test_05_load_json_argv_with_non_existent_json_file) ... 
 test.py json_test_files/non-existent-file.json -> None, File_Path
 Error : Invalid permissions or path to json_test_files/non-existent-file.json
-.
+ok
+test_06_load_json_argv_with_empty_json_file (questionnaire_unit_test._04_load_json_argv_with_file_in_folder_and_another_name.test_06_load_json_argv_with_empty_json_file) ... 
 test.py json_test_files/json_00_empty.json -> None, File_Path
 Error : Incompatible or no data in JSON file json_test_files/json_00_empty.json
-.
+ok
+test_01_load_json_argv_with_json_file_sample_online (questionnaire_unit_test._05_load_json_argv_with_data_online.test_01_load_json_argv_with_json_file_sample_online) ... 
 questionnaire.py https://countwordsfree.com/example.json -> Json_Data, File_Path
-.
+ok
+test_02_load_json_argv_with_invalid_json_file_sample_online (questionnaire_unit_test._05_load_json_argv_with_data_online.test_02_load_json_argv_with_invalid_json_file_sample_online) ... 
 questionnaire.py https://countwordsfree.com/non-existant.json -> None, File_Path
 Error : File not found at URL https://countwordsfree.com/non-existant.json
-.
+ok
+test_03_load_json_argv_with_invalid_url (questionnaire_unit_test._05_load_json_argv_with_data_online.test_03_load_json_argv_with_invalid_url) ... 
 questionnaire.py https://countwordsfre.com/example.json -> None, File_Path
 Error : Invalid URL at https://countwordsfre.com/example.json
-.
+ok
+test_04_load_json_argv_with_empty_or_uncompleted_file_online (questionnaire_unit_test._05_load_json_argv_with_data_online.test_04_load_json_argv_with_empty_or_uncompleted_file_online) ... 
 questionnaire.py https://countwordsfree.com/empty_or_uncompleted_file -> None, File_Path
 Error : Incorrect extension, add a .json questionnaire. Example : questionnaire.py questionnaire_to_read.json
-.
-Connection to http://127.0.0.1:8000/ in Thread-1 (serve_forever)
-questionnaire.py http://127.0.0.1:8000/json_test_files/json_01_good_format.json -> Json_Data, File_Path
-127.0.0.1 - - [07/Dec/2022 15:07:38] "GET /json_test_files/json_01_good_format.json HTTP/1.1" 200 -
-Disconnection from http://127.0.0.1:8000/
-.
-Connection to http://127.0.0.1:8000/ in Thread-3 (serve_forever)
-questionnaire.py http://127.0.0.1:8000/json_test_files/ -> None, File_Path
-Error : Incorrect extension, add a .json questionnaire. Example : questionnaire.py questionnaire_to_read.json
-Disconnection from http://127.0.0.1:8000/
-.
-Connection to http://127.0.0.1:8000/ in Thread-4 (serve_forever)
-questionnaire.py http://127.0.0.1:8000/json_test_files/json_01_good_format.json http://127.0.0.1:8000/json_test_files/json_01_another_good_format.json -> None, None
-Error : Error in argument, should add a single .json questionnaire. Example : questionnaire.py questionnaire_to_read.json
-Disconnection from http://127.0.0.1:8000/
-.
-Connection to http://127.0.0.1:8000/ in Thread-5 (serve_forever)
-questionnaire.py http://127.0.0.1:8000/json_test_files/json_00_without_extension -> None, File_Path
-Error : Incorrect extension, add a .json questionnaire. Example : questionnaire.py questionnaire_to_read.json
-Disconnection from http://127.0.0.1:8000/
-.
-Connection to http://127.0.0.1:8000/ in Thread-6 (serve_forever)
-questionnaire.py http://127.0.0.1:8000/json_test_files/non-existent-file.json -> None, File_Path
-127.0.0.1 - - [07/Dec/2022 15:07:40] code 404, message File not found
-127.0.0.1 - - [07/Dec/2022 15:07:40] "GET /json_test_files/non-existent-file.json HTTP/1.1" 404 -
-Error : File not found at URL http://127.0.0.1:8000/json_test_files/non-existent-file.json
-Disconnection from http://127.0.0.1:8000/
-.
-Connection to http://127.0.0.1:8000/ in Thread-8 (serve_forever)
-questionnaire.py http://127.0.0.1:8000/json_test_files/json_00_empty.json -> None, File_Path
-127.0.0.1 - - [07/Dec/2022 15:07:40] "GET /json_test_files/json_00_empty.json HTTP/1.1" 200 -
-Error : Incompatible or no data in JSON file at URL http://127.0.0.1:8000/json_test_files/json_00_empty.json
-Disconnection from http://127.0.0.1:8000/
-.
-Connection to http://127.0.0.1:8000/ in Thread-10 (serve_forever)
-questionnaire.py http://127.0.0.1:8000/json_test_files/json_01_good_format.json -> Json_Data, File_Path
-127.0.0.1 - - [07/Dec/2022 15:07:41] "GET /json_test_files/json_01_good_format.json HTTP/1.1" 200 -
-.
-questionnaire.py http://127.0.0.1:8000/json_test_files/ -> None, File_Path
-Error : Incorrect extension, add a .json questionnaire. Example : questionnaire.py questionnaire_to_read.json
-.
-questionnaire.py http://127.0.0.1:8000/json_test_files/json_01_good_format.json http://127.0.0.1:8000/json_test_files/json_01_another_good_format.json -> None, None
-Error : Error in argument, should add a single .json questionnaire. Example : questionnaire.py questionnaire_to_read.json
-.
-questionnaire.py http://127.0.0.1:8000/json_test_files/json_00_without_extension -> None, File_Path
-Error : Incorrect extension, add a .json questionnaire. Example : questionnaire.py questionnaire_to_read.json
-.
-questionnaire.py http://127.0.0.1:8000/json_test_files/non-existent-file.json -> None, File_Path
-127.0.0.1 - - [07/Dec/2022 15:07:41] code 404, message File not found
-127.0.0.1 - - [07/Dec/2022 15:07:41] "GET /json_test_files/non-existent-file.json HTTP/1.1" 404 -
-Error : File not found at URL http://127.0.0.1:8000/json_test_files/non-existent-file.json
-.
-questionnaire.py http://127.0.0.1:8000/json_test_files/json_00_empty.json -> None, File_Path
-127.0.0.1 - - [07/Dec/2022 15:07:41] "GET /json_test_files/json_00_empty.json HTTP/1.1" 200 -
-Error : Incompatible or no data in JSON file at URL http://127.0.0.1:8000/json_test_files/json_00_empty.json
-.
-Disconnection from http://127.0.0.1:8000/
+ok
+test_01_load_json_argv_with_one_good_json_file (questionnaire_unit_test._06_load_json_argv_with_data_via_localhost_8000_in_setup_teardown.test_01_load_json_argv_with_one_good_json_file) ... 
 
+Connection to http://127.0.0.1:50967/ in Thread-1 (serve_forever) 
+questionnaire.py http://127.0.0.1:50967/json_test_files/json_01_good_format.json -> Json_Data, File_Path
+127.0.0.1 - - [30/Jun/2026 15:21:23] "GET /json_test_files/json_01_good_format.json HTTP/1.1" 200 -
+Disconnection from http://127.0.0.1:50967/
+ok
+test_02_load_json_argv_with_no_argv (questionnaire_unit_test._06_load_json_argv_with_data_via_localhost_8000_in_setup_teardown.test_02_load_json_argv_with_no_argv) ... 
+
+Connection to http://127.0.0.1:55735/ in Thread-3 (serve_forever) 
+questionnaire.py http://127.0.0.1:55735/json_test_files/ -> None, File_Path
+Error : Incorrect extension, add a .json questionnaire. Example : questionnaire.py questionnaire_to_read.json
+Disconnection from http://127.0.0.1:55735/
+ok
+test_03_load_json_argv_with_more_than_one_argv (questionnaire_unit_test._06_load_json_argv_with_data_via_localhost_8000_in_setup_teardown.test_03_load_json_argv_with_more_than_one_argv) ... 
+
+Connection to http://127.0.0.1:55233/ in Thread-4 (serve_forever) 
+questionnaire.py http://127.0.0.1:55233/json_test_files/json_01_good_format.json http://127.0.0.1:55233/json_test_files/json_01_another_good_format.json -> None, None
+Error : Error in argument, should add a single .json questionnaire. Example : questionnaire.py questionnaire_to_read.json
+Disconnection from http://127.0.0.1:55233/
+ok
+test_04_load_json_argv_with_argv_without_json_extension (questionnaire_unit_test._06_load_json_argv_with_data_via_localhost_8000_in_setup_teardown.test_04_load_json_argv_with_argv_without_json_extension) ... 
+
+Connection to http://127.0.0.1:54449/ in Thread-5 (serve_forever) 
+questionnaire.py http://127.0.0.1:54449/json_test_files/json_00_without_extension -> None, File_Path
+Error : Incorrect extension, add a .json questionnaire. Example : questionnaire.py questionnaire_to_read.json
+Disconnection from http://127.0.0.1:54449/
+ok
+test_05_load_json_argv_with_non_existent_json_file (questionnaire_unit_test._06_load_json_argv_with_data_via_localhost_8000_in_setup_teardown.test_05_load_json_argv_with_non_existent_json_file) ... 
+
+Connection to http://127.0.0.1:47915/ in Thread-6 (serve_forever) 
+questionnaire.py http://127.0.0.1:47915/json_test_files/non-existent-file.json -> None, File_Path
+127.0.0.1 - - [30/Jun/2026 15:21:25] code 404, message File not found
+127.0.0.1 - - [30/Jun/2026 15:21:25] "GET /json_test_files/non-existent-file.json HTTP/1.1" 404 -
+Error : File not found at URL http://127.0.0.1:47915/json_test_files/non-existent-file.json
+Disconnection from http://127.0.0.1:47915/
+ok
+test_06_load_json_argv_with_empty_json_file (questionnaire_unit_test._06_load_json_argv_with_data_via_localhost_8000_in_setup_teardown.test_06_load_json_argv_with_empty_json_file) ... 
+
+Connection to http://127.0.0.1:48385/ in Thread-8 (serve_forever) 
+questionnaire.py http://127.0.0.1:48385/json_test_files/json_00_empty.json -> None, File_Path
+127.0.0.1 - - [30/Jun/2026 15:21:25] "GET /json_test_files/json_00_empty.json HTTP/1.1" 200 -
+Error : Incompatible or no data in JSON file at URL http://127.0.0.1:48385/json_test_files/json_00_empty.json
+Disconnection from http://127.0.0.1:48385/
+ok
+test_01_load_json_argv_with_one_good_json_file (questionnaire_unit_test._07_load_json_argv_with_data_via_localhost_8000_in_fixture.test_01_load_json_argv_with_one_good_json_file) ... skipped 'requires pytest'
+test_02_load_json_argv_with_no_argv (questionnaire_unit_test._07_load_json_argv_with_data_via_localhost_8000_in_fixture.test_02_load_json_argv_with_no_argv) ... skipped 'requires pytest'
+test_03_load_json_argv_with_more_than_one_argv (questionnaire_unit_test._07_load_json_argv_with_data_via_localhost_8000_in_fixture.test_03_load_json_argv_with_more_than_one_argv) ... skipped 'requires pytest'
+test_04_load_json_argv_with_argv_without_json_extension (questionnaire_unit_test._07_load_json_argv_with_data_via_localhost_8000_in_fixture.test_04_load_json_argv_with_argv_without_json_extension) ... skipped 'requires pytest'
+test_05_load_json_argv_with_non_existent_json_file (questionnaire_unit_test._07_load_json_argv_with_data_via_localhost_8000_in_fixture.test_05_load_json_argv_with_non_existent_json_file) ... skipped 'requires pytest'
+test_06_load_json_argv_with_empty_json_file (questionnaire_unit_test._07_load_json_argv_with_data_via_localhost_8000_in_fixture.test_06_load_json_argv_with_empty_json_file) ... skipped 'requires pytest'
+
+
+Connection to http://127.0.0.1:48907/ in Thread-10 (serve_forever)test_01_load_json_argv_with_one_good_json_file (questionnaire_unit_test._08_load_json_argv_with_data_via_localhost_8000_in_setupClass_teardownClass.test_01_load_json_argv_with_one_good_json_file) ...  
+questionnaire.py http://127.0.0.1:48907/json_test_files/json_01_good_format.json -> Json_Data, File_Path
+127.0.0.1 - - [30/Jun/2026 15:21:26] "GET /json_test_files/json_01_good_format.json HTTP/1.1" 200 -
+ok
+test_02_load_json_argv_with_no_argv (questionnaire_unit_test._08_load_json_argv_with_data_via_localhost_8000_in_setupClass_teardownClass.test_02_load_json_argv_with_no_argv) ... 
+questionnaire.py http://127.0.0.1:48907/json_test_files/ -> None, File_Path
+Error : Incorrect extension, add a .json questionnaire. Example : questionnaire.py questionnaire_to_read.json
+ok
+test_03_load_json_argv_with_more_than_one_argv (questionnaire_unit_test._08_load_json_argv_with_data_via_localhost_8000_in_setupClass_teardownClass.test_03_load_json_argv_with_more_than_one_argv) ... 
+questionnaire.py http://127.0.0.1:48907/json_test_files/json_01_good_format.json http://127.0.0.1:48907/json_test_files/json_01_another_good_format.json -> None, None
+Error : Error in argument, should add a single .json questionnaire. Example : questionnaire.py questionnaire_to_read.json
+ok
+test_04_load_json_argv_with_argv_without_json_extension (questionnaire_unit_test._08_load_json_argv_with_data_via_localhost_8000_in_setupClass_teardownClass.test_04_load_json_argv_with_argv_without_json_extension) ... 
+questionnaire.py http://127.0.0.1:48907/json_test_files/json_00_without_extension -> None, File_Path
+Error : Incorrect extension, add a .json questionnaire. Example : questionnaire.py questionnaire_to_read.json
+ok
+test_05_load_json_argv_with_non_existent_json_file (questionnaire_unit_test._08_load_json_argv_with_data_via_localhost_8000_in_setupClass_teardownClass.test_05_load_json_argv_with_non_existent_json_file) ... 
+questionnaire.py http://127.0.0.1:48907/json_test_files/non-existent-file.json -> None, File_Path
+127.0.0.1 - - [30/Jun/2026 15:21:26] code 404, message File not found
+127.0.0.1 - - [30/Jun/2026 15:21:26] "GET /json_test_files/non-existent-file.json HTTP/1.1" 404 -
+Error : File not found at URL http://127.0.0.1:48907/json_test_files/non-existent-file.json
+ok
+test_06_load_json_argv_with_empty_json_file (questionnaire_unit_test._08_load_json_argv_with_data_via_localhost_8000_in_setupClass_teardownClass.test_06_load_json_argv_with_empty_json_file) ... 
+questionnaire.py http://127.0.0.1:48907/json_test_files/json_00_empty.json -> None, File_Path
+127.0.0.1 - - [30/Jun/2026 15:21:26] "GET /json_test_files/json_00_empty.json HTTP/1.1" 200 -
+Error : Incompatible or no data in JSON file at URL http://127.0.0.1:48907/json_test_files/json_00_empty.json
+ok
+Disconnection from http://127.0.0.1:48907/
+test_01_load_json_argv_with_simulated_FileNotFound_answer (questionnaire_unit_test._09_load_json_argv_with_simulated_server.test_01_load_json_argv_with_simulated_FileNotFound_answer) ... 
 questionnaire.py http://non-existent-url.com/json_01_good_format.json -> None, File_Path
 Error : File not found at URL http://non-existent-url.com/json_01_good_format.json
-.
+ok
+test_02_load_json_argv_with_simulated_success_request_and_fake_data (questionnaire_unit_test._09_load_json_argv_with_simulated_server.test_02_load_json_argv_with_simulated_success_request_and_fake_data) ... 
 questionnaire.py http://non-existent-url.com/json_01_good_format.json -> Json_Data, File_Path
-.
-Questionnaire( <json data>, json_test_files\json_00_empty.json ) --> None
-Error : Incompatible or no data in JSON file json_test_files\json_00_empty.json
+ok
+test_00_Questionnaire_empty_file (questionnaire_unit_test._10_Questionnaire_initialization.test_00_Questionnaire_empty_file) ... 
+Questionnaire( <json data>, json_test_files/json_00_empty.json ) --> None 
+Error : Incompatible or no data in JSON file json_test_files/json_00_empty.json
 --> Wrong arguments, should be test on load_json_argv
-.
-Questionnaire( <json data>, json_test_files\json_01_good_format.json ) --> Questionnaire
-.
-Questionnaire( <json data>, json_test_files\json_02_without_category.json ) --> Questionnaire
-.
-Questionnaire( <json data>, json_test_files\json_03_with_empty_category.json ) --> Questionnaire
-.
-Questionnaire( <json data>, json_test_files\json_04_without_difficulty.json ) --> Questionnaire
-.
-Questionnaire( <json data>, json_test_files\json_05_with_empty_difficulty.json ) --> Questionnaire
-.
-Questionnaire( <json data>, json_test_files\json_06_without_title.json ) --> None
-Error : Incompatible Json schema in file json_test_files\json_06_without_title.json
-.
-Questionnaire( <json data>, json_test_files\json_07_with_empty_title.json ) --> None
-Error : The title of the quizz is missing and mandatory in file json_test_files\json_07_with_empty_title.json
-.
-Questionnaire( <json data>, json_test_files\json_08_without_questions.json ) --> None
-Error : Incompatible Json schema in file json_test_files\json_08_without_questions.json
-.
-Questionnaire( <json data>, json_test_files\json_09_with_empty_questions.json ) --> None
-Error : The questions of the quizz are missing and mandatory in file json_test_files\json_09_with_empty_questions.json
-.
-Questionnaire( <json data>, json_test_files\json_10_with_more_keys.json ) --> Questionnaire
-.
-Questionnaire( <json data>, json_test_files\json_11_without_title_in_questions.json ) --> None
-Error : Incompatible Json schema in file json_test_files\json_11_without_title_in_questions.json
-.
-Questionnaire( <json data>, json_test_files\json_12_with_empty_title_in_questions.json ) --> Questionnaire
-Warning : Skipped question : question is empty in question 1 file json_test_files\json_12_with_empty_title_in_questions.json
-.
-Questionnaire( <json data>, json_test_files\json_13_without_choice_in_questions.json ) --> None
-Error : Incompatible Json schema in file json_test_files\json_13_without_choice_in_questions.json
-.
-Questionnaire( <json data>, json_test_files\json_14_with_empty_choice_array_in_questions.json ) --> None
-Error : Incompatible Json schema in file json_test_files\json_14_with_empty_choice_array_in_questions.json
-.
-Questionnaire( <json data>, json_test_files\json_15_with_only_one_choice_in_questions.json ) --> None
-Error : Incompatible Json schema in file json_test_files\json_15_with_only_one_choice_in_questions.json
-.
-Questionnaire( <json data>, json_test_files\json_16_without_answer_in_choices_in_questions.json ) --> None
-Error : Incompatible Json schema in file json_test_files\json_16_without_answer_in_choices_in_questions.json
-.
-Questionnaire( <json data>, json_test_files\json_17_with_empty_wrong_answer_in_choices_in_questions.json ) --> Questionnaire
-Warning : Skipped answer : answer is empty in question 1 file json_test_files\json_17_with_empty_wrong_answer_in_choices_in_questions.json
-.
-Questionnaire( <json data>, json_test_files\json_18_with_empty_good_answer_in_choices_in_questions.json ) --> Questionnaire
-Warning : Skipped answer : answer is empty in question 1 file json_test_files\json_18_with_empty_good_answer_in_choices_in_questions.json
-Warning : Skipped question : no one or more than one good answers in question 1 file json_test_files\json_18_with_empty_good_answer_in_choices_in_questions.json
-.
-Questionnaire( <json data>, json_test_files\json_19_without_boolean_in_choices_in_questions.json ) --> None
-Error : Incompatible Json schema in file json_test_files\json_19_without_boolean_in_choices_in_questions.json
-.
-Questionnaire( <json data>, json_test_files\json_20_with_integer_in_choices_in_questions.json ) --> None
-Error : Incompatible Json schema in file json_test_files\json_20_with_integer_in_choices_in_questions.json
-.
-Questionnaire( <json data>, json_test_files\json_21_without_no_good_answer_in_choices_in_questions.json ) --> Questionnaire
-Warning : Skipped question : no one or more than one good answers in question 1 file json_test_files\json_21_without_no_good_answer_in_choices_in_questions.json
-.
-Questionnaire( <json data>, json_test_files\json_22_with_more_than_one_good_answer_in_choices_in_questions.json ) --> Questionnaire
-Warning : Skipped question : no one or more than one good answers in question 1 file json_test_files\json_22_with_more_than_one_good_answer_in_choices_in_questions.json
-.
-Questionnaire( <json data>, json_test_files\json_23_with_an_empty_array_in_choices_in_questions.json ) --> None
-Error : Incompatible Json schema in file json_test_files\json_23_with_an_empty_array_in_choices_in_questions.json
-.
-Questionnaire( <json data>, json_test_files\json_24_with_questions_without_good_answer_only.json ) --> Questionnaire
-Warning : Skipped question : no one or more than one good answers in question 1 file json_test_files\json_24_with_questions_without_good_answer_only.json
-Warning : Skipped question : no one or more than one good answers in question 2 file json_test_files\json_24_with_questions_without_good_answer_only.json
-.
+ok
+test_01_Questionnaire_good_format_file (questionnaire_unit_test._10_Questionnaire_initialization.test_01_Questionnaire_good_format_file) ... 
+Questionnaire( <json data>, json_test_files/json_01_good_format.json ) --> Questionnaire 
+ok
+test_02_Questionnaire_without_not_mandatory_category (questionnaire_unit_test._10_Questionnaire_initialization.test_02_Questionnaire_without_not_mandatory_category) ... 
+Questionnaire( <json data>, json_test_files/json_02_without_category.json ) --> Questionnaire 
+ok
+test_03_Questionnaire_with_empty_not_mandatory_category (questionnaire_unit_test._10_Questionnaire_initialization.test_03_Questionnaire_with_empty_not_mandatory_category) ... 
+Questionnaire( <json data>, json_test_files/json_03_with_empty_category.json ) --> Questionnaire 
+ok
+test_04_Questionnaire_without_not_mandatory_difficulty (questionnaire_unit_test._10_Questionnaire_initialization.test_04_Questionnaire_without_not_mandatory_difficulty) ... 
+Questionnaire( <json data>, json_test_files/json_04_without_difficulty.json ) --> Questionnaire 
+ok
+test_05_Questionnaire_with_empty_not_mandatory_difficulty (questionnaire_unit_test._10_Questionnaire_initialization.test_05_Questionnaire_with_empty_not_mandatory_difficulty) ... 
+Questionnaire( <json data>, json_test_files/json_05_with_empty_difficulty.json ) --> Questionnaire 
+ok
+test_06_Questionnaire_without_mandatory_title (questionnaire_unit_test._10_Questionnaire_initialization.test_06_Questionnaire_without_mandatory_title) ... 
+Questionnaire( <json data>, json_test_files/json_06_without_title.json ) --> None 
+Error : Incompatible Json schema in file json_test_files/json_06_without_title.json
+ok
+test_07_Questionnaire_with_empty_title (questionnaire_unit_test._10_Questionnaire_initialization.test_07_Questionnaire_with_empty_title) ... 
+Questionnaire( <json data>, json_test_files/json_07_with_empty_title.json ) --> None 
+Error : The title of the quizz is missing and mandatory in file json_test_files/json_07_with_empty_title.json
+ok
+test_08_Questionnaire_without_mandatory_questions (questionnaire_unit_test._10_Questionnaire_initialization.test_08_Questionnaire_without_mandatory_questions) ... 
+Questionnaire( <json data>, json_test_files/json_08_without_questions.json ) --> None 
+Error : Incompatible Json schema in file json_test_files/json_08_without_questions.json
+ok
+test_09_Questionnaire_with_empty_questions (questionnaire_unit_test._10_Questionnaire_initialization.test_09_Questionnaire_with_empty_questions) ... 
+Questionnaire( <json data>, json_test_files/json_09_with_empty_questions.json ) --> None 
+Error : The questions of the quizz are missing and mandatory in file json_test_files/json_09_with_empty_questions.json
+ok
+test_10_Questionnaire_with_more_keys (questionnaire_unit_test._10_Questionnaire_initialization.test_10_Questionnaire_with_more_keys) ... 
+Questionnaire( <json data>, json_test_files/json_10_with_more_keys.json ) --> Questionnaire 
+ok
+test_11_Questionnaire_without_title_in_questions (questionnaire_unit_test._10_Questionnaire_initialization.test_11_Questionnaire_without_title_in_questions) ... 
+Questionnaire( <json data>, json_test_files/json_11_without_title_in_questions.json ) --> None 
+Error : Incompatible Json schema in file json_test_files/json_11_without_title_in_questions.json
+ok
+test_12_Questionnaire_with_empty_title_in_questions (questionnaire_unit_test._10_Questionnaire_initialization.test_12_Questionnaire_with_empty_title_in_questions) ... 
+Questionnaire( <json data>, json_test_files/json_12_with_empty_title_in_questions.json ) --> Questionnaire 
+Warning : Skipped question : question is empty in question 1 file json_test_files/json_12_with_empty_title_in_questions.json
+ok
+test_13_Questionnaire_without_choice_in_questions (questionnaire_unit_test._10_Questionnaire_initialization.test_13_Questionnaire_without_choice_in_questions) ... 
+Questionnaire( <json data>, json_test_files/json_13_without_choice_in_questions.json ) --> None 
+Error : Incompatible Json schema in file json_test_files/json_13_without_choice_in_questions.json
+ok
+test_14_Questionnaire_with_empty_choice_array_in_questions (questionnaire_unit_test._10_Questionnaire_initialization.test_14_Questionnaire_with_empty_choice_array_in_questions) ... 
+Questionnaire( <json data>, json_test_files/json_14_with_empty_choice_array_in_questions.json ) --> None 
+Error : Incompatible Json schema in file json_test_files/json_14_with_empty_choice_array_in_questions.json
+ok
+test_15_Questionnaire_with_only_one_choices_in_questions (questionnaire_unit_test._10_Questionnaire_initialization.test_15_Questionnaire_with_only_one_choices_in_questions) ... 
+Questionnaire( <json data>, json_test_files/json_15_with_only_one_choice_in_questions.json ) --> None 
+Error : Incompatible Json schema in file json_test_files/json_15_with_only_one_choice_in_questions.json
+ok
+test_16_Questionnaire_without_answer_in_choices_in_questions (questionnaire_unit_test._10_Questionnaire_initialization.test_16_Questionnaire_without_answer_in_choices_in_questions) ... 
+Questionnaire( <json data>, json_test_files/json_16_without_answer_in_choices_in_questions.json ) --> None 
+Error : Incompatible Json schema in file json_test_files/json_16_without_answer_in_choices_in_questions.json
+ok
+test_17_Questionnaire_with_empty_wrong_answer_in_choices_in_questions (questionnaire_unit_test._10_Questionnaire_initialization.test_17_Questionnaire_with_empty_wrong_answer_in_choices_in_questions) ... 
+Questionnaire( <json data>, json_test_files/json_17_with_empty_wrong_answer_in_choices_in_questions.json ) --> Questionnaire 
+Warning : Skipped answer : answer is empty in question 1 file json_test_files/json_17_with_empty_wrong_answer_in_choices_in_questions.json
+ok
+test_18_Questionnaire_with_empty_good_answer_in_choices_in_questions (questionnaire_unit_test._10_Questionnaire_initialization.test_18_Questionnaire_with_empty_good_answer_in_choices_in_questions) ... 
+Questionnaire( <json data>, json_test_files/json_18_with_empty_good_answer_in_choices_in_questions.json ) --> Questionnaire 
+Warning : Skipped answer : answer is empty in question 1 file json_test_files/json_18_with_empty_good_answer_in_choices_in_questions.json
+Warning : Skipped question : no one or more than one good answers in question 1 file json_test_files/json_18_with_empty_good_answer_in_choices_in_questions.json
+ok
+test_19_Questionnaire_without_boolean_in_choices_in_questions (questionnaire_unit_test._10_Questionnaire_initialization.test_19_Questionnaire_without_boolean_in_choices_in_questions) ... 
+Questionnaire( <json data>, json_test_files/json_19_without_boolean_in_choices_in_questions.json ) --> None 
+Error : Incompatible Json schema in file json_test_files/json_19_without_boolean_in_choices_in_questions.json
+ok
+test_20_Questionnaire_with_integer_in_choices_in_questions (questionnaire_unit_test._10_Questionnaire_initialization.test_20_Questionnaire_with_integer_in_choices_in_questions) ... 
+Questionnaire( <json data>, json_test_files/json_20_with_integer_in_choices_in_questions.json ) --> None 
+Error : Incompatible Json schema in file json_test_files/json_20_with_integer_in_choices_in_questions.json
+ok
+test_21_Questionnaire_without_no_good_answer_in_choices_in_questions (questionnaire_unit_test._10_Questionnaire_initialization.test_21_Questionnaire_without_no_good_answer_in_choices_in_questions) ... 
+Questionnaire( <json data>, json_test_files/json_21_without_no_good_answer_in_choices_in_questions.json ) --> Questionnaire 
+Warning : Skipped question : no one or more than one good answers in question 1 file json_test_files/json_21_without_no_good_answer_in_choices_in_questions.json
+ok
+test_22_Questionnaire_with_more_than_one_good_answer_in_choices_in_questions (questionnaire_unit_test._10_Questionnaire_initialization.test_22_Questionnaire_with_more_than_one_good_answer_in_choices_in_questions) ... 
+Questionnaire( <json data>, json_test_files/json_22_with_more_than_one_good_answer_in_choices_in_questions.json ) --> Questionnaire 
+Warning : Skipped question : no one or more than one good answers in question 1 file json_test_files/json_22_with_more_than_one_good_answer_in_choices_in_questions.json
+ok
+test_23_Questionnaire_with_an_empty_array_in_choices_in_questions (questionnaire_unit_test._10_Questionnaire_initialization.test_23_Questionnaire_with_an_empty_array_in_choices_in_questions) ... 
+Questionnaire( <json data>, json_test_files/json_23_with_an_empty_array_in_choices_in_questions.json ) --> None 
+Error : Incompatible Json schema in file json_test_files/json_23_with_an_empty_array_in_choices_in_questions.json
+ok
+test_24_Questionnaire_with_questions_without_good_answer_only (questionnaire_unit_test._10_Questionnaire_initialization.test_24_Questionnaire_with_questions_without_good_answer_only) ... 
+Questionnaire( <json data>, json_test_files/json_24_with_questions_without_good_answer_only.json ) --> Questionnaire 
+Warning : Skipped question : no one or more than one good answers in question 1 file json_test_files/json_24_with_questions_without_good_answer_only.json
+Warning : Skipped question : no one or more than one good answers in question 2 file json_test_files/json_24_with_questions_without_good_answer_only.json
+ok
+
 ----------------------------------------------------------------------
-Ran 73 tests in 5.675s
+Ran 73 tests in 4.908s
 
 OK (skipped=6)
 ```
 ---
 ### Final results with pytest
 
-```commandline
+```bash
 pytest -v -k questionnaire_unit_test.py -s
-========================================================================================== test session starts ==========================================================================================
-platform win32 -- Python 3.10.8, pytest-7.2.0, pluggy-1.0.0 -- C:\Users\cedri\AppData\Local\Microsoft\WindowsApps\PythonSoftwareFoundation.Python.3.10_qbz5n2kfra8p0\python.exe
-cachedir: .pytest_cache
-rootdir: C:\MyPythonApps\unit_tests_practice, configfile: pytest.ini
-collecting 6 items                                                                                                                                                                                       o
-k
-collected 127 items / 54 deselected / 73 selected
+```
 
-questionnaire_unit_test.py::_01_load_json_argv::test_01_load_json_argv_with_one_good_json_file
+```python
+============================================================================================================ test session starts =============================================================================================================
+platform linux -- Python 3.12.3, pytest-9.1.1, pluggy-1.6.0 -- ~/unit_tests_practice/venv/bin/python3
+cachedir: .pytest_cache
+rootdir: ~/unit_tests_practice
+configfile: pytest.ini
+collecting ... ok
+collected 126 items / 53 deselected / 73 selected                                                                                                                                                                                            
+
+questionnaire_unit_test.py::_01_load_json_argv::test_01_load_json_argv_with_one_good_json_file 
 questionnaire.py json_01_good_format.json -> Json_Data, File_Path
 PASSED
-
-questionnaire_unit_test.py::_01_load_json_argv::test_02_load_json_argv_with_no_argv
+questionnaire_unit_test.py::_01_load_json_argv::test_02_load_json_argv_with_no_argv 
 questionnaire.py -> None, None
 Error : Error in argument, should add a single .json questionnaire. Example : questionnaire.py questionnaire_to_read.json
 PASSED
-
-questionnaire_unit_test.py::_01_load_json_argv::test_03_load_json_argv_with_more_than_one_argv
+questionnaire_unit_test.py::_01_load_json_argv::test_03_load_json_argv_with_more_than_one_argv 
 questionnaire.py json_01_good_format.json json_01_another_good_format.json -> None, None
 Error : Error in argument, should add a single .json questionnaire. Example : questionnaire.py questionnaire_to_read.json
 PASSED
-
-questionnaire_unit_test.py::_01_load_json_argv::test_04_load_json_argv_with_argv_without_json_extension
+questionnaire_unit_test.py::_01_load_json_argv::test_04_load_json_argv_with_argv_without_json_extension 
 questionnaire.py json_00_without_extension -> None, File_Path
 Error : Incorrect extension, add a .json questionnaire. Example : questionnaire.py questionnaire_to_read.json
 PASSED
-
-questionnaire_unit_test.py::_01_load_json_argv::test_05_load_json_argv_with_non_existent_json_file
+questionnaire_unit_test.py::_01_load_json_argv::test_05_load_json_argv_with_non_existent_json_file 
 questionnaire.py non-existent-file.json -> None, File_Path
 Error : Invalid permissions or path to non-existent-file.json
 PASSED
-
-questionnaire_unit_test.py::_01_load_json_argv::test_06_load_json_argv_with_empty_json_file
+questionnaire_unit_test.py::_01_load_json_argv::test_06_load_json_argv_with_empty_json_file 
 questionnaire.py json_00_empty.json -> None, File_Path
 Error : Incompatible or no data in JSON file json_00_empty.json
 PASSED
-
-questionnaire_unit_test.py::_02_load_json_argv_with_another_name::test_01_load_json_argv_with_one_good_json_file
+questionnaire_unit_test.py::_02_load_json_argv_with_another_name::test_01_load_json_argv_with_one_good_json_file 
 test.py json_01_good_format.json -> Json_Data, File_Path
 PASSED
-
-questionnaire_unit_test.py::_02_load_json_argv_with_another_name::test_02_load_json_argv_with_no_argv
+questionnaire_unit_test.py::_02_load_json_argv_with_another_name::test_02_load_json_argv_with_no_argv 
 test.py -> None, None
 Error : Error in argument, should add a single .json questionnaire. Example : test.py questionnaire_to_read.json
 PASSED
-
-questionnaire_unit_test.py::_02_load_json_argv_with_another_name::test_03_load_json_argv_with_more_than_one_argv
+questionnaire_unit_test.py::_02_load_json_argv_with_another_name::test_03_load_json_argv_with_more_than_one_argv 
 test.py json_01_good_format.json json_01_another_good_format.json -> None, None
 Error : Error in argument, should add a single .json questionnaire. Example : test.py questionnaire_to_read.json
 PASSED
-
-questionnaire_unit_test.py::_02_load_json_argv_with_another_name::test_04_load_json_argv_with_argv_without_json_extension
+questionnaire_unit_test.py::_02_load_json_argv_with_another_name::test_04_load_json_argv_with_argv_without_json_extension 
 test.py json_00_without_extension -> None, File_Path
 Error : Incorrect extension, add a .json questionnaire. Example : test.py questionnaire_to_read.json
 PASSED
-
-questionnaire_unit_test.py::_02_load_json_argv_with_another_name::test_05_load_json_argv_with_non_existent_json_file
+questionnaire_unit_test.py::_02_load_json_argv_with_another_name::test_05_load_json_argv_with_non_existent_json_file 
 test.py non-existent-file.json -> None, File_Path
 Error : Invalid permissions or path to non-existent-file.json
 PASSED
-
-questionnaire_unit_test.py::_02_load_json_argv_with_another_name::test_06_load_json_argv_with_empty_json_file
+questionnaire_unit_test.py::_02_load_json_argv_with_another_name::test_06_load_json_argv_with_empty_json_file 
 test.py json_00_empty.json -> None, File_Path
 Error : Incompatible or no data in JSON file json_00_empty.json
 PASSED
-
-questionnaire_unit_test.py::_03_load_json_argv_with_file_in_folder::test_01_load_json_argv_with_one_good_json_file
+questionnaire_unit_test.py::_03_load_json_argv_with_file_in_folder::test_01_load_json_argv_with_one_good_json_file 
 questionnaire.py json_test_files/json_01_good_format.json -> Json_Data, File_Path
 PASSED
-
-questionnaire_unit_test.py::_03_load_json_argv_with_file_in_folder::test_02_load_json_argv_with_no_argv
+questionnaire_unit_test.py::_03_load_json_argv_with_file_in_folder::test_02_load_json_argv_with_no_argv 
 questionnaire.py json_test_files/ -> None, File_Path
 Error : Incorrect extension, add a .json questionnaire. Example : questionnaire.py questionnaire_to_read.json
 PASSED
-
-questionnaire_unit_test.py::_03_load_json_argv_with_file_in_folder::test_03_load_json_argv_with_more_than_one_argv
+questionnaire_unit_test.py::_03_load_json_argv_with_file_in_folder::test_03_load_json_argv_with_more_than_one_argv 
 questionnaire.py json_test_files/json_01_good_format.json json_test_files/json_01_another_good_format.json -> None, None
 Error : Error in argument, should add a single .json questionnaire. Example : questionnaire.py questionnaire_to_read.json
 PASSED
-
-questionnaire_unit_test.py::_03_load_json_argv_with_file_in_folder::test_04_load_json_argv_with_argv_without_json_extension
+questionnaire_unit_test.py::_03_load_json_argv_with_file_in_folder::test_04_load_json_argv_with_argv_without_json_extension 
 questionnaire.py json_test_files/json_00_without_extension -> None, File_Path
 Error : Incorrect extension, add a .json questionnaire. Example : questionnaire.py questionnaire_to_read.json
 PASSED
-
-questionnaire_unit_test.py::_03_load_json_argv_with_file_in_folder::test_05_load_json_argv_with_non_existent_json_file
+questionnaire_unit_test.py::_03_load_json_argv_with_file_in_folder::test_05_load_json_argv_with_non_existent_json_file 
 questionnaire.py json_test_files/non-existent-file.json -> None, File_Path
 Error : Invalid permissions or path to json_test_files/non-existent-file.json
 PASSED
-
-questionnaire_unit_test.py::_03_load_json_argv_with_file_in_folder::test_06_load_json_argv_with_empty_json_file
+questionnaire_unit_test.py::_03_load_json_argv_with_file_in_folder::test_06_load_json_argv_with_empty_json_file 
 questionnaire.py json_test_files/json_00_empty.json -> None, File_Path
 Error : Incompatible or no data in JSON file json_test_files/json_00_empty.json
 PASSED
-
-questionnaire_unit_test.py::_04_load_json_argv_with_file_in_folder_and_another_name::test_01_load_json_argv_with_one_good_json_file
+questionnaire_unit_test.py::_04_load_json_argv_with_file_in_folder_and_another_name::test_01_load_json_argv_with_one_good_json_file 
 test.py json_test_files/json_01_good_format.json -> Json_Data, File_Path
 PASSED
-
-questionnaire_unit_test.py::_04_load_json_argv_with_file_in_folder_and_another_name::test_02_load_json_argv_with_no_argv
+questionnaire_unit_test.py::_04_load_json_argv_with_file_in_folder_and_another_name::test_02_load_json_argv_with_no_argv 
 test.py json_test_files/ -> None, File_Path
 Error : Incorrect extension, add a .json questionnaire. Example : test.py questionnaire_to_read.json
 PASSED
-
-questionnaire_unit_test.py::_04_load_json_argv_with_file_in_folder_and_another_name::test_03_load_json_argv_with_more_than_one_argv
+questionnaire_unit_test.py::_04_load_json_argv_with_file_in_folder_and_another_name::test_03_load_json_argv_with_more_than_one_argv 
 test.py json_test_files/json_01_good_format.json json_test_files/json_01_another_good_format.json -> None, None
 Error : Error in argument, should add a single .json questionnaire. Example : test.py questionnaire_to_read.json
 PASSED
-
-questionnaire_unit_test.py::_04_load_json_argv_with_file_in_folder_and_another_name::test_04_load_json_argv_with_argv_without_json_extension
+questionnaire_unit_test.py::_04_load_json_argv_with_file_in_folder_and_another_name::test_04_load_json_argv_with_argv_without_json_extension 
 test.py json_test_files/json_00_without_extension -> None, File_Path
 Error : Incorrect extension, add a .json questionnaire. Example : test.py questionnaire_to_read.json
 PASSED
-
-questionnaire_unit_test.py::_04_load_json_argv_with_file_in_folder_and_another_name::test_05_load_json_argv_with_non_existent_json_file
+questionnaire_unit_test.py::_04_load_json_argv_with_file_in_folder_and_another_name::test_05_load_json_argv_with_non_existent_json_file 
 test.py json_test_files/non-existent-file.json -> None, File_Path
 Error : Invalid permissions or path to json_test_files/non-existent-file.json
 PASSED
-
-questionnaire_unit_test.py::_04_load_json_argv_with_file_in_folder_and_another_name::test_06_load_json_argv_with_empty_json_file
+questionnaire_unit_test.py::_04_load_json_argv_with_file_in_folder_and_another_name::test_06_load_json_argv_with_empty_json_file 
 test.py json_test_files/json_00_empty.json -> None, File_Path
 Error : Incompatible or no data in JSON file json_test_files/json_00_empty.json
 PASSED
-
-questionnaire_unit_test.py::_05_load_json_argv_with_data_online::test_01_load_json_argv_with_json_file_sample_online
+questionnaire_unit_test.py::_05_load_json_argv_with_data_online::test_01_load_json_argv_with_json_file_sample_online 
 questionnaire.py https://countwordsfree.com/example.json -> Json_Data, File_Path
 PASSED
-
-questionnaire_unit_test.py::_05_load_json_argv_with_data_online::test_02_load_json_argv_with_invalid_json_file_sample_online
+questionnaire_unit_test.py::_05_load_json_argv_with_data_online::test_02_load_json_argv_with_invalid_json_file_sample_online 
 questionnaire.py https://countwordsfree.com/non-existant.json -> None, File_Path
 Error : File not found at URL https://countwordsfree.com/non-existant.json
 PASSED
-
-questionnaire_unit_test.py::_05_load_json_argv_with_data_online::test_03_load_json_argv_with_invalid_url
+questionnaire_unit_test.py::_05_load_json_argv_with_data_online::test_03_load_json_argv_with_invalid_url 
 questionnaire.py https://countwordsfre.com/example.json -> None, File_Path
 Error : Invalid URL at https://countwordsfre.com/example.json
 PASSED
-
-questionnaire_unit_test.py::_05_load_json_argv_with_data_online::test_04_load_json_argv_with_empty_or_uncompleted_file_online
+questionnaire_unit_test.py::_05_load_json_argv_with_data_online::test_04_load_json_argv_with_empty_or_uncompleted_file_online 
 questionnaire.py https://countwordsfree.com/empty_or_uncompleted_file -> None, File_Path
 Error : Incorrect extension, add a .json questionnaire. Example : questionnaire.py questionnaire_to_read.json
 PASSED
+questionnaire_unit_test.py::_06_load_json_argv_with_data_via_localhost_8000_in_setup_teardown::test_01_load_json_argv_with_one_good_json_file 
 
-questionnaire_unit_test.py::_06_load_json_argv_with_data_via_localhost_8000_in_setup_teardown::test_01_load_json_argv_with_one_good_json_file
-Connection to http://127.0.0.1:8000/ in Thread-1 (serve_forever)
-questionnaire.py http://127.0.0.1:8000/json_test_files/json_01_good_format.json -> Json_Data, File_Path
-127.0.0.1 - - [07/Dec/2022 15:08:54] "GET /json_test_files/json_01_good_format.json HTTP/1.1" 200 -
-Disconnection from http://127.0.0.1:8000/
+Connection to http://127.0.0.1:60393/ in Thread-1 (serve_forever) 
+questionnaire.py http://127.0.0.1:60393/json_test_files/json_01_good_format.json -> Json_Data, File_Path
+127.0.0.1 - - [30/Jun/2026 15:14:15] "GET /json_test_files/json_01_good_format.json HTTP/1.1" 200 -
+Disconnection from http://127.0.0.1:60393/
 PASSED
+questionnaire_unit_test.py::_06_load_json_argv_with_data_via_localhost_8000_in_setup_teardown::test_02_load_json_argv_with_no_argv 
 
-questionnaire_unit_test.py::_06_load_json_argv_with_data_via_localhost_8000_in_setup_teardown::test_02_load_json_argv_with_no_argv
-Connection to http://127.0.0.1:8000/ in Thread-3 (serve_forever)
-questionnaire.py http://127.0.0.1:8000/json_test_files/ -> None, File_Path
+Connection to http://127.0.0.1:55809/ in Thread-3 (serve_forever) 
+questionnaire.py http://127.0.0.1:55809/json_test_files/ -> None, File_Path
 Error : Incorrect extension, add a .json questionnaire. Example : questionnaire.py questionnaire_to_read.json
-Disconnection from http://127.0.0.1:8000/
+Disconnection from http://127.0.0.1:55809/
 PASSED
+questionnaire_unit_test.py::_06_load_json_argv_with_data_via_localhost_8000_in_setup_teardown::test_03_load_json_argv_with_more_than_one_argv 
 
-questionnaire_unit_test.py::_06_load_json_argv_with_data_via_localhost_8000_in_setup_teardown::test_03_load_json_argv_with_more_than_one_argv
-Connection to http://127.0.0.1:8000/ in Thread-4 (serve_forever)
-questionnaire.py http://127.0.0.1:8000/json_test_files/json_01_good_format.json http://127.0.0.1:8000/json_test_files/json_01_another_good_format.json -> None, None
+Connection to http://127.0.0.1:40861/ in Thread-4 (serve_forever) 
+questionnaire.py http://127.0.0.1:40861/json_test_files/json_01_good_format.json http://127.0.0.1:40861/json_test_files/json_01_another_good_format.json -> None, None
 Error : Error in argument, should add a single .json questionnaire. Example : questionnaire.py questionnaire_to_read.json
-Disconnection from http://127.0.0.1:8000/
+Disconnection from http://127.0.0.1:40861/
 PASSED
+questionnaire_unit_test.py::_06_load_json_argv_with_data_via_localhost_8000_in_setup_teardown::test_04_load_json_argv_with_argv_without_json_extension 
 
-questionnaire_unit_test.py::_06_load_json_argv_with_data_via_localhost_8000_in_setup_teardown::test_04_load_json_argv_with_argv_without_json_extension
-Connection to http://127.0.0.1:8000/ in Thread-5 (serve_forever)
-questionnaire.py http://127.0.0.1:8000/json_test_files/json_00_without_extension -> None, File_Path
+Connection to http://127.0.0.1:40203/ in Thread-5 (serve_forever) 
+questionnaire.py http://127.0.0.1:40203/json_test_files/json_00_without_extension -> None, File_Path
 Error : Incorrect extension, add a .json questionnaire. Example : questionnaire.py questionnaire_to_read.json
-Disconnection from http://127.0.0.1:8000/
+Disconnection from http://127.0.0.1:40203/
 PASSED
+questionnaire_unit_test.py::_06_load_json_argv_with_data_via_localhost_8000_in_setup_teardown::test_05_load_json_argv_with_non_existent_json_file 
 
-questionnaire_unit_test.py::_06_load_json_argv_with_data_via_localhost_8000_in_setup_teardown::test_05_load_json_argv_with_non_existent_json_file
-Connection to http://127.0.0.1:8000/ in Thread-6 (serve_forever)
-questionnaire.py http://127.0.0.1:8000/json_test_files/non-existent-file.json -> None, File_Path
-127.0.0.1 - - [07/Dec/2022 15:08:56] code 404, message File not found
-127.0.0.1 - - [07/Dec/2022 15:08:56] "GET /json_test_files/non-existent-file.json HTTP/1.1" 404 -
-Error : File not found at URL http://127.0.0.1:8000/json_test_files/non-existent-file.json
-Disconnection from http://127.0.0.1:8000/
+Connection to http://127.0.0.1:58481/ in Thread-6 (serve_forever) 
+questionnaire.py http://127.0.0.1:58481/json_test_files/non-existent-file.json -> None, File_Path
+127.0.0.1 - - [30/Jun/2026 15:14:17] code 404, message File not found
+127.0.0.1 - - [30/Jun/2026 15:14:17] "GET /json_test_files/non-existent-file.json HTTP/1.1" 404 -
+Error : File not found at URL http://127.0.0.1:58481/json_test_files/non-existent-file.json
+Disconnection from http://127.0.0.1:58481/
 PASSED
+questionnaire_unit_test.py::_06_load_json_argv_with_data_via_localhost_8000_in_setup_teardown::test_06_load_json_argv_with_empty_json_file 
 
-questionnaire_unit_test.py::_06_load_json_argv_with_data_via_localhost_8000_in_setup_teardown::test_06_load_json_argv_with_empty_json_file
-Connection to http://127.0.0.1:8000/ in Thread-8 (serve_forever)
-questionnaire.py http://127.0.0.1:8000/json_test_files/json_00_empty.json -> None, File_Path
-127.0.0.1 - - [07/Dec/2022 15:08:57] "GET /json_test_files/json_00_empty.json HTTP/1.1" 200 -
-Error : Incompatible or no data in JSON file at URL http://127.0.0.1:8000/json_test_files/json_00_empty.json
-Disconnection from http://127.0.0.1:8000/
+Connection to http://127.0.0.1:49833/ in Thread-8 (serve_forever) 
+questionnaire.py http://127.0.0.1:49833/json_test_files/json_00_empty.json -> None, File_Path
+127.0.0.1 - - [30/Jun/2026 15:14:17] "GET /json_test_files/json_00_empty.json HTTP/1.1" 200 -
+Error : Incompatible or no data in JSON file at URL http://127.0.0.1:49833/json_test_files/json_00_empty.json
+Disconnection from http://127.0.0.1:49833/
 PASSED
+questionnaire_unit_test.py::_07_load_json_argv_with_data_via_localhost_8000_in_fixture::test_01_load_json_argv_with_one_good_json_file 
 
-questionnaire_unit_test.py::_07_load_json_argv_with_data_via_localhost_8000_in_fixture::test_01_load_json_argv_with_one_good_json_file
 HTTP Connection to http://127.0.0.1:8000/ in Thread-10 (serve_forever) 
 questionnaire.py http://127.0.0.1:8000/json_test_files/json_01_good_format.json -> Json_Data, File_Path
-127.0.0.1 - - [07/Dec/2022 15:08:57] "GET /json_test_files/json_01_good_format.json HTTP/1.1" 200 -
+127.0.0.1 - - [30/Jun/2026 15:14:18] "GET /json_test_files/json_01_good_format.json HTTP/1.1" 200 -
 PASSED
-
-questionnaire_unit_test.py::_07_load_json_argv_with_data_via_localhost_8000_in_fixture::test_02_load_json_argv_with_no_argv
+questionnaire_unit_test.py::_07_load_json_argv_with_data_via_localhost_8000_in_fixture::test_02_load_json_argv_with_no_argv 
 questionnaire.py http://127.0.0.1:8000/json_test_files/ -> None, File_Path
 Error : Incorrect extension, add a .json questionnaire. Example : questionnaire.py questionnaire_to_read.json
 PASSED
-
-questionnaire_unit_test.py::_07_load_json_argv_with_data_via_localhost_8000_in_fixture::test_03_load_json_argv_with_more_than_one_argv
+questionnaire_unit_test.py::_07_load_json_argv_with_data_via_localhost_8000_in_fixture::test_03_load_json_argv_with_more_than_one_argv 
 questionnaire.py http://127.0.0.1:8000/json_test_files/json_01_good_format.json http://127.0.0.1:8000/json_test_files/json_01_another_good_format.json -> None, None
 Error : Error in argument, should add a single .json questionnaire. Example : questionnaire.py questionnaire_to_read.json
 PASSED
-
-questionnaire_unit_test.py::_07_load_json_argv_with_data_via_localhost_8000_in_fixture::test_04_load_json_argv_with_argv_without_json_extension
+questionnaire_unit_test.py::_07_load_json_argv_with_data_via_localhost_8000_in_fixture::test_04_load_json_argv_with_argv_without_json_extension 
 questionnaire.py http://127.0.0.1:8000/json_test_files/json_00_without_extension -> None, File_Path
 Error : Incorrect extension, add a .json questionnaire. Example : questionnaire.py questionnaire_to_read.json
 PASSED
-
-questionnaire_unit_test.py::_07_load_json_argv_with_data_via_localhost_8000_in_fixture::test_05_load_json_argv_with_non_existent_json_file
+questionnaire_unit_test.py::_07_load_json_argv_with_data_via_localhost_8000_in_fixture::test_05_load_json_argv_with_non_existent_json_file 
 questionnaire.py http://127.0.0.1:8000/json_test_files/non-existent-file.json -> None, File_Path
-127.0.0.1 - - [07/Dec/2022 15:08:57] code 404, message File not found
-127.0.0.1 - - [07/Dec/2022 15:08:57] "GET /json_test_files/non-existent-file.json HTTP/1.1" 404 -
+127.0.0.1 - - [30/Jun/2026 15:14:18] code 404, message File not found
+127.0.0.1 - - [30/Jun/2026 15:14:18] "GET /json_test_files/non-existent-file.json HTTP/1.1" 404 -
 Error : File not found at URL http://127.0.0.1:8000/json_test_files/non-existent-file.json
 PASSED
-
-questionnaire_unit_test.py::_07_load_json_argv_with_data_via_localhost_8000_in_fixture::test_06_load_json_argv_with_empty_json_file
+questionnaire_unit_test.py::_07_load_json_argv_with_data_via_localhost_8000_in_fixture::test_06_load_json_argv_with_empty_json_file 
 questionnaire.py http://127.0.0.1:8000/json_test_files/json_00_empty.json -> None, File_Path
-127.0.0.1 - - [07/Dec/2022 15:08:57] "GET /json_test_files/json_00_empty.json HTTP/1.1" 200 -
+127.0.0.1 - - [30/Jun/2026 15:14:18] "GET /json_test_files/json_00_empty.json HTTP/1.1" 200 -
 Error : Incompatible or no data in JSON file at URL http://127.0.0.1:8000/json_test_files/json_00_empty.json
-PASSED
-HTTP Disconnection from http://127.0.0.1:8000/
+PASSEDHTTP Disconnection from http://127.0.0.1:8000/
 
 questionnaire_unit_test.py::_08_load_json_argv_with_data_via_localhost_8000_in_setupClass_teardownClass::test_01_load_json_argv_with_one_good_json_file 
-Connection to http://127.0.0.1:8000/ in Thread-14 (serve_forever)
-questionnaire.py http://127.0.0.1:8000/json_test_files/json_01_good_format.json -> Json_Data, File_Path
-127.0.0.1 - - [07/Dec/2022 15:08:58] "GET /json_test_files/json_01_good_format.json HTTP/1.1" 200 -
-PASSED
 
-questionnaire_unit_test.py::_08_load_json_argv_with_data_via_localhost_8000_in_setupClass_teardownClass::test_02_load_json_argv_with_no_argv
-questionnaire.py http://127.0.0.1:8000/json_test_files/ -> None, File_Path
+Connection to http://127.0.0.1:47413/ in Thread-14 (serve_forever) 
+questionnaire.py http://127.0.0.1:47413/json_test_files/json_01_good_format.json -> Json_Data, File_Path
+127.0.0.1 - - [30/Jun/2026 15:14:18] "GET /json_test_files/json_01_good_format.json HTTP/1.1" 200 -
+PASSED
+questionnaire_unit_test.py::_08_load_json_argv_with_data_via_localhost_8000_in_setupClass_teardownClass::test_02_load_json_argv_with_no_argv 
+questionnaire.py http://127.0.0.1:47413/json_test_files/ -> None, File_Path
 Error : Incorrect extension, add a .json questionnaire. Example : questionnaire.py questionnaire_to_read.json
 PASSED
-
-questionnaire_unit_test.py::_08_load_json_argv_with_data_via_localhost_8000_in_setupClass_teardownClass::test_03_load_json_argv_with_more_than_one_argv
-questionnaire.py http://127.0.0.1:8000/json_test_files/json_01_good_format.json http://127.0.0.1:8000/json_test_files/json_01_another_good_format.json -> None, None
+questionnaire_unit_test.py::_08_load_json_argv_with_data_via_localhost_8000_in_setupClass_teardownClass::test_03_load_json_argv_with_more_than_one_argv 
+questionnaire.py http://127.0.0.1:47413/json_test_files/json_01_good_format.json http://127.0.0.1:47413/json_test_files/json_01_another_good_format.json -> None, None
 Error : Error in argument, should add a single .json questionnaire. Example : questionnaire.py questionnaire_to_read.json
 PASSED
-
-questionnaire_unit_test.py::_08_load_json_argv_with_data_via_localhost_8000_in_setupClass_teardownClass::test_04_load_json_argv_with_argv_without_json_extension
-questionnaire.py http://127.0.0.1:8000/json_test_files/json_00_without_extension -> None, File_Path
+questionnaire_unit_test.py::_08_load_json_argv_with_data_via_localhost_8000_in_setupClass_teardownClass::test_04_load_json_argv_with_argv_without_json_extension 
+questionnaire.py http://127.0.0.1:47413/json_test_files/json_00_without_extension -> None, File_Path
 Error : Incorrect extension, add a .json questionnaire. Example : questionnaire.py questionnaire_to_read.json
 PASSED
-
-questionnaire_unit_test.py::_08_load_json_argv_with_data_via_localhost_8000_in_setupClass_teardownClass::test_05_load_json_argv_with_non_existent_json_file
-questionnaire.py http://127.0.0.1:8000/json_test_files/non-existent-file.json -> None, File_Path
-127.0.0.1 - - [07/Dec/2022 15:08:58] code 404, message File not found
-127.0.0.1 - - [07/Dec/2022 15:08:58] "GET /json_test_files/non-existent-file.json HTTP/1.1" 404 -
-Error : File not found at URL http://127.0.0.1:8000/json_test_files/non-existent-file.json
+questionnaire_unit_test.py::_08_load_json_argv_with_data_via_localhost_8000_in_setupClass_teardownClass::test_05_load_json_argv_with_non_existent_json_file 
+questionnaire.py http://127.0.0.1:47413/json_test_files/non-existent-file.json -> None, File_Path
+127.0.0.1 - - [30/Jun/2026 15:14:18] code 404, message File not found
+127.0.0.1 - - [30/Jun/2026 15:14:18] "GET /json_test_files/non-existent-file.json HTTP/1.1" 404 -
+Error : File not found at URL http://127.0.0.1:47413/json_test_files/non-existent-file.json
 PASSED
-
-questionnaire_unit_test.py::_08_load_json_argv_with_data_via_localhost_8000_in_setupClass_teardownClass::test_06_load_json_argv_with_empty_json_file
-questionnaire.py http://127.0.0.1:8000/json_test_files/json_00_empty.json -> None, File_Path
-127.0.0.1 - - [07/Dec/2022 15:08:58] "GET /json_test_files/json_00_empty.json HTTP/1.1" 200 -
-Error : Incompatible or no data in JSON file at URL http://127.0.0.1:8000/json_test_files/json_00_empty.json
-PASSED
-Disconnection from http://127.0.0.1:8000/
+questionnaire_unit_test.py::_08_load_json_argv_with_data_via_localhost_8000_in_setupClass_teardownClass::test_06_load_json_argv_with_empty_json_file 
+questionnaire.py http://127.0.0.1:47413/json_test_files/json_00_empty.json -> None, File_Path
+127.0.0.1 - - [30/Jun/2026 15:14:18] "GET /json_test_files/json_00_empty.json HTTP/1.1" 200 -
+Error : Incompatible or no data in JSON file at URL http://127.0.0.1:47413/json_test_files/json_00_empty.json
+PASSEDDisconnection from http://127.0.0.1:47413/
 
 questionnaire_unit_test.py::_09_load_json_argv_with_simulated_server::test_01_load_json_argv_with_simulated_FileNotFound_answer 
 questionnaire.py http://non-existent-url.com/json_01_good_format.json -> None, File_Path
 Error : File not found at URL http://non-existent-url.com/json_01_good_format.json
 PASSED
-
-questionnaire_unit_test.py::_09_load_json_argv_with_simulated_server::test_02_load_json_argv_with_simulated_success_request_and_fake_data
+questionnaire_unit_test.py::_09_load_json_argv_with_simulated_server::test_02_load_json_argv_with_simulated_success_request_and_fake_data 
 questionnaire.py http://non-existent-url.com/json_01_good_format.json -> Json_Data, File_Path
 PASSED
-
-questionnaire_unit_test.py::_10_Questionnaire_initialization::test_00_Questionnaire_empty_file
-Questionnaire( <json data>, json_test_files\json_00_empty.json ) --> None
-Error : Incompatible or no data in JSON file json_test_files\json_00_empty.json
+questionnaire_unit_test.py::_10_Questionnaire_initialization::test_00_Questionnaire_empty_file 
+Questionnaire( <json data>, json_test_files/json_00_empty.json ) --> None 
+Error : Incompatible or no data in JSON file json_test_files/json_00_empty.json
 --> Wrong arguments, should be test on load_json_argv
 PASSED
-
-questionnaire_unit_test.py::_10_Questionnaire_initialization::test_01_Questionnaire_good_format_file
-Questionnaire( <json data>, json_test_files\json_01_good_format.json ) --> Questionnaire
+questionnaire_unit_test.py::_10_Questionnaire_initialization::test_01_Questionnaire_good_format_file 
+Questionnaire( <json data>, json_test_files/json_01_good_format.json ) --> Questionnaire 
+PASSED
+questionnaire_unit_test.py::_10_Questionnaire_initialization::test_02_Questionnaire_without_not_mandatory_category 
+Questionnaire( <json data>, json_test_files/json_02_without_category.json ) --> Questionnaire 
+PASSED
+questionnaire_unit_test.py::_10_Questionnaire_initialization::test_03_Questionnaire_with_empty_not_mandatory_category 
+Questionnaire( <json data>, json_test_files/json_03_with_empty_category.json ) --> Questionnaire 
+PASSED
+questionnaire_unit_test.py::_10_Questionnaire_initialization::test_04_Questionnaire_without_not_mandatory_difficulty 
+Questionnaire( <json data>, json_test_files/json_04_without_difficulty.json ) --> Questionnaire 
+PASSED
+questionnaire_unit_test.py::_10_Questionnaire_initialization::test_05_Questionnaire_with_empty_not_mandatory_difficulty 
+Questionnaire( <json data>, json_test_files/json_05_with_empty_difficulty.json ) --> Questionnaire 
+PASSED
+questionnaire_unit_test.py::_10_Questionnaire_initialization::test_06_Questionnaire_without_mandatory_title 
+Questionnaire( <json data>, json_test_files/json_06_without_title.json ) --> None 
+Error : Incompatible Json schema in file json_test_files/json_06_without_title.json
+PASSED
+questionnaire_unit_test.py::_10_Questionnaire_initialization::test_07_Questionnaire_with_empty_title 
+Questionnaire( <json data>, json_test_files/json_07_with_empty_title.json ) --> None 
+Error : The title of the quizz is missing and mandatory in file json_test_files/json_07_with_empty_title.json
+PASSED
+questionnaire_unit_test.py::_10_Questionnaire_initialization::test_08_Questionnaire_without_mandatory_questions 
+Questionnaire( <json data>, json_test_files/json_08_without_questions.json ) --> None 
+Error : Incompatible Json schema in file json_test_files/json_08_without_questions.json
+PASSED
+questionnaire_unit_test.py::_10_Questionnaire_initialization::test_09_Questionnaire_with_empty_questions 
+Questionnaire( <json data>, json_test_files/json_09_with_empty_questions.json ) --> None 
+Error : The questions of the quizz are missing and mandatory in file json_test_files/json_09_with_empty_questions.json
+PASSED
+questionnaire_unit_test.py::_10_Questionnaire_initialization::test_10_Questionnaire_with_more_keys 
+Questionnaire( <json data>, json_test_files/json_10_with_more_keys.json ) --> Questionnaire 
+PASSED
+questionnaire_unit_test.py::_10_Questionnaire_initialization::test_11_Questionnaire_without_title_in_questions 
+Questionnaire( <json data>, json_test_files/json_11_without_title_in_questions.json ) --> None 
+Error : Incompatible Json schema in file json_test_files/json_11_without_title_in_questions.json
+PASSED
+questionnaire_unit_test.py::_10_Questionnaire_initialization::test_12_Questionnaire_with_empty_title_in_questions 
+Questionnaire( <json data>, json_test_files/json_12_with_empty_title_in_questions.json ) --> Questionnaire 
+Warning : Skipped question : question is empty in question 1 file json_test_files/json_12_with_empty_title_in_questions.json
+PASSED
+questionnaire_unit_test.py::_10_Questionnaire_initialization::test_13_Questionnaire_without_choice_in_questions 
+Questionnaire( <json data>, json_test_files/json_13_without_choice_in_questions.json ) --> None 
+Error : Incompatible Json schema in file json_test_files/json_13_without_choice_in_questions.json
+PASSED
+questionnaire_unit_test.py::_10_Questionnaire_initialization::test_14_Questionnaire_with_empty_choice_array_in_questions 
+Questionnaire( <json data>, json_test_files/json_14_with_empty_choice_array_in_questions.json ) --> None 
+Error : Incompatible Json schema in file json_test_files/json_14_with_empty_choice_array_in_questions.json
+PASSED
+questionnaire_unit_test.py::_10_Questionnaire_initialization::test_15_Questionnaire_with_only_one_choices_in_questions 
+Questionnaire( <json data>, json_test_files/json_15_with_only_one_choice_in_questions.json ) --> None 
+Error : Incompatible Json schema in file json_test_files/json_15_with_only_one_choice_in_questions.json
+PASSED
+questionnaire_unit_test.py::_10_Questionnaire_initialization::test_16_Questionnaire_without_answer_in_choices_in_questions 
+Questionnaire( <json data>, json_test_files/json_16_without_answer_in_choices_in_questions.json ) --> None 
+Error : Incompatible Json schema in file json_test_files/json_16_without_answer_in_choices_in_questions.json
+PASSED
+questionnaire_unit_test.py::_10_Questionnaire_initialization::test_17_Questionnaire_with_empty_wrong_answer_in_choices_in_questions 
+Questionnaire( <json data>, json_test_files/json_17_with_empty_wrong_answer_in_choices_in_questions.json ) --> Questionnaire 
+Warning : Skipped answer : answer is empty in question 1 file json_test_files/json_17_with_empty_wrong_answer_in_choices_in_questions.json
+PASSED
+questionnaire_unit_test.py::_10_Questionnaire_initialization::test_18_Questionnaire_with_empty_good_answer_in_choices_in_questions 
+Questionnaire( <json data>, json_test_files/json_18_with_empty_good_answer_in_choices_in_questions.json ) --> Questionnaire 
+Warning : Skipped answer : answer is empty in question 1 file json_test_files/json_18_with_empty_good_answer_in_choices_in_questions.json
+Warning : Skipped question : no one or more than one good answers in question 1 file json_test_files/json_18_with_empty_good_answer_in_choices_in_questions.json
+PASSED
+questionnaire_unit_test.py::_10_Questionnaire_initialization::test_19_Questionnaire_without_boolean_in_choices_in_questions 
+Questionnaire( <json data>, json_test_files/json_19_without_boolean_in_choices_in_questions.json ) --> None 
+Error : Incompatible Json schema in file json_test_files/json_19_without_boolean_in_choices_in_questions.json
+PASSED
+questionnaire_unit_test.py::_10_Questionnaire_initialization::test_20_Questionnaire_with_integer_in_choices_in_questions 
+Questionnaire( <json data>, json_test_files/json_20_with_integer_in_choices_in_questions.json ) --> None 
+Error : Incompatible Json schema in file json_test_files/json_20_with_integer_in_choices_in_questions.json
+PASSED
+questionnaire_unit_test.py::_10_Questionnaire_initialization::test_21_Questionnaire_without_no_good_answer_in_choices_in_questions 
+Questionnaire( <json data>, json_test_files/json_21_without_no_good_answer_in_choices_in_questions.json ) --> Questionnaire 
+Warning : Skipped question : no one or more than one good answers in question 1 file json_test_files/json_21_without_no_good_answer_in_choices_in_questions.json
+PASSED
+questionnaire_unit_test.py::_10_Questionnaire_initialization::test_22_Questionnaire_with_more_than_one_good_answer_in_choices_in_questions 
+Questionnaire( <json data>, json_test_files/json_22_with_more_than_one_good_answer_in_choices_in_questions.json ) --> Questionnaire 
+Warning : Skipped question : no one or more than one good answers in question 1 file json_test_files/json_22_with_more_than_one_good_answer_in_choices_in_questions.json
+PASSED
+questionnaire_unit_test.py::_10_Questionnaire_initialization::test_23_Questionnaire_with_an_empty_array_in_choices_in_questions 
+Questionnaire( <json data>, json_test_files/json_23_with_an_empty_array_in_choices_in_questions.json ) --> None 
+Error : Incompatible Json schema in file json_test_files/json_23_with_an_empty_array_in_choices_in_questions.json
+PASSED
+questionnaire_unit_test.py::_10_Questionnaire_initialization::test_24_Questionnaire_with_questions_without_good_answer_only 
+Questionnaire( <json data>, json_test_files/json_24_with_questions_without_good_answer_only.json ) --> Questionnaire 
+Warning : Skipped question : no one or more than one good answers in question 1 file json_test_files/json_24_with_questions_without_good_answer_only.json
+Warning : Skipped question : no one or more than one good answers in question 2 file json_test_files/json_24_with_questions_without_good_answer_only.json
 PASSED
 
-questionnaire_unit_test.py::_10_Questionnaire_initialization::test_02_Questionnaire_without_not_mandatory_category
-Questionnaire( <json data>, json_test_files\json_02_without_category.json ) --> Questionnaire
-PASSED
-
-questionnaire_unit_test.py::_10_Questionnaire_initialization::test_03_Questionnaire_with_empty_not_mandatory_category
-Questionnaire( <json data>, json_test_files\json_03_with_empty_category.json ) --> Questionnaire
-PASSED
-
-questionnaire_unit_test.py::_10_Questionnaire_initialization::test_04_Questionnaire_without_not_mandatory_difficulty
-Questionnaire( <json data>, json_test_files\json_04_without_difficulty.json ) --> Questionnaire
-PASSED
-
-questionnaire_unit_test.py::_10_Questionnaire_initialization::test_05_Questionnaire_with_empty_not_mandatory_difficulty
-Questionnaire( <json data>, json_test_files\json_05_with_empty_difficulty.json ) --> Questionnaire
-PASSED
-
-questionnaire_unit_test.py::_10_Questionnaire_initialization::test_06_Questionnaire_without_mandatory_title
-Questionnaire( <json data>, json_test_files\json_06_without_title.json ) --> None
-Error : Incompatible Json schema in file json_test_files\json_06_without_title.json
-PASSED
-
-questionnaire_unit_test.py::_10_Questionnaire_initialization::test_07_Questionnaire_with_empty_title
-Questionnaire( <json data>, json_test_files\json_07_with_empty_title.json ) --> None
-Error : The title of the quizz is missing and mandatory in file json_test_files\json_07_with_empty_title.json
-PASSED
-
-questionnaire_unit_test.py::_10_Questionnaire_initialization::test_08_Questionnaire_without_mandatory_questions
-Questionnaire( <json data>, json_test_files\json_08_without_questions.json ) --> None
-Error : Incompatible Json schema in file json_test_files\json_08_without_questions.json
-PASSED
-
-questionnaire_unit_test.py::_10_Questionnaire_initialization::test_09_Questionnaire_with_empty_questions
-Questionnaire( <json data>, json_test_files\json_09_with_empty_questions.json ) --> None
-Error : The questions of the quizz are missing and mandatory in file json_test_files\json_09_with_empty_questions.json
-PASSED
-
-questionnaire_unit_test.py::_10_Questionnaire_initialization::test_10_Questionnaire_with_more_keys
-Questionnaire( <json data>, json_test_files\json_10_with_more_keys.json ) --> Questionnaire
-PASSED
-
-questionnaire_unit_test.py::_10_Questionnaire_initialization::test_11_Questionnaire_without_title_in_questions
-Questionnaire( <json data>, json_test_files\json_11_without_title_in_questions.json ) --> None
-Error : Incompatible Json schema in file json_test_files\json_11_without_title_in_questions.json
-PASSED
-
-questionnaire_unit_test.py::_10_Questionnaire_initialization::test_12_Questionnaire_with_empty_title_in_questions
-Questionnaire( <json data>, json_test_files\json_12_with_empty_title_in_questions.json ) --> Questionnaire
-Warning : Skipped question : question is empty in question 1 file json_test_files\json_12_with_empty_title_in_questions.json
-PASSED
-
-questionnaire_unit_test.py::_10_Questionnaire_initialization::test_13_Questionnaire_without_choice_in_questions
-Questionnaire( <json data>, json_test_files\json_13_without_choice_in_questions.json ) --> None
-Error : Incompatible Json schema in file json_test_files\json_13_without_choice_in_questions.json
-PASSED
-
-questionnaire_unit_test.py::_10_Questionnaire_initialization::test_14_Questionnaire_with_empty_choice_array_in_questions
-Questionnaire( <json data>, json_test_files\json_14_with_empty_choice_array_in_questions.json ) --> None
-Error : Incompatible Json schema in file json_test_files\json_14_with_empty_choice_array_in_questions.json
-PASSED
-
-questionnaire_unit_test.py::_10_Questionnaire_initialization::test_15_Questionnaire_with_only_one_choices_in_questions
-Questionnaire( <json data>, json_test_files\json_15_with_only_one_choice_in_questions.json ) --> None
-Error : Incompatible Json schema in file json_test_files\json_15_with_only_one_choice_in_questions.json
-PASSED
-
-questionnaire_unit_test.py::_10_Questionnaire_initialization::test_16_Questionnaire_without_answer_in_choices_in_questions
-Questionnaire( <json data>, json_test_files\json_16_without_answer_in_choices_in_questions.json ) --> None
-Error : Incompatible Json schema in file json_test_files\json_16_without_answer_in_choices_in_questions.json
-PASSED
-
-questionnaire_unit_test.py::_10_Questionnaire_initialization::test_17_Questionnaire_with_empty_wrong_answer_in_choices_in_questions
-Questionnaire( <json data>, json_test_files\json_17_with_empty_wrong_answer_in_choices_in_questions.json ) --> Questionnaire
-Warning : Skipped answer : answer is empty in question 1 file json_test_files\json_17_with_empty_wrong_answer_in_choices_in_questions.json
-PASSED
-
-questionnaire_unit_test.py::_10_Questionnaire_initialization::test_18_Questionnaire_with_empty_good_answer_in_choices_in_questions
-Questionnaire( <json data>, json_test_files\json_18_with_empty_good_answer_in_choices_in_questions.json ) --> Questionnaire
-Warning : Skipped answer : answer is empty in question 1 file json_test_files\json_18_with_empty_good_answer_in_choices_in_questions.json
-Warning : Skipped question : no one or more than one good answers in question 1 file json_test_files\json_18_with_empty_good_answer_in_choices_in_questions.json
-PASSED
-
-questionnaire_unit_test.py::_10_Questionnaire_initialization::test_19_Questionnaire_without_boolean_in_choices_in_questions
-Questionnaire( <json data>, json_test_files\json_19_without_boolean_in_choices_in_questions.json ) --> None
-Error : Incompatible Json schema in file json_test_files\json_19_without_boolean_in_choices_in_questions.json
-PASSED
-
-questionnaire_unit_test.py::_10_Questionnaire_initialization::test_20_Questionnaire_with_integer_in_choices_in_questions
-Questionnaire( <json data>, json_test_files\json_20_with_integer_in_choices_in_questions.json ) --> None
-Error : Incompatible Json schema in file json_test_files\json_20_with_integer_in_choices_in_questions.json
-PASSED
-
-questionnaire_unit_test.py::_10_Questionnaire_initialization::test_21_Questionnaire_without_no_good_answer_in_choices_in_questions
-Questionnaire( <json data>, json_test_files\json_21_without_no_good_answer_in_choices_in_questions.json ) --> Questionnaire
-Warning : Skipped question : no one or more than one good answers in question 1 file json_test_files\json_21_without_no_good_answer_in_choices_in_questions.json
-PASSED
-
-questionnaire_unit_test.py::_10_Questionnaire_initialization::test_22_Questionnaire_with_more_than_one_good_answer_in_choices_in_questions
-Questionnaire( <json data>, json_test_files\json_22_with_more_than_one_good_answer_in_choices_in_questions.json ) --> Questionnaire
-Warning : Skipped question : no one or more than one good answers in question 1 file json_test_files\json_22_with_more_than_one_good_answer_in_choices_in_questions.json
-PASSED
-
-questionnaire_unit_test.py::_10_Questionnaire_initialization::test_23_Questionnaire_with_an_empty_array_in_choices_in_questions
-Questionnaire( <json data>, json_test_files\json_23_with_an_empty_array_in_choices_in_questions.json ) --> None
-Error : Incompatible Json schema in file json_test_files\json_23_with_an_empty_array_in_choices_in_questions.json
-PASSED
-
-questionnaire_unit_test.py::_10_Questionnaire_initialization::test_24_Questionnaire_with_questions_without_good_answer_only
-Questionnaire( <json data>, json_test_files\json_24_with_questions_without_good_answer_only.json ) --> Questionnaire
-Warning : Skipped question : no one or more than one good answers in question 1 file json_test_files\json_24_with_questions_without_good_answer_only.json
-Warning : Skipped question : no one or more than one good answers in question 2 file json_test_files\json_24_with_questions_without_good_answer_only.json
-PASSED
-
-=================================================================================== 73 passed, 54 deselected in 7.04s ===================================================================================
+===================================================================================================== 73 passed, 53 deselected in 6.33s ======================================================================================================
 ```
 
 [README.md](./README.md) > [questionnaire_unit_test.md](./questionnaire_unit_test.md)

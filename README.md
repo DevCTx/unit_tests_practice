@@ -32,7 +32,7 @@ pip install -r requirements-dev.txt   # to use questionnaire_unit_tests.py
 python3 ./questionnaire_import.py 
 ```
 
-More info : [questionnaire_import.md](./questionnaire_import.md)
+More info about the original conversion : [questionnaire_import.md](./questionnaire_import.md)
 
 ---
 
@@ -41,22 +41,33 @@ More info : [questionnaire_import.md](./questionnaire_import.md)
 python3 ./questionnaire.py ./json_questionnaires/<questionnaire.json>
 ```
 
-More info : [questionnaire.md](./questionnaire.md)
+More info about the JSON format expected and Error messages : [questionnaire.md](./questionnaire.md)
 
 ---
 
 ### Run the tests with `unittest` or `pytest` 
-use ./json_test_files folder to check 25 intentionally broken quizzes targeting error cases
+
 ```bash
-python3 -m unittest questionnaire_unit_test.py ./json_test_files/<questionnaire.json>
-pytest -v questionnaire_unit_test.py -s ./json_test_files/<questionnaire.json>
+python3 -m unittest questionnaire_unit_test
+```
+```bash
+pytest -v questionnaire_unit_test.py -s
+```
+or use ./json_test_files folder to check 25 intentionally broken quizzes targeting error cases
+```bash
+python3 questionnaire.py json_test_files/json_00_empty.json
 ```
 
 More info : [questionnaire_unit_test.md](./questionnaire_unit_test.md)
 
+### Explanation
+
+```load_json_argv()``` is the entry point. It receives ```sys.argv```, validates that there is exactly one ```.json``` argument, detects whether it is a ```URL``` or a local ```file```, and delegates to ```load_json_data_from_URL()``` or ```load_json_data_from_file()```. It always returns a tuple ```(json_data, file_path)```.
+
 
 ### Testing highlights
- 
+The objective was to test these various characteristics and methods:
+
 - **Test-class inheritance** to reuse base cases by changing a single parameter.
 - **Mocking** with `unittest.mock.patch` to simulate `sys.argv`.
 - **Threaded local HTTP server** (`ThreadingMixIn` + `SimpleHTTPRequestHandler`) to test
