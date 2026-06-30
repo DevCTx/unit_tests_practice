@@ -91,7 +91,7 @@ GitHub Actions runs on every push and pull request to `master`: dependency insta
 - validators==0.20.0
 
 ### [Requirements-dev](./requirements-dev.txt)
-- pytest==7.2.0
+- pytest==8.0.0
 - flake8==6.0.0
 
 
